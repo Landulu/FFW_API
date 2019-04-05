@@ -1,7 +1,7 @@
 <?php
 
 ini_set('display_error', 1);
-header('Content-Type : application/json');
+header('Content-Type: application/json');
 
 require_once __DIR__ . '/../../services/LocalService.php';
 
