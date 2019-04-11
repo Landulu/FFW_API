@@ -21,12 +21,10 @@ class ArticleService {
         $manager = DatabaseManager::getManager();
         $affectedRows = $manager->exec('
         INSERT INTO
-        article (name, category, limit_date, suggestedDate)
-        VALUES (?, ?, ?, ?)', [
+        article (name, category)
+        VALUES (?, ?)', [
             $article->getName(),
             $article->getCategory(),
-            $article->getLimitDate(),
-            $article->getSuggestedDate()
             ]);
         if ($affectedRows > 0) {
             $article->setAId($manager->lastInsertId());
@@ -39,7 +37,7 @@ class ArticleService {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll('
         SELECT * from
-        address'
+        article'
         );
         if (sizeof($rows)  > 0) {
             return $rows;
