@@ -4,8 +4,6 @@ class Article implements JsonSerializable {
     private $aid;
     private $name;
     private $category;
-    private $limitDate;
-    private $suggestedDate;
 
     public function __construct(array $fields) {
         $this->aid = isset($fields['aid']) ? $fields['aid'] : NULL;
