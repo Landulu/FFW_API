@@ -32,8 +32,15 @@ class LocalService {
         return NULL;
     }
 
-    public function getOne($id): ?Loca {
-
+    public function getAll() {
+        $manager = DatabaseManager::getManager();
+        $rows = $manager->getAll('
+        SELECT * from
+        local'
+        );
+        if (sizeof($rows)  > 0) {
+            return $rows;
+        }
     }
 
 }
