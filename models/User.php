@@ -7,12 +7,13 @@ class User implements JsonSerializable {
     private $password;
     private $firstname;
     private $lastname;
+    private $status;
+    private $rights;
     private $lastSubscription;
     private $endSubscription;
     private $lastEdit;
     private $companyName;
     private $addressId;
-    private $status;
 
     public function __construct(array $fields) {
         $this->uid = isset($fields['uid']) ? $fields['uid'] : NULL;
@@ -21,12 +22,13 @@ class User implements JsonSerializable {
         $this->password = $fields['password'];
         $this->firstname = $fields['firstname'];
         $this->lastname = $fields['lastname'];
+        $this->status = $fields['status'];
+        $this->rights = $fields['rights'];
         $this->lastSubcription = $fields['lastSubcription'];
         $this->endSubscription = $fields['endSubscription'];
         $this->lastEdit = $fields['lastEdit'];
         $this->companyName = $fields['companyName'];
         $this->addressId = $fields['addressId'];
-        $this->status = $fields['status'];
     }
 
     public function getUid(): ?int {return $this->uid;}
@@ -35,12 +37,13 @@ class User implements JsonSerializable {
     public function getPassword(): string {return $this->password;}
     public function getFirstname(): string {return $this->firstname;}
     public function getLastname(): string {return $this->lastname;}
+    public function getStatus(): string {return $this->status;}
+    public function getRights(): string {return $this->rights;}
     public function getLastSubscription(): string {return $this->lastSubscription;}
     public function getEndSubscription(): string {return $this->endSubscription;}
     public function getLastEdit(): string {return $this->lastEdit;}
     public function getCompanyName(): ?string {return $this->companyName;}
     public function getAddressId(): ?int {return $this->addressId;}
-    public function getStatus(): string {return $this->status;}
 
     public function setUId(int $uid) {
         $this->uid = $uid;

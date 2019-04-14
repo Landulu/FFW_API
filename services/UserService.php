@@ -31,8 +31,9 @@ class UserService {
             company_name, 
             address_ad_id, 
             status, 
+            rights,
             tel)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
             $user->getEmail(),
             password_hash($user->getPassword(), PASSWORD_DEFAULT),
             $user->getFirstname(),
@@ -42,6 +43,8 @@ class UserService {
             $user->getLastEdit(),
             $user->getCompanyName(),
             $user->getAddressId(),
+            $user->getStatus(),
+            $user->getRights(),
             $user->getTel()
             ]);
         if ($affectedRows > 0) {
@@ -85,6 +88,42 @@ class UserService {
         if (sizeof($user)  > 0) {
             return $user;
         }
+    }
+
+    public function update(User $user): ?User {
+        $manager = DatabaseManager::getManager();
+        $affectedRows = $manager->exec('
+        UPDATE user
+        SET email = ?, 
+            password = ?, 
+            firstname = ?, 
+            lastname = ?,
+            last_subscription = ?,
+            end_subscription = ?,
+            last_edit = ?,
+            company_name = ?,
+            address_ad_id = ?,
+            status = ?,
+            rights = ?,
+            tel = ?', [
+            $user->getEmail(),
+            password_hash($user->getPassword(), PASSWORD_DEFAULT),
+            $user->getFirstname(),
+            $user->getLastname(),
+            $user->getLastSubscription(),
+            $user->getEndSubscription(),
+            $user->getLastEdit(),
+            $user->getCompanyName(),
+            $user->getAddressId(),
+            $user->getStatus(),
+            $user->getRights(),
+            $user->getTel()
+            ]);
+        if ($affectedRows > 0) {
+            $user->setUId($manager->lastInsertId());
+            return $user;
+        }
+        return NULL;
     }
 
 }
