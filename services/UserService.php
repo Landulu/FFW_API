@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__.'/../models/User.php';
+require_once __DIR__.'/../utils/DateUtil.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
 
 
@@ -124,6 +125,10 @@ class UserService {
             return $user;
         }
         return NULL;
+    }
+
+    public function getAdherentsToday() {
+        $todayDate = date("Y-m-d");
     }
 
 }
