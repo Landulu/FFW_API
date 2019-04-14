@@ -6,6 +6,7 @@ header('Content-Type: application/json');
 
 require_once __DIR__ . '/../../utils/database/DatabaseManager.php';
 require_once __DIR__ . '/../../services/VehicleService.php';
+require_once __DIR__ . '/../../services/ProductService.php';
 
 
 $db = DatabaseManager::getManager();
@@ -22,11 +23,17 @@ $db = DatabaseManager::getManager();
 
 // echo $affectedRows;
 
-$res = VehicleService::getInstance()->getAll();
-echo $res;
+// $res = VehicleService::getInstance()->getAll();
 
-$c = $db->getOne('SELECT * FROM vehicle WHERE v_id = ?', [2]);
-print_r($c);
+// $res = ProductService::getInstance()->getAllByRoom(1);
+// print_r($res);
+
+// $res = 
+
+// echo $res;
+
+// $c = $db->getOne('SELECT * FROM vehicle WHERE v_id = ?', [2]);
+// print_r($c);
 
 
 ?>
