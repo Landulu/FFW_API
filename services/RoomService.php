@@ -21,9 +21,11 @@ class RoomService {
         $affectedRows = $manager->exec('
         INSERT INTO
         room (name, is_unavailable, is_stockroom, local_lo_id)
-        VALUES (?, ?)', [
+        VALUES (?, ?, ?, ?)', [
         $room->getName(),
-        $room->getAdId()
+        $room->getIsUnavailable(),
+        $room->getIsStockroom(),
+        $room->getLoId()
         ]);
         if($affectedRows > 0) {
         $room->setRId($manager->lastInsertId());
@@ -62,7 +64,29 @@ class RoomService {
         }
     }
 
+    public function update(Room $room): ?Room {
+        $manager = DatabaseManager::getManager();
+        $affectedRows = $manager->exec('
+        UPDATE room
+        set name = ?, 
+        is_unavailable = ?, 
+        is_stockroom = ?, 
+        local_lo_id = ?)', [
+        $room->getName(),
+        $room->getIsUnavailable(),
+        $room->getIsStockroom(),
+        $room->getLoId()
+        ]);
+        if($affectedRows > 0) {
+        $room->setRId($manager->lastInsertId());
+        return $room;
+        }
+        return NULL;
+    }
+
 }
+
+
 
 
 ?>

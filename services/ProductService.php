@@ -16,6 +16,25 @@ class ProductService {
         return self::$instance;
     }
 
+    public function create(Product $product): ?Product {
+        $manager = DatabaseManager::getManager();
+        $affectedRows = $manager->exec('
+        INSERT INTO
+        product (limit_date, state, article_a_id, basket_b_id, room_r_id)
+        VALUES (?, ?, ?, ?)', [
+            $product->getLimitDate(),
+            $product->getState(),
+            $product->getArticleId(),
+            $product->getBasketId(),
+            $product->getRoomId()
+            ]);
+        if ($affectedRows > 0) {
+            $product->setVId($manager->lastInsertId());
+            return $product;
+        }
+        return NULL;
+    }
+
     public function getALl() {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll('
@@ -44,6 +63,28 @@ class ProductService {
         if (sizeof($rows)  > 0) {
             return $rows;
         }
+    }
+
+    public function update(Product $product): ?Product {
+        $manager = DatabaseManager::getManager();
+        $affectedRows = $manager->exec('
+        UPDATE products
+        set limit_date = ?, 
+        state = ?, 
+        article_a_id = ?, 
+        basket_b_id = ?, 
+        room_r_id = ?)', [
+            $product->getLimitDate(),
+            $product->getState(),
+            $product->getArticleId(),
+            $product->getBasketId(),
+            $product->getRoomId()
+            ]);
+        if ($affectedRows > 0) {
+            $product->setPrId($manager->lastInsertId());
+            return $product;
+        }
+        return NULL;
     }
 }
 
