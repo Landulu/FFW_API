@@ -73,6 +73,7 @@ class ProductService {
         if (sizeof($rows)  > 0) {
             return $rows;
         }
+        return NULL;
     }
 
     public function update(Product $product): ?Product {
