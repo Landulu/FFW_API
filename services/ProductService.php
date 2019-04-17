@@ -16,7 +16,6 @@ class ProductService {
         return self::$instance;
     }
 
-    public function getAll() {
     public function create(Product $product): ?Product {
         $manager = DatabaseManager::getManager();
         $affectedRows = $manager->exec('
@@ -36,7 +35,7 @@ class ProductService {
         return NULL;
     }
 
-    public function getALl() {
+    public function getAll() {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll('
         SELECT product.pr_id, 
