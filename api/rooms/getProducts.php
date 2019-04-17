@@ -15,7 +15,7 @@ if($products) {
     http_response_code(200);
     echo json_encode($products);
 } else {
-    http_response_code(400);
+    http_response_code(204);
 }
 
 

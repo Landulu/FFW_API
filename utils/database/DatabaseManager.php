@@ -52,7 +52,10 @@ class DatabaseManager {
     public function getOne(string $sql, array $params = []): ?array {
         $stmt = $this->internalExec($sql, $params);
         if($stmt) {
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            $res = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($res){
+                return $res; 
+            }
         }
         return NULL;
     }

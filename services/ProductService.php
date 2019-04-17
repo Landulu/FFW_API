@@ -16,6 +16,25 @@ class ProductService {
         return self::$instance;
     }
 
+    public function create(Product $product): ?Product {
+        $manager = DatabaseManager::getManager();
+        $affectedRows = $manager->exec('
+        INSERT INTO
+        product (limit_date, state, article_a_id, basket_b_id, room_r_id)
+        VALUES (?, ?, ?, ?)', [
+            $product->getLimitDate(),
+            $product->getState(),
+            $product->getArticleId(),
+            $product->getBasketId(),
+            $product->getRoomId()
+            ]);
+        if ($affectedRows > 0) {
+            $product->setVId($manager->lastInsertId());
+            return $product;
+        }
+        return NULL;
+    }
+
     public function getAll() {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll('
@@ -54,6 +73,61 @@ class ProductService {
         if (sizeof($rows)  > 0) {
             return $rows;
         }
+        return NULL;
+    }
+
+    public function update(Product $product): ?Product {
+        $manager = DatabaseManager::getManager();
+        $affectedRows = $manager->exec('
+        UPDATE products
+        set limit_date = ?, 
+        state = ?, 
+        article_a_id = ?, 
+        basket_b_id = ?, 
+        room_r_id = ?)', [
+            $product->getLimitDate(),
+            $product->getState(),
+            $product->getArticleId(),
+            $product->getBasketId(),
+            $product->getRoomId()
+            ]);
+        if ($affectedRows > 0) {
+            $product->setPrId($manager->lastInsertId());
+            return $product;
+        }
+        return NULL;
+    }
+
+    public function getOne(int $prid) {
+        $manager = DatabaseManager::getManager();
+        $product = $manager->getOne('
+        select * 
+        FROM product
+        WHERE pr_id = ?'
+        , [$prid]);
+        if (sizeof($product)  > 0) {
+            return $product;
+        }
+    }
+
+    public function transferRoomForProducts($productIds, $roomId) {
+        $manager = DatabaseManager::getManager();
+        $affectedRows = 0;
+        foreach ($productIds as $key => $value) {
+            
+            $affectedRows += $manager->exec('
+                UPDATE product
+                SET room_r_id = ?
+                WHERE pr_id = ?',
+                [
+                    $roomId,
+                    $value
+                ]);
+        }
+        if ($affectedRows > 0) {
+            return $affectedRows;
+        }
+        return NULL;
     }
 }
 

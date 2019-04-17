@@ -46,6 +46,28 @@ class AddressService {
         }
     }
 
+    public function update(Address $address): ?Address {
+        $manager = DatabaseManager::getManager();
+        $affectedRows = $manager->exec('
+        UPDATE adress
+        SET street_address = ?, 
+        city_name = ?, 
+        city_code = ?, 
+        country = ?', [
+            $address->getStreetAddress(),
+            $address->getCityName(),
+            $address->getCityCode(),
+            $address->getCountry()
+            ]);
+        if ($affectedRows > 0) {
+            $address->setAdId($manager->lastInsertId());
+            return $address;
+        }
+        return NULL;
+    }
+
+
+
 }
 
 ?>

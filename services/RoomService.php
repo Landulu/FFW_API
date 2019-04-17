@@ -21,9 +21,11 @@ class RoomService {
         $affectedRows = $manager->exec('
         INSERT INTO
         room (name, is_unavailable, is_stockroom, local_lo_id)
-        VALUES (?, ?)', [
+        VALUES (?, ?, ?, ?)', [
         $room->getName(),
-        $room->getAdId()
+        $room->getIsUnavailable(),
+        $room->getIsStockroom(),
+        $room->getLoId()
         ]);
         if($affectedRows > 0) {
         $room->setRId($manager->lastInsertId());
@@ -32,11 +34,30 @@ class RoomService {
         return NULL;
     }
 
-    public function getOne($id): ?Room {
-
+    public function getOne($id):?Room {
+        $manager = DatabaseManager::getManager();
+        $room = $manager->getOne('
+        SELECT * FROM
+        room
+        WHERE r_id = ?',
+        [$id]
+        );
+        if ($room) {
+            $roomObj = new Room($this->adaptRoomQueryToConstruct($room));
+            return $roomObj;
+        }
+        return NULL;
     }
 
-    
+    private function adaptRoomQueryToConstruct($rowRoom){
+        $room = array("rid"=>$rowRoom["r_id"],
+                      "name"=>$rowRoom["name"],
+                      "isUnavailable"=>$rowRoom["is_unavailable"],
+                      "isStockroom"=>$rowRoom["is_stockroom"],
+                      "loid"=>$rowRoom["local_lo_id"]);
+        return $room;
+    }
+
     public function getAll() {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll('
@@ -62,7 +83,29 @@ class RoomService {
         }
     }
 
+    public function update(Room $room): ?Room {
+        $manager = DatabaseManager::getManager();
+        $affectedRows = $manager->exec('
+        UPDATE room
+        set name = ?, 
+        is_unavailable = ?, 
+        is_stockroom = ?, 
+        local_lo_id = ?)', [
+        $room->getName(),
+        $room->getIsUnavailable(),
+        $room->getIsStockroom(),
+        $room->getLoId()
+        ]);
+        if($affectedRows > 0) {
+        $room->setRId($manager->lastInsertId());
+        return $room;
+        }
+        return NULL;
+    }
+
 }
+
+
 
 
 ?>

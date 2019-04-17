@@ -17,8 +17,8 @@ class Room implements JsonSerializable {
 
     public function getRId(): ?int {return $this->rid;}
     public function getName(): string {return $this->name;}
-    public function getIsUnavailable(): boolval {return $this->isUnavailable;}
-    public function getIsStockroom(): boolval {return $this->isStockroom;}
+    public function getIsUnavailable(): string {return $this->isUnavailable;}
+    public function getIsStockroom(): int {return $this->isStockroom;}
     public function getLoId(): ?int {return $this->loid;}
 
     public function setLoId(int $loid) {

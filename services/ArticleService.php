@@ -44,6 +44,23 @@ class ArticleService {
         }
     }
 
+    public function update(Article $article): ?Article {
+        $manager = DatabaseManager::getManager();
+        $affectedRows = $manager->exec('
+        UPDATE article
+        SET 
+        name = ?, 
+        category =  ?', [
+            $article->getName(),
+            $article->getCategory(),
+            ]);
+        if ($affectedRows > 0) {
+            $article->setAId($manager->lastInsertId());
+            return $article;
+        }
+        return NULL;
+    }
+
 }
 
 ?>
