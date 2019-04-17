@@ -86,6 +86,35 @@ class ProductService {
         }
         return NULL;
     }
+
+    public function getOne(int $prid) {
+        $manager = DatabaseManager::getManager();
+        $product = $manager->getOne('
+        select * 
+        FROM product
+        WHERE pr_id = ?'
+        , [$prid]);
+        if (sizeof($product)  > 0) {
+            return $product;
+        }
+    }
+
+    public function transferRoomForProducts($productIds, $roomId) {
+        $manager = DatabaseManager::getManager();
+        
+        $affectedRows = $manager->exec(
+            'UPDATE products
+            SET room_r_id = ?
+            WHERE pr_id IN ('.implode(",",$productIds).')',
+            [
+                $roomId,
+                $productIds
+            ]);
+        if ($affectedRows > 0) {
+            return $affectedRows;
+        }
+        return NULL;
+    }
 }
 
 

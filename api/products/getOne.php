@@ -7,7 +7,9 @@ header('Content-Type: application/json');
 require_once __DIR__ . '/../../services/ProductService.php';
 
 
-$product = ProductService::getInstance()->getOne();
+$productId = $_GET['pr_id'];
+
+$product = ProductService::getInstance()->getOne($productId);
 if($product) {
     http_response_code(200);
     echo json_encode($product);

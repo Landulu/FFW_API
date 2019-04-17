@@ -35,7 +35,16 @@ class RoomService {
     }
 
     public function getOne($id): ?Room {
-
+        $manager = DatabaseManager::getManager();
+        $room = $manager->getOne('
+        SELECT * FROM
+        room
+        WHERE r_id = ?',
+        [$id]
+        );
+        if ($room) {
+            return $room;
+        }
     }
 
     
