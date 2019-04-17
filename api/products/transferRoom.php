@@ -14,17 +14,18 @@ $productIds = json_decode($json, true);
 
 if (sizeof($productIds) > 0) {
     $room = RoomService::getInstance()->getOne($roomId);
-    echo $room;
-    // if ( $room && $room->getIsUnavailable() == FREE && $room->getIsStockroom()) {
-    //     $affectedProducts = ProductService::getInstance()->transferRoom($productIds, $roomId);
-    //     if ($affectedProducts > 0) {
-    //         echo $affectedProducts;
-    //     } else {
-    //         http_response_code(204);
-    //     }
-    // } else {
-    //     http_response_code(406);
-    // }
+    if ( $room && $room->getIsUnavailable() == "FREE" && $room->getIsStockroom()) {
+        $affectedProducts = ProductService::getInstance()->transferRoomForProducts($productIds, $roomId);
+
+        if ($affectedProducts > 0) {
+            echo $affectedProducts;
+        } else {
+            echo "0";
+            http_response_code(204);
+        }
+    } else {
+        http_response_code(406);
+    }
 } else {
     http_response_code(400);
 }

@@ -112,15 +112,18 @@ class ProductService {
 
     public function transferRoomForProducts($productIds, $roomId) {
         $manager = DatabaseManager::getManager();
-        
-        $affectedRows = $manager->exec(
-            'UPDATE products
-            SET room_r_id = ?
-            WHERE pr_id IN ('.implode(",",$productIds).')',
-            [
-                $roomId,
-                $productIds
-            ]);
+        $affectedRows = 0;
+        foreach ($productIds as $key => $value) {
+            
+            $affectedRows += $manager->exec('
+                UPDATE product
+                SET room_r_id = ?
+                WHERE pr_id = ?',
+                [
+                    $roomId,
+                    $value
+                ]);
+        }
         if ($affectedRows > 0) {
             return $affectedRows;
         }

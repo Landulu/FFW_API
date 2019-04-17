@@ -34,7 +34,7 @@ class RoomService {
         return NULL;
     }
 
-    public function getOne($id): ?Room {
+    public function getOne($id):?Room {
         $manager = DatabaseManager::getManager();
         $room = $manager->getOne('
         SELECT * FROM
@@ -43,11 +43,21 @@ class RoomService {
         [$id]
         );
         if ($room) {
-            return $room;
+            $roomObj = new Room($this->adaptRoomQueryToConstruct($room));
+            return $roomObj;
         }
+        return NULL;
     }
 
-    
+    private function adaptRoomQueryToConstruct($rowRoom){
+        $room = array("rid"=>$rowRoom["r_id"],
+                      "name"=>$rowRoom["name"],
+                      "isUnavailable"=>$rowRoom["is_unavailable"],
+                      "isStockroom"=>$rowRoom["is_stockroom"],
+                      "loid"=>$rowRoom["local_lo_id"]);
+        return $room;
+    }
+
     public function getAll() {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll('
