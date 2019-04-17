@@ -38,7 +38,7 @@ class ProductService {
     public function getALl() {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll('
-        SELECT * FROM product');
+        SELECT * FROM product JOIN article ON article.a_id = product.article_a_id');
         if (sizeof($rows) > 0) {
             return $rows;
         }
