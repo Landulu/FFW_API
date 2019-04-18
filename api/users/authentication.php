@@ -13,7 +13,7 @@ $userPwd = $_GET['password'].urldecode;
 $user = UserService::getInstance()->getOneByEmail($userEmail);
 if($user) {
     if (isset($userPwd) && isset($user->password)){
-        if( password_verify($_POST["pwd"], $resultat['password'])){
+        if( password_verify($userPwd, $user['password'])){
             echo 1;
         } else {
             http_response_code(403);
