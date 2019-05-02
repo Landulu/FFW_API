@@ -43,15 +43,27 @@ class Company {
         return NULL;
     }
 
-    public function getAll() {
+    public function getAll($offset, $limit) {
         $manager = DatabaseManager::getManager();
-        $rows = $manager->getAll('
-        SELECT * from
-        company'
+        $rows = $manager->getAll(
+        'SELECT 
+        co_id as coid,
+        SIRET,
+        status, 
+        name, 
+        address_ad_id as addressId,
+        tel,
+        user_u_id as userId 
+        from company
+        LIMIT $offset, $limit'
         );
-        if (sizeof($rows)  > 0) {
-            return $rows;
+        $locals = [];
+
+        foreach ($rows as $row) {
+            $locals[] = new Local($row);
         }
+
+        return $locals;
     }
 
     public function update(Company $company): ?Company {

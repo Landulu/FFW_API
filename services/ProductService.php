@@ -35,45 +35,57 @@ class ProductService {
         return NULL;
     }
 
-    public function getAll() {
+    public function getAll($offset, $limit) {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll('
-        SELECT product.pr_id, 
-        product.limit_date, 
-        product.state, 
-        product.article_a_id, 
-        product.basket_b_id, 
-        product.room_r_id,
-        article.name,
-        article.category
+        SELECT product.pr_id as prid, 
+                product.limit_date as limitdate, 
+                product.state as state, 
+                product.article_a_id as articleId, 
+                product.basket_b_id as basketId, 
+                product.room_r_id as roomId,
+                article.name as articleName,
+                article.category as articleCategory
         FROM product
         JOIN room ON room.r_id = product.room_r_id
-        JOIN article ON article.a_id = product.article_a_id');
-        if (sizeof($rows) > 0) {
-            return $rows;
+        JOIN article ON article.a_id = product.article_a_id
+        
+        LIMIT $offset, $limit'
+        );
+        $products = [];
+
+        foreach ($rows as $row) {
+            $products[] = new DetailedProduct($row);
         }
+        return products;
     }
 
 
-    public function getAllByRoom($room_id) {
+
+
+    public function getAllByRoom($room_id, $offset, $limit) {
         $manager = DatabaseManager::getManager();
-        $rows = $manager->getAll('
-        SELECT product.pr_id, 
-            product.limit_date, 
-            product.state, 
-            product.article_a_id, 
-            product.basket_b_id, 
-            product.room_r_id,
-            article.name,
-            article.category
-        FROM product
-        JOIN room ON room.r_id = product.room_r_id AND room.r_id = ?
-        JOIN article ON article.a_id = product.article_a_id',
+        $rows = $manager->getAll(
+            'SELECT product.pr_id as prid, 
+                product.limit_date as limitdate, 
+                product.state as state, 
+                product.article_a_id as articleId, 
+                product.basket_b_id as basketId, 
+                product.room_r_id as roomId,
+                article.name as articleName,
+                article.category as articleCategory
+            FROM product
+            JOIN room ON room.r_id = product.room_r_id AND room.r_id = ?
+            JOIN article ON article.a_id = product.article_a_id
+            LIMIT $offset, $limit',
         [$room_id]);
-        if (sizeof($rows)  > 0) {
-            return $rows;
+        
+        $products = [];
+
+        foreach ($rows as $row) {
+            $products[] = new DetailedProduct($row);
         }
-        return NULL;
+        return products;
     }
 
     public function update(Product $product): ?Product {

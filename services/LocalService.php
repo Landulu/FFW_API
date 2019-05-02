@@ -32,15 +32,23 @@ class LocalService {
         return NULL;
     }
 
-    public function getAll() {
+    public function getAll($offset, $limit) {
         $manager = DatabaseManager::getManager();
-        $rows = $manager->getAll('
-        SELECT * from
-        local'
+        $rows = $manager->getAll(
+            'SELECT 
+            lo_id as loid,
+            name, 
+            address_ad_id as adid 
+            FROM local
+            LIMIT $offset, $limit'
         );
-        if (sizeof($rows)  > 0) {
-            return $rows;
+        $locals = [];
+
+        foreach ($rows as $row) {
+            $locals[] = new Local($row);
         }
+
+        return $locals;
     }
 
 }

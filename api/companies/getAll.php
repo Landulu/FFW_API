@@ -6,15 +6,12 @@ header('Content-Type: application/json');
 
 require_once __DIR__ . '/../../services/CompanyService.php';
 
-
-$companies = CompanyService::getInstance()->getAll();
-if($companies) {
-    http_response_code(200);
-    echo json_encode($companies);
-} else {
-    http_response_code(400);
-}
+$offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
+$limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
 
+
+$companies = CompanyService::getInstance()->getAll($offset, $limit);
+echo json_encode($companies);
 
 ?>

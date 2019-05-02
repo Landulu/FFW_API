@@ -55,15 +55,33 @@ class UserService {
         return NULL;
     }
 
-    public function getAll() {
+    public function getAll($offset, $limit) {
         $manager = DatabaseManager::getManager();
-        $rows = $manager->getAll('
-        SELECT * from
-        address'
+        $rows = $manager->getAll(
+        'SELECT
+        u_id as uid, 
+        email, 
+        password, 
+        firstname, 
+        lastname,  
+        last_subscription as lastSubscription, 
+        end_subscription as endSubscription, 
+        last_edit as lastEdit, 
+        company_name as companyName, 
+        address_ad_id as addressId, 
+        status, 
+        rights,
+        tel
+        FROM user
+        LIMIT $offset, $limit'
         );
-        if (sizeof($rows)  > 0) {
-            return $rows;
+        $users = [];
+
+        foreach ($rows as $row) {
+            $users[] = new User($row);
         }
+
+        return $users;
     }
 
 

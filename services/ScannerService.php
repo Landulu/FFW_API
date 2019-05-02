@@ -35,15 +35,25 @@ class ScannerService {
         return NULL;
     }
 
-    public function getAll() {
+    public function getAll($offset, $limit) {
         $manager = DatabaseManager::getManager();
-        $rows = $manager->getAll('
-        SELECT * from
-        scanner'
+        $rows = $manager->getAll(
+        'SELECT 
+        sc_id as scid,
+        version, 
+        build_date as buildDate, 
+        emit_date as emitDate,
+        state
+        FROM scanner
+        LIMIT $offset, $limit'
         );
-        if (sizeof($rows)  > 0) {
-            return $rows;
+        $scanners = [];
+
+        foreach ($rows as $row) {
+            $scanners[] = new Scanner($row);
         }
+        return $scanners;
+
     }
 
 }

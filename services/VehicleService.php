@@ -37,13 +37,23 @@ class VehicleService {
 
     public function getAll() {
         $manager = DatabaseManager::getManager();
-        $rows = $manager->getAll('
-        SELECT * from
-        vehicle'
+        $rows = $manager->getAll(
+        'SELECT 
+        v_id as vid, 
+        volume, 
+        insurance_date as insuranceDate,
+        last_revision as lastRevision,
+        description 
+        FROM vehicle
+        LIMIT $offset, $limit'
         );
-        if (sizeof($rows)  > 0) {
-            return $rows;
+        $vehicles = [];
+
+        foreach ($rows as $row) {
+            $vehicles[] = new Vehicle($row);
         }
+
+        return $vehicles;
     }
 
 }

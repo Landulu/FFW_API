@@ -33,15 +33,23 @@ class ArticleService {
         return NULL;
     }
 
-    public function getAll() {
+    public function getAll($offset, $limit) {
         $manager = DatabaseManager::getManager();
-        $rows = $manager->getAll('
-        SELECT * from
-        article'
+        $rows = $manager->getAll(
+        'SELECT 
+        a_id as aid,
+        name,
+        category
+        FROM article
+        LIMIT $offset, $limit'
         );
-        if (sizeof($rows)  > 0) {
-            return $rows;
+        $articles = [];
+
+        foreach ($rows as $row) {
+            $articles[] = new Article($row);
         }
+
+        return $articles;
     }
 
     public function update(Article $article): ?Article {

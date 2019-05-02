@@ -41,15 +41,30 @@ class BasketService {
         return NULL;
     }
 
-    public function getAll() {
+    public function getAll($offset, $limit) {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll(
-            'SELECT *
-        FROM basket'
+        'SELECT 
+        b_id as bid,
+        create_time as createTime,
+        validation_status as validationStatus,
+        role,
+        processed,
+        order,
+        service_ser_id as serviceId,
+        company_co_id as companyId,
+        external_ex_id as externalId,
+        user_u_id as userId
+        FROM basket
+        LIMIT $offset, $limit'
         );
-        if (sizeof($rows) > 0) {
-            return $rows;
+        $baskets = [];
+
+        foreach ($rows as $row) {
+            $baskets[] = new Basket($row);
         }
+
+        return $baskets;
     }
     
     public function getOne(int $bid) {
@@ -64,17 +79,31 @@ class BasketService {
         }
     }
 
-    public function getAllByUser($userId) {
+    public function getAllByUser($userId, $offset, $limit) {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll(
-        'SELECT *
-        FROM product
-        WHERE user_u_id',
+        'SELECT 
+        b_id as bid,
+        create_time as createTime,
+        validation_status as validationStatus,
+        role,
+        processed,
+        order,
+        service_ser_id as serviceId,
+        company_co_id as companyId,
+        external_ex_id as externalId,
+        user_u_id as userId
+        FROM basket
+        WHERE user_u_id
+        LIMIT $offset, $limit',
         [$userId]);
-        if (sizeof($rows)  > 0) {
-            return $rows;
+        $baskets = [];
+
+        foreach ($rows as $row) {
+            $baskets[] = new Basket($row);
         }
-        return NULL;
+
+        return $baskets;
     }
 
     // public function update(Product $product): ?Product {

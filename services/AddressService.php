@@ -35,15 +35,26 @@ class AddressService {
         return NULL;
     }
 
-    public function getAll() {
+    public function getAll($offset, $limit) {
         $manager = DatabaseManager::getManager();
-        $rows = $manager->getAll('
-        SELECT * from
-        address'
+        $rows = $manager->getAll( 
+        'SELECT 
+        ad_id as adid,
+        street_address as streetAddress,
+        city_name as cityName,
+        city_code as cityCode,
+        country as country
+        from
+        address
+        LIMIT $offset, $limit'
         );
-        if (sizeof($rows)  > 0) {
-            return $rows;
+        $addresses = [];
+
+        foreach ($rows as $row) {
+            $addresses[] = new Address($row);
         }
+
+        return $addresses;
     }
 
     public function update(Address $address): ?Address {

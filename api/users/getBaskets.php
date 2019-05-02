@@ -9,14 +9,13 @@ require_once __DIR__ . '/../../services/BasketService.php';
 
 $u_id = $_GET['u_id'];
 
-$baskets = BasketService::getInstance()->getAllByUser($u_id);
+$offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
+$limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-if($baskets) {
-    http_response_code(200);
-    echo json_encode($baskets);
-} else {
-    http_response_code(204);
-}
+
+$baskets = BasketService::getInstance()->getAllByUser($u_id, $offset, $limit);
+
+echo json_encode($baskets);
 
 
 
