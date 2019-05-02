@@ -18,10 +18,10 @@ class LocalService {
 
     public function create(Local $local): ?Local {
         $manager = DatabaseManager::getManager();
-        $affectedRows = $manager->exec('
-        INSERT INTO
+        $affectedRows = $manager->exec(
+        "INSERT INTO
         local (name, address_ad_id)
-        VALUES (?, ?)', [
+        VALUES (?, ?)", [
         $local->getName(),
         $local->getAdId()
         ]);
@@ -35,12 +35,12 @@ class LocalService {
     public function getAll($offset, $limit) {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll(
-            'SELECT 
+            "SELECT 
             lo_id as loid,
             name, 
             address_ad_id as adid 
             FROM local
-            LIMIT $offset, $limit'
+            LIMIT $offset, $limit"
         );
         $locals = [];
 

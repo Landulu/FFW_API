@@ -19,10 +19,10 @@ class ArticleService {
 
     public function create(Article $article): ?Article {
         $manager = DatabaseManager::getManager();
-        $affectedRows = $manager->exec('
-        INSERT INTO
+        $affectedRows = $manager->exec(
+        "INSERT INTO
         article (name, category)
-        VALUES (?, ?)', [
+        VALUES (?, ?)", [
             $article->getName(),
             $article->getCategory(),
             ]);
@@ -36,12 +36,12 @@ class ArticleService {
     public function getAll($offset, $limit) {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll(
-        'SELECT 
+        "SELECT 
         a_id as aid,
         name,
         category
         FROM article
-        LIMIT $offset, $limit'
+        LIMIT $offset, $limit"
         );
         $articles = [];
 
@@ -54,11 +54,11 @@ class ArticleService {
 
     public function update(Article $article): ?Article {
         $manager = DatabaseManager::getManager();
-        $affectedRows = $manager->exec('
-        UPDATE article
+        $affectedRows = $manager->exec(
+        "UPDATE article
         SET 
         name = ?, 
-        category =  ?', [
+        category =  ?", [
             $article->getName(),
             $article->getCategory(),
             ]);

@@ -20,10 +20,15 @@ class ProductService {
 
     public function create(Product $product): ?Product {
         $manager = DatabaseManager::getManager();
-        $affectedRows = $manager->exec('
-        INSERT INTO
-        product (limit_date, state, article_a_id, basket_b_id, room_r_id)
-        VALUES (?, ?, ?, ?)', [
+        $affectedRows = $manager->exec(
+        "INSERT INTO
+        product (
+        limit_date, 
+        state, 
+        article_a_id, 
+        basket_b_id, 
+        room_r_id)
+        VALUES (?, ?, ?, ?, ?)", [
             $product->getLimitDate(),
             $product->getState(),
             $product->getArticleId(),
@@ -31,7 +36,7 @@ class ProductService {
             $product->getRoomId()
             ]);
         if ($affectedRows > 0) {
-            $product->setVId($manager->lastInsertId());
+            $product->setPrId($manager->lastInsertId());
             return $product;
         }
         return NULL;
@@ -39,8 +44,8 @@ class ProductService {
 
     public function getAll($offset, $limit) {
         $manager = DatabaseManager::getManager();
-        $rows = $manager->getAll('
-        SELECT product.pr_id as prid, 
+        $rows = $manager->getAll(
+        "SELECT product.pr_id as prid, 
                 product.limit_date as limitdate, 
                 product.state as state, 
                 product.article_a_id as articleId, 
@@ -52,7 +57,7 @@ class ProductService {
         JOIN room ON room.r_id = product.room_r_id
         JOIN article ON article.a_id = product.article_a_id
         
-        LIMIT $offset, $limit'
+        LIMIT $offset, $limit"
         );
         $products = [];
 
@@ -68,7 +73,7 @@ class ProductService {
     public function getAllByRoom($room_id, $offset, $limit) {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll(
-            'SELECT product.pr_id as prid, 
+            "SELECT product.pr_id as prid, 
                 product.limit_date as limitdate, 
                 product.state as state, 
                 product.article_a_id as articleId, 
@@ -79,7 +84,7 @@ class ProductService {
             FROM product
             JOIN room ON room.r_id = product.room_r_id AND room.r_id = ?
             JOIN article ON article.a_id = product.article_a_id
-            LIMIT $offset, $limit',
+            LIMIT $offset, $limit",
         [$room_id]);
         
         $products = [];
@@ -92,13 +97,13 @@ class ProductService {
 
     public function update(Product $product): ?Product {
         $manager = DatabaseManager::getManager();
-        $affectedRows = $manager->exec('
-        UPDATE products
+        $affectedRows = $manager->exec(
+        "UPDATE products
         set limit_date = ?, 
         state = ?, 
         article_a_id = ?, 
         basket_b_id = ?, 
-        room_r_id = ?)', [
+        room_r_id = ?)", [
             $product->getLimitDate(),
             $product->getState(),
             $product->getArticleId(),
@@ -119,7 +124,7 @@ class ProductService {
         FROM product
         WHERE pr_id = ?'
         , [$prid]);
-        if (sizeof($product)  > 0) {
+        if ($product) {
             return $product;
         }
     }
@@ -129,10 +134,10 @@ class ProductService {
         $affectedRows = 0;
         foreach ($productIds as $key => $value) {
             
-            $affectedRows += $manager->exec('
-                UPDATE product
+            $affectedRows += $manager->exec(
+                "UPDATE product
                 SET room_r_id = ?
-                WHERE pr_id = ?',
+                WHERE pr_id = ?",
                 [
                     $roomId,
                     $value
@@ -148,9 +153,9 @@ class ProductService {
         $manager = DatabaseManager::getManager();
         $affectedRows = 0;
         foreach($product_ids as $key => $value){
-            $affectedRows += $manager->exec('
-            DELETE FROM product WHERE pr_id=?
-            ', [$value]);
+            $affectedRows += $manager->exec(
+            "DELETE FROM product WHERE pr_id=?
+            ", [$value]);
         }
         if($affectedRows>0){
             return $affectedRows;

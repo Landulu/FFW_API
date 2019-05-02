@@ -18,10 +18,10 @@ class RoomService {
 
     public function create(Room $room): ?Room {
         $manager = DatabaseManager::getManager();
-        $affectedRows = $manager->exec('
-        INSERT INTO
+        $affectedRows = $manager->exec(
+        "INSERT INTO
         room (name, is_unavailable, is_stockroom, local_lo_id)
-        VALUES (?, ?, ?, ?)', [
+        VALUES (?, ?, ?, ?)", [
         $room->getName(),
         $room->getIsUnavailable(),
         $room->getIsStockroom(),
@@ -36,10 +36,10 @@ class RoomService {
 
     public function getOne($id):?Room {
         $manager = DatabaseManager::getManager();
-        $room = $manager->getOne('
-        SELECT * FROM
+        $room = $manager->getOne(
+        "SELECT * FROM
         room
-        WHERE r_id = ?',
+        WHERE r_id = ?",
         [$id]
         );
         if ($room) {
@@ -61,14 +61,14 @@ class RoomService {
     public function getAll($offset, $limit) {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll(
-        'SELECT 
+        "SELECT 
         r_id as rid,
         name, 
         is_unavailable as isUnavailable,
         is_stockroom as isStockroom,
         local_lo_id as loid
         FROM room
-        LIMIT $offset, $limit'
+        LIMIT $offset, $limit"
         );
         $rooms = [];
 
@@ -83,7 +83,7 @@ class RoomService {
     public function getAllByLocal($lo_id, $offset, $limit) {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll(
-        'SELECT 
+        "SELECT 
         room.r_id as rid,
         room.name, 
         room.is_unavailable as isUnavailable,
@@ -91,7 +91,7 @@ class RoomService {
         room.local_lo_id as loid
         from room 
         JOIN local ON room.local_lo_id = local.lo_id AND local.lo_id = ?
-        LIMIT $offset, $limit',
+        LIMIT $offset, $limit",
         [$lo_id]
         );
         foreach ($rows as $row) {
@@ -102,12 +102,12 @@ class RoomService {
 
     public function update(Room $room): ?Room {
         $manager = DatabaseManager::getManager();
-        $affectedRows = $manager->exec('
-        UPDATE room
+        $affectedRows = $manager->exec(
+        "UPDATE room
         set name = ?, 
         is_unavailable = ?, 
         is_stockroom = ?, 
-        local_lo_id = ?)', [
+        local_lo_id = ?)", [
         $room->getName(),
         $room->getIsUnavailable(),
         $room->getIsStockroom(),
