@@ -18,17 +18,17 @@ class User implements JsonSerializable {
     public function __construct(array $fields) {
         $this->uid = isset($fields['uid']) ? $fields['uid'] : NULL;
         $this->email = $fields['email'];
-        $this->tel = $fields['tel'];
+        $this->tel = isset($fields['tel']) ? $fields['tel'] : NULL;
         $this->password = $fields['password'];
         $this->firstname = $fields['firstname'];
         $this->lastname = $fields['lastname'];
-        $this->status = $fields['status'];
-        $this->rights = $fields['rights'];
-        $this->lastSubcription = $fields['lastSubcription'];
-        $this->endSubscription = $fields['endSubscription'];
-        $this->lastEdit = $fields['lastEdit'];
-        $this->companyName = $fields['companyName'];
-        $this->addressId = $fields['addressId'];
+        $this->status = isset($fields['status']) ? $fields['status'] : NULL;
+        $this->rights = isset($fields['rights']) ? $fields['rights'] : NULL;
+        $this->lastSubcription = isset($fields['lastSubcription']) ? $fields['lastSubcription'] : NULL;
+        $this->endSubscription = isset($fields['endSubscription']) ? $fields['endSubscription'] : NULL;
+        $this->lastEdit = isset($fields['lastEdit']) ? $fields['lastEdit'] : NULL;
+        $this->companyName = isset($fields['companyName']) ? $fields['companyName'] : NULL;
+        $this->addressId = isset($fields['addressId']) ? $fields['addressId'] : NULL;
     }
 
     public function getUid(): ?int {return $this->uid;}
@@ -37,11 +37,11 @@ class User implements JsonSerializable {
     public function getPassword(): string {return $this->password;}
     public function getFirstname(): string {return $this->firstname;}
     public function getLastname(): string {return $this->lastname;}
-    public function getStatus(): string {return $this->status;}
-    public function getRights(): string {return $this->rights;}
-    public function getLastSubscription(): string {return $this->lastSubscription;}
-    public function getEndSubscription(): string {return $this->endSubscription;}
-    public function getLastEdit(): string {return $this->lastEdit;}
+    public function getStatus(): ?string {return $this->status;}
+    public function getRights(): ?string {return $this->rights;}
+    public function getLastSubscription(): ?string {return $this->lastSubscription;}
+    public function getEndSubscription(): ?string {return $this->endSubscription;}
+    public function getLastEdit(): ?string {return $this->lastEdit;}
     public function getCompanyName(): ?string {return $this->companyName;}
     public function getAddressId(): ?int {return $this->addressId;}
 
