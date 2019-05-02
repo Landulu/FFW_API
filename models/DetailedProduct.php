@@ -1,6 +1,6 @@
 <?php
 
-class Product implements JsonSerializable {
+class DetailedProduct implements JsonSerializable {
 
     private $prid;
     private $limitDate;
