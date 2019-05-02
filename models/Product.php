@@ -14,15 +14,15 @@ class Product implements JsonSerializable {
         $this->limitDate = $fields['limitDate'];
         $this->state = $fields['state'];
         $this->articleId = $fields['articleId'];
-        $this->basketId = $fields['basketId'];
+        $this->basketId = isset($fields['basketId'])? $field['basketId'] : NULL;
         $this->roomId = $fields['roomId'];
     }
 
-    public function getAid(): int { return $this->prid;}
+    public function getAid(): ?int { return $this->prid;}
     public function getLimitDate(): string { return $this->limitDate;}
     public function getState(): string { return $this->state;}
-    public function getArticleId(): int { return $this->articleId;}
-    public function getBasketId(): int { return $this->basketId;}
+    public function getArticleId(): string { return $this->articleId;}
+    public function getBasketId(): ?int { return $this->basketId;}
     public function getRoomId(): int { return $this->roomId;}
 
 
