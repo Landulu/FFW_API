@@ -23,7 +23,7 @@ class ProductService {
         $affectedRows = $manager->exec('
         INSERT INTO
         product (limit_date, state, article_a_id, basket_b_id, room_r_id)
-        VALUES (?, ?, ?, ?)', [
+        VALUES (?, ?, ?, ?, ?)', [
             $product->getLimitDate(),
             $product->getState(),
             $product->getArticleId(),
@@ -31,7 +31,7 @@ class ProductService {
             $product->getRoomId()
             ]);
         if ($affectedRows > 0) {
-            $product->setVId($manager->lastInsertId());
+            $product->setPrId($manager->lastInsertId());
             return $product;
         }
         return NULL;
@@ -39,9 +39,9 @@ class ProductService {
 
     public function getAll($offset, $limit) {
         $manager = DatabaseManager::getManager();
-        $rows = $manager->getAll('
-        SELECT product.pr_id as prid, 
-                product.limit_date as limitdate, 
+        $rows = $manager->getAll(
+        "SELECT product.pr_id as prid, 
+                product.limit_date as limitDate, 
                 product.state as state, 
                 product.article_a_id as articleId, 
                 product.basket_b_id as basketId, 
@@ -52,14 +52,14 @@ class ProductService {
         JOIN room ON room.r_id = product.room_r_id
         JOIN article ON article.a_id = product.article_a_id
         
-        LIMIT $offset, $limit'
+        LIMIT $offset, $limit"
         );
         $products = [];
 
         foreach ($rows as $row) {
             $products[] = new DetailedProduct($row);
         }
-        return products;
+        return $products;
     }
 
 
@@ -68,8 +68,8 @@ class ProductService {
     public function getAllByRoom($room_id, $offset, $limit) {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll(
-            'SELECT product.pr_id as prid, 
-                product.limit_date as limitdate, 
+            "SELECT product.pr_id as prid, 
+                product.limit_date as limitDate, 
                 product.state as state, 
                 product.article_a_id as articleId, 
                 product.basket_b_id as basketId, 
@@ -79,7 +79,7 @@ class ProductService {
             FROM product
             JOIN room ON room.r_id = product.room_r_id AND room.r_id = ?
             JOIN article ON article.a_id = product.article_a_id
-            LIMIT $offset, $limit',
+            LIMIT $offset, $limit",
         [$room_id]);
         
         $products = [];
@@ -87,7 +87,7 @@ class ProductService {
         foreach ($rows as $row) {
             $products[] = new DetailedProduct($row);
         }
-        return products;
+        return $products;
     }
 
     public function update(Product $product): ?Product {

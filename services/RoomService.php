@@ -83,7 +83,7 @@ class RoomService {
     public function getAllByLocal($lo_id, $offset, $limit) {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll(
-        'SELECT 
+        "SELECT 
         room.r_id as rid,
         room.name, 
         room.is_unavailable as isUnavailable,
@@ -91,13 +91,15 @@ class RoomService {
         room.local_lo_id as loid
         from room 
         JOIN local ON room.local_lo_id = local.lo_id AND local.lo_id = ?
-        LIMIT $offset, $limit',
+        LIMIT $offset, $limit",
         [$lo_id]
         );
-        foreach ($rows as $row) {
-            $rooms[] = new Room($row);
+        if($rows){
+            foreach ($rows as $row) {
+                $rooms[] = new Room($row);
+            }
+            return $rooms;
         }
-        return $rooms;
     }
 
     public function update(Room $room): ?Room {
