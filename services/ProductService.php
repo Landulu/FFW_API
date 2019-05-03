@@ -20,10 +20,15 @@ class ProductService {
 
     public function create(Product $product): ?Product {
         $manager = DatabaseManager::getManager();
-        $affectedRows = $manager->exec('
-        INSERT INTO
-        product (limit_date, state, article_a_id, basket_b_id, room_r_id)
-        VALUES (?, ?, ?, ?, ?)', [
+        $affectedRows = $manager->exec(
+        "INSERT INTO
+        product (
+        limit_date, 
+        state, 
+        article_a_id, 
+        basket_b_id, 
+        room_r_id)
+        VALUES (?, ?, ?, ?, ?)", [
             $product->getLimitDate(),
             $product->getState(),
             $product->getArticleId(),
@@ -92,13 +97,13 @@ class ProductService {
 
     public function update(Product $product): ?Product {
         $manager = DatabaseManager::getManager();
-        $affectedRows = $manager->exec('
-        UPDATE products
+        $affectedRows = $manager->exec(
+        "UPDATE products
         set limit_date = ?, 
         state = ?, 
         article_a_id = ?, 
         basket_b_id = ?, 
-        room_r_id = ?)', [
+        room_r_id = ?)", [
             $product->getLimitDate(),
             $product->getState(),
             $product->getArticleId(),
@@ -119,7 +124,7 @@ class ProductService {
         FROM product
         WHERE pr_id = ?'
         , [$prid]);
-        if (sizeof($product)  > 0) {
+        if ($product) {
             return $product;
         }
     }
@@ -129,10 +134,10 @@ class ProductService {
         $affectedRows = 0;
         foreach ($productIds as $key => $value) {
             
-            $affectedRows += $manager->exec('
-                UPDATE product
+            $affectedRows += $manager->exec(
+                "UPDATE product
                 SET room_r_id = ?
-                WHERE pr_id = ?',
+                WHERE pr_id = ?",
                 [
                     $roomId,
                     $value
@@ -148,9 +153,9 @@ class ProductService {
         $manager = DatabaseManager::getManager();
         $affectedRows = 0;
         foreach($product_ids as $key => $value){
-            $affectedRows += $manager->exec('
-            DELETE FROM product WHERE pr_id=?
-            ', [$value]);
+            $affectedRows += $manager->exec(
+            "DELETE FROM product WHERE pr_id=?
+            ", [$value]);
         }
         if($affectedRows>0){
             return $affectedRows;

@@ -19,8 +19,8 @@ class Company {
 
     public function create(Company $company): ?Company {
         $manager = DatabaseManager::getManager();
-        $affectedRows = $manager->exec('
-        INSERT INTO
+        $affectedRows = $manager->exec(
+        "INSERT INTO
         company 
         (SIRET, 
         status, 
@@ -28,7 +28,7 @@ class Company {
         address_ad_id,
         tel,
         user_u_id)
-        VALUES (?, ?, ?, ?, ?, ?)', [
+        VALUES (?, ?, ?, ?, ?, ?)", [
             $company->getSiret(),
             $company->getStatus(),
             $company->getName(),
@@ -46,7 +46,7 @@ class Company {
     public function getAll($offset, $limit) {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll(
-        'SELECT 
+        "SELECT 
         co_id as coid,
         SIRET,
         status, 
@@ -55,7 +55,7 @@ class Company {
         tel,
         user_u_id as userId 
         from company
-        LIMIT $offset, $limit'
+        LIMIT $offset, $limit"
         );
         $locals = [];
 
@@ -68,14 +68,14 @@ class Company {
 
     public function update(Company $company): ?Company {
         $manager = DatabaseManager::getManager();
-        $affectedRows = $manager->exec('
-        UPDATE company
+        $affectedRows = $manager->exec(
+        "UPDATE company
         SET SIRET = ?, 
         status = ?, 
         name = ?, 
         address_ad_id = ?,
         tel = ?,
-        user_u_id = ?', [
+        user_u_id = ?", [
             $company->getSiret(),
             $company->getStatus(),
             $company->getName(),

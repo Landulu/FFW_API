@@ -20,9 +20,17 @@ class BasketService {
 
     public function create(Basket $basket): ?Basket {
         $manager = DatabaseManager::getManager();
-        $affectedRows = $manager->exec('
-        INSERT INTO
-        basket (b_id, create_time, validation_status, role, processed, order, service_ser_id, company_co_id, external_ex_id, user_u_id )
+        $affectedRows = $manager->exec(
+        'INSERT INTO
+        basket (b_id, 
+        create_time, 
+        validation_status, 
+        role, 
+        processed, 
+        order, 
+        service_ser_id, 
+        company_co_id, 
+        external_ex_id, user_u_id )
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [
             $basket->getBId(),
             $basket->getCreateTime(),
@@ -44,7 +52,7 @@ class BasketService {
     public function getAll($offset, $limit) {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll(
-        'SELECT 
+        "SELECT 
         b_id as bid,
         create_time as createTime,
         validation_status as validationStatus,
@@ -56,7 +64,7 @@ class BasketService {
         external_ex_id as externalId,
         user_u_id as userId
         FROM basket
-        LIMIT $offset, $limit'
+        LIMIT $offset, $limit"
         );
         $baskets = [];
 
@@ -69,12 +77,12 @@ class BasketService {
     
     public function getOne(int $bid) {
         $manager = DatabaseManager::getManager();
-        $basket = $manager->getOne('
-        select * 
+        $basket = $manager->getOne(
+        "SELECT * 
         FROM basket
-        WHERE b_id = ?'
+        WHERE b_id = ?"
         , [$bid]);
-        if (sizeof($basket)  > 0) {
+        if ($basket) {
             return $basket;
         }
     }
@@ -82,7 +90,7 @@ class BasketService {
     public function getAllByUser($userId, $offset, $limit) {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll(
-        'SELECT 
+        "SELECT 
         b_id as bid,
         create_time as createTime,
         validation_status as validationStatus,
@@ -95,7 +103,7 @@ class BasketService {
         user_u_id as userId
         FROM basket
         WHERE user_u_id
-        LIMIT $offset, $limit',
+        LIMIT $offset, $limit",
         [$userId]);
         $baskets = [];
 
