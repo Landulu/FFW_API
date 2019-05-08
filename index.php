@@ -2,25 +2,52 @@
 
 ini_set('display_errors', 1);
 
-include_once 'Request.php';
-include_once 'Router.php';
-$router = new Router(new Request);
+header('Content-Type: application/json');
 
 
-$router->get('/', function() {
-  return <<<HTML
-  <h1>Hello world</h1>
-HTML;
-});
+
+// include_once 'utils/routing/Request.php';
+// include_once 'utils/routing/Router.php';
 
 
-$router->get('/profile', function($request) {
-  return <<<HTML
-  <h1>Profile</h1>
-HTML;
-});
+include_once 'api/controllers/AppController.php';
+
+$appController = AppController::getController();
+echo json_encode($appController->proccessQuery($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']));
 
 
-$router->post('/data', function($request) {
-  return json_encode($request->getBody());
-});
+// echo $appController->proccessQuery($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
+
+
+// $router = new Router(new Request);
+
+
+// $router->get('/', function() {
+
+// });
+
+
+// $router->get('/profile', function($request) {
+//   return <<<HTML
+//   <h1>Profile</h1>
+// HTML;
+// });
+
+
+// $router->post('/data', function($request) {
+//   return json_encode($request->getBody());
+// });
+
+// $router->post('/locals', function($request) {
+//   return json_encode($request->getBody());
+// });
+
+
+
+// $router->get('/locals', function($request) {
+
+//   $urlArray = 
+//   return 
+// });
+
+

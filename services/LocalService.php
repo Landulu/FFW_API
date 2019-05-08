@@ -51,6 +51,21 @@ class LocalService {
         return $locals;
     }
 
+    public function getOne($loid) {
+        $manager = DatabaseManager::getManager();
+        $local = $manager->getOne(
+            "SELECT 
+            lo_id as loid,
+            name, 
+            address_ad_id as adid 
+            FROM local
+            WHERE lo_id = ?", [$loid]
+        );
+        if ($local) {
+            return new Local($local);
+        }
+    }
+
 }
 
 
