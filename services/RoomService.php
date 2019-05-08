@@ -94,10 +94,12 @@ class RoomService {
         LIMIT $offset, $limit",
         [$lo_id]
         );
-        foreach ($rows as $row) {
-            $rooms[] = new Room($row);
+        if($rows){
+            foreach ($rows as $row) {
+                $rooms[] = new Room($row);
+            }
+            return $rooms;
         }
-        return $rooms;
     }
 
     public function update(Room $room): ?Room {

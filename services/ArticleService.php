@@ -69,6 +69,18 @@ class ArticleService {
         return NULL;
     }
 
+    public function getOne(string $aid) {
+        $manager = DatabaseManager::getManager();
+        $article = $manager->getOne('
+        select * 
+        FROM article
+        WHERE a_id = ?'
+        , [$aid]);
+        if ($article) {
+            return $article;
+        }
+    }
+
 }
 
 ?>

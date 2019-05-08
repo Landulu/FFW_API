@@ -46,7 +46,7 @@ class ProductService {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll(
         "SELECT product.pr_id as prid, 
-                product.limit_date as limitdate, 
+                product.limit_date as limitDate, 
                 product.state as state, 
                 product.article_a_id as articleId, 
                 product.basket_b_id as basketId, 
@@ -64,7 +64,7 @@ class ProductService {
         foreach ($rows as $row) {
             $products[] = new DetailedProduct($row);
         }
-        return products;
+        return $products;
     }
 
 
@@ -74,7 +74,7 @@ class ProductService {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll(
             "SELECT product.pr_id as prid, 
-                product.limit_date as limitdate, 
+                product.limit_date as limitDate, 
                 product.state as state, 
                 product.article_a_id as articleId, 
                 product.basket_b_id as basketId, 
@@ -92,7 +92,7 @@ class ProductService {
         foreach ($rows as $row) {
             $products[] = new DetailedProduct($row);
         }
-        return products;
+        return $products;
     }
 
     public function update(Product $product): ?Product {
