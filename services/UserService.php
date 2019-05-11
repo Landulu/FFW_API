@@ -102,8 +102,8 @@ class UserService {
         $user = $manager->getOne(
         "SELECT * 
         FROM user
-        WHERE email LIKE ?"
-        , ["%" . $email . "%"]);
+        WHERE email = ?"
+        , [$email]);
         if ($user) {
             return $user;
         }

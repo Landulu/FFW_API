@@ -81,7 +81,7 @@ class RoomsController {
         // get products by room Id
         if ( count($urlArray) == 3
         && ctype_digit($urlArray[1]) 
-        && $urlArray[2] = 'products'
+        && $urlArray[2] == 'products'
         && $method == 'GET') {
 
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
@@ -89,7 +89,7 @@ class RoomsController {
             
             $products = ProductService::getInstance()->getAllByRoom($urlArray[1], $offset, $limit);
             if($products) {
-                http_response_code(200);
+                http_response_code(233);
                 return $products;
             } else {
                 http_response_code(400);

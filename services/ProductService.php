@@ -85,14 +85,15 @@ class ProductService {
             JOIN room ON room.r_id = product.room_r_id AND room.r_id = ?
             JOIN article ON article.a_id = product.article_a_id
             LIMIT $offset, $limit",
-        [$room_id]);
-        
+            [$room_id]
+            );
         $products = [];
-
-        foreach ($rows as $row) {
-            $products[] = new DetailedProduct($row);
+        if($rows) {   
+            foreach ($rows as $row) {
+                $products[] = new DetailedProduct($row);
+            }
+            return $products;
         }
-        return $products;
     }
 
     public function update(Product $product): ?Product {

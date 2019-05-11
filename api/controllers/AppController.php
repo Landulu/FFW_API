@@ -46,9 +46,13 @@ class AppController {
             case 'addresses':
                 
             case 'articles':
-                # code...
+                $articlesController = ArticlesController::getController();
+                $result = $articlesController->proccessQuery(array_slice($urlArray, 1), $method);
+                return $result;
             case 'baskets':
-                # code...
+                $basketsController = BasketsController::getController();
+                $result = $basketsController->proccessQuery(array_slice($urlArray, 1), $method);
+                return $result;
             case 'companies':
                 # code...
             case 'locals':
@@ -66,11 +70,13 @@ class AppController {
             case 'services':
                 # code...
             case 'users':
-                # code...
+                $usersController = UsersController::getController();
+                $result = $usersController->proccessQuery(array_slice($urlArray, 1), $method);
+                return $result;
             case 'vehicles':
                 # code...
             default:
-                # code...
+                http_response_code(404);
                 break;
         }
 

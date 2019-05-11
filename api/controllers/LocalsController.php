@@ -30,7 +30,11 @@ class LocalsController {
 
 
         //get all
+        /*
+            locals/ (GET)
+        */
         if ( count($urlArray) == 1 && $method == 'GET') {
+
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
@@ -40,6 +44,9 @@ class LocalsController {
 
 
         //create local
+        /*
+            locals/ (POST)
+        */
         if ( count($urlArray) == 1 && $method == 'POST') {
             $json = file_get_contents('php://input'); 
             $obj = json_decode($json, true);
@@ -54,7 +61,12 @@ class LocalsController {
         }
 
         // get One by Id
-        if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
+        /*
+            locals/{int} (GET)
+        */
+        if ( count($urlArray) == 2 
+        && ctype_digit($urlArray[1]) 
+        && $method == 'GET') {
 
             $local = LocalService::getInstance()->getOne($urlArray[1]);
             if($local) {
@@ -68,7 +80,7 @@ class LocalsController {
         // get room by local Id
         if ( count($urlArray) == 3
         && ctype_digit($urlArray[1]) 
-        && $urlArray[2] = 'rooms'
+        && $urlArray[2] == 'rooms'
         && $method == 'GET') {
 
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
