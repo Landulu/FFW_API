@@ -114,6 +114,20 @@ class BasketService {
         return $baskets;
     }
 
+    public function affectProductToBasket($prid, $bid) {
+        $manager = DatabaseManager::getManager();
+        $affectedRows = $manager->exec(
+        'INSERT INTO
+        basket_has_article (basket_b_id, product_pr_id)
+        VALUES (?, ?)', [
+           $bid, $prid
+            ]);
+        if ($affectedRows > 0) {
+            return 1;
+        }
+        return 0;
+    }
+
     // public function update(Product $product): ?Product {
     //     $manager = DatabaseManager::getManager();
     //     $affectedRows = $manager->exec('

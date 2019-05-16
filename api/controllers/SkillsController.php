@@ -4,10 +4,10 @@
 include_once 'utils/routing/Request.php';
 include_once 'utils/routing/Router.php';
 
-include_once 'services/BasketService.php';
+include_once 'services/SkillService.php';
 
 
-class BasketsController {
+class SkillsController {
 
 
     private static $controller;
@@ -17,9 +17,9 @@ class BasketsController {
     private function __construct(){}
 
     
-    public static function getController(): BasketsController {
+    public static function getController(): SkillsController {
         if(!isset(self::$controller)) {
-            self::$controller = new BasketsController();
+            self::$controller = new SkillsController();
         }
         return self::$controller;
     }
@@ -27,26 +27,25 @@ class BasketsController {
 
     public function proccessQuery($urlArray, $method) {
 
-
         //get all
         if ( count($urlArray) == 1 && $method == 'GET') {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-            $baskets = Basketservice::getInstance()->getAll($offset, $limit);
-            return $baskets;
+            $skills = SkillService::getInstance()->getAll($offset, $limit);
+            return $skills;
         }
 
 
-        //create basket
+        //create article
         if ( count($urlArray) == 1 && $method == 'POST') {
             $json = file_get_contents('php://input'); 
             $obj = json_decode($json, true);
             
-            $newBasket = Basketservice::getInstance()->create(new Basket($obj));
-            if($newBasket) {
+            $newSkill = SkillService::getInstance()->create(new Skill($obj));
+            if($newSkill) {
                 http_response_code(201);
-                return $newBasket;
+                return $newSkill;
             } else {
                 http_response_code(400);
             }
@@ -55,10 +54,10 @@ class BasketsController {
         // get One by Id
         if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
 
-            $basket = Basketservice::getInstance()->getOne($urlArray[1]);
-            if($basket) {
+            $skill = SkillService::getInstance()->getOne($urlArray[1]);
+            if($skill) {
                 http_response_code(200);
-                return $basket;
+                return $skill;
             } else {
                 http_response_code(400);
             }
@@ -66,4 +65,5 @@ class BasketsController {
 
         
     }
+
 }

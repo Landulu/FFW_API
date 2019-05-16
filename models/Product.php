@@ -15,7 +15,7 @@ class Product implements JsonSerializable {
         $this->state = $fields['state'];
         $this->articleId = $fields['articleId'];
         $this->basketId = isset($fields['basketId'])? $field['basketId'] : NULL;
-        $this->roomId = $fields['roomId'];
+        $this->roomId = isset($fields['roomId'])? $fields['roomId'] : NULL;
     }
 
     public function getAid(): ?int { return $this->prid;}

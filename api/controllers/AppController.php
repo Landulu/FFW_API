@@ -7,6 +7,11 @@ include_once 'utils/routing/Router.php';
 
 include_once 'api/controllers/RoomsController.php';
 include_once 'api/controllers/LocalsController.php';
+include_once 'api/controllers/ArticlesController.php';
+include_once 'api/controllers/BasketsController.php';
+include_once 'api/controllers/UsersController.php';
+include_once 'api/controllers/SkillsController.php';
+include_once 'api/controllers/ServicesController.php';
 
 
 
@@ -68,10 +73,16 @@ class AppController {
             case 'scanners':
                 # code...
             case 'services':
-                # code...
+                $servicesController = ServicesController::getController();
+                $result = $servicesController->proccessQuery(array_slice($urlArray, 1), $method);
+                return $result;
             case 'users':
                 $usersController = UsersController::getController();
                 $result = $usersController->proccessQuery(array_slice($urlArray, 1), $method);
+                return $result;
+            case 'skills':
+                $skillsController = SkillsController::getController();
+                $result = $skillsController->proccessQuery(array_slice($urlArray, 1), $method);
                 return $result;
             case 'vehicles':
                 # code...

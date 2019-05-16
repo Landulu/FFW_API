@@ -4,20 +4,18 @@ class Product implements JsonSerializable {
 
     private $bid;
     private $createTime;
-    private $validationStatus;
+    private $status;
     private $role;
-    private $processed;
     private $serviceId;
     private $companyId;
     private $externalId;
     private $userId;
 
     public function __construct(array $fields) {
-        $this->pid = isset($fields['bid']) ? $fields['bid'] : NULL;
+        $this->bid = isset($fields['bid']) ? $fields['bid'] : NULL;
         $this->createTime = $fields['createTime'];
-        $this->validationStatus = $fields['validationStatus'];
+        $this->status = $fields['status'];
         $this->role = $fields['role'];  // in or out or trans
-        $this->processed = $fields['processed'];
         $this->serviceId = isset($fields['serviceId']) ? $fields['serviceId'] : NULL;
         $this->companyId = isset($fields['companyId']) ? $fields['companyId'] : NULL;
         $this->externalId = isset($fields['externalId']) ? $fields['externalId'] : NULL;
