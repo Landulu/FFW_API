@@ -11,6 +11,7 @@ include_once 'api/controllers/ArticlesController.php';
 include_once 'api/controllers/BasketsController.php';
 include_once 'api/controllers/UsersController.php';
 include_once 'api/controllers/SkillsController.php';
+include_once 'api/controllers/ExternalsController.php';
 include_once 'api/controllers/ServicesController.php';
 
 
@@ -60,6 +61,9 @@ class AppController {
                 return $result;
             case 'companies':
                 # code...
+            case 'externals':
+                $externalsController = ExternalsController::getController();
+                $result = $externalsController->proccessQuery(array_slice($urlArray, 1), $method);
             case 'locals':
                 $localsController = LocalsController::getController();
                 $result = $localsController->proccessQuery(array_slice($urlArray, 1), $method);
