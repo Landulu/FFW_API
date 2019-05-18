@@ -71,6 +71,24 @@ class UsersController {
             }
         } 
 
+
+        // update One by Id
+        /*
+            /users/{uid}
+        */
+        if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'PUT') {
+            $json = file_get_contents('php://input'); 
+            $obj = json_decode($json, true);
+            
+            $newUser = UserService::getInstance()->update(new User($obj));
+            if($newUser) {
+                http_response_code(201);
+                return $newUser;
+            } else {
+                http_response_code(400);
+            }
+        } 
+
         // get One by email
         /*
             users/byemail
@@ -239,9 +257,6 @@ class UsersController {
                             }
                         }
                         
-                        
-                        
-
 
                     }
      

@@ -112,6 +112,27 @@ class ProductsController {
         } 
 
 
+         /*
+        PUT: 'products/{int}'
+        */
+        // update One by Id
+        if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'PUT') {
+
+            $json = file_get_contents('php://input'); 
+            $obj = json_decode($json, true);
+
+            $product = new Product($obj);
+
+            $product = ProductService::getInstance()->update($product);
+            if($product) {
+                http_response_code(200);
+                return $product;
+            } else {
+                http_response_code(400);
+            }
+        } 
+
+
         /*
         GET: 'products/{int}'
         */

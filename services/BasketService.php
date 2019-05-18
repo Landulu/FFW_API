@@ -24,19 +24,18 @@ class BasketService {
         'INSERT INTO
         basket (b_id, 
         create_time, 
-        validation_status, 
+        status, 
         role, 
-        processed, 
         order, 
         service_ser_id, 
         company_co_id, 
-        external_ex_id, user_u_id )
+        external_ex_id, 
+        user_u_id ) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [
             $basket->getBId(),
             $basket->getCreateTime(),
-            $basket->getValidationStatus(),
+            $basket->getStatus(),
             $basket->getRole(),
-            $basket->getProcessed(),
             $basket->getServiceId(),
             $basket->getCompanyId(),
             $basket->getExternalId(),
@@ -55,9 +54,8 @@ class BasketService {
         "SELECT 
         b_id as bid,
         create_time as createTime,
-        validation_status as validationStatus,
+        status,
         role,
-        processed,
         order,
         service_ser_id as serviceId,
         company_co_id as companyId,
@@ -93,9 +91,8 @@ class BasketService {
         "SELECT 
         b_id as bid,
         create_time as createTime,
-        validation_status as validationStatus,
+        status,
         role,
-        processed,
         order,
         service_ser_id as serviceId,
         company_co_id as companyId,

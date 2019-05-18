@@ -16,25 +16,6 @@ class CurlManager
         return self::$manager;
     }
 
-
-    // public function exec($options) {
-        
-    //     $curl_handle = curl_init();
-        
-    //     curl_setopt_array($curl_handle,$options);
-    //     $server_output = curl_exec($curl_handle);
-    //     $curlError = curl_error($curl_handle);
-        
-    //     curl_close($curl_handle);
-        
-    //     if ($server_output === false) {
-    //         return  $curlError;
-    //     } else {
-    //         return $server_output;
-    //     }
-        
-    // }
-
     public function curlGet($url, array $get = NULL, array $options = array()){   
         $defaults = array(
             CURLOPT_URL => $url. (strpos($url, '?') === FALSE ? '?' : ''). http_build_query($get? $get : []),

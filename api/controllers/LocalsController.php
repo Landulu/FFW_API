@@ -50,7 +50,6 @@ class LocalsController {
         if ( count($urlArray) == 1 && $method == 'POST') {
             $json = file_get_contents('php://input'); 
             $obj = json_decode($json, true);
-            
             $newLocal = LocalService::getInstance()->create(new Local($obj));
             if($newLocal) {
                 http_response_code(201);
