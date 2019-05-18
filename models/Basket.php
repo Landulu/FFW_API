@@ -1,6 +1,6 @@
 <?php
 
-class Product implements JsonSerializable {
+class Basket implements JsonSerializable {
 
     private $bid;
     private $createTime;
