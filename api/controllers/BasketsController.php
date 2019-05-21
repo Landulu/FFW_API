@@ -8,6 +8,7 @@ include_once 'services/BasketService.php';
 include_once 'services/UserService.php';
 include_once 'services/CompanyService.php';
 include_once 'services/ExternalService.php';
+include_once 'services/DetailedBasket.php';
 
 
 class BasketsController {
@@ -82,11 +83,44 @@ class BasketsController {
                 $baskets = Basketservice::getInstance()->getAllByStatus($status, $offset, $limit);
                 foreach ($baskets as $basket) {
                     if($basket->getCompanyId()) {
-                        $company =
+                        // $company =
                     } else if ($basket->getExternalId()) {
+                        $external = ExternalService::getInstance()->getOne($basket->getExternalId());
+                        if ($external->getAddressId()) {
+                            $address = AddressService::getInstance()->getOne($external->getAddressId());
+                            if ($address) {
+                                $basketElement = new DetailedBasket([
+                                    "createTime" => $basket->getCreateTime(),
+                                    "status" => $basket->getStatus(),
+                                    "role" => $basket->getRole(),
+                                    "externalId" => $basket->getExternalId(),
+                                    "entityName" => $external->getName() != null ? $external->getName() :"Nom inféfini",
+                                    "tel" => $external->getTel() != null ? $external->getTel() : null,
+                                    "addressId" => $address->getAdId(),
+                                    "addressZipCode" => $address->getCityCode(),
+                                    "addressName" => $address->getStreetAddress(). ' ' . $address->getCityName()
+                                ]);
+                            }
+                        }
 
                     } else if ($basket->getUserId()) {
-
+                        $user = UserService::getInstance()->getOne($basket->getUserId());
+                        if ($user->getAddressId()) {
+                            $address = AddressService::getInstance()->getOne($user->getAddressId());
+                            if ($address) {
+                                $basketElement = new DetailedBasket([
+                                    "createTime" => $basket->getCreateTime(),
+                                    "status" => $basket->getStatus(),
+                                    "role" => $basket->getRole(),
+                                    "userId" => $basket->getUserId(),
+                                    "entityName" => $user->getLastname() . ' ' . $user->getFirstName(),
+                                    "tel" => $user->getTel() != null ? $user->getTel() : null,
+                                    "addressId" => $address->getAdId(),
+                                    "addressZipCode" => $address->getCityCode(),
+                                    "addressName" => $address->getStreetAddress(). ' ' . $address->getCityName()
+                                ]);
+                            }
+                        }
                     }
                 }
 

@@ -242,7 +242,7 @@ class UsersController {
                                     "state" => isset($peremptionProduct['state'])? $peremptionProduct['state'] : null,
                                     "quantityUnit" => isset($peremptionProduct['quantityUnit'])? $peremptionProduct['quantityUnit'] : null,
                                     "weightQuantity" => isset($peremptionProduct['weightQuantity'])? $peremptionProduct['weightQuantity'] : null,
-                                    "articleId" => $article->getAid()
+                                    "articleId" => $article->getAid(),
                                 ));
 
                                 $product = ProductService::getInstance()->create($newProduct);

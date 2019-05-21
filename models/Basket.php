@@ -27,6 +27,9 @@ class Basket implements JsonSerializable {
     public function getCompanyId() {return $this->companyId;}
     public function getExternalId() {return $this->externalId;}
     public function getUserId() {return $this->userId;}
+    public function getCreateTime() {return $this->createTime;}
+    public function getRole() {return $this->role;}
+
 
     public function setBId($id) {
         $this->bid = $id;
