@@ -72,12 +72,14 @@ class ArticleService {
     public function getOne(string $aid) {
         $manager = DatabaseManager::getManager();
         $article = $manager->getOne('
-        select * 
+        select a_id as aid,
+        name,
+        category
         FROM article
         WHERE a_id = ?'
         , [$aid]);
         if ($article) {
-            return $article;
+            return new Article($article);
         }
     }
 

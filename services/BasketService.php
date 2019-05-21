@@ -111,19 +111,46 @@ class BasketService {
         return $baskets;
     }
 
-    public function affectProductToBasket($prid, $bid) {
+
+    public function getAllByStatus($status, $offset, $limit) {
         $manager = DatabaseManager::getManager();
-        $affectedRows = $manager->exec(
-        'INSERT INTO
-        basket_has_article (basket_b_id, product_pr_id)
-        VALUES (?, ?)', [
-           $bid, $prid
-            ]);
-        if ($affectedRows > 0) {
-            return 1;
+        $rows = $manager->getAll(
+            "SELECT 
+        b_id as bid,
+        create_time as createTime,
+        status,
+        role,
+        order,
+        service_ser_id as serviceId,
+        company_co_id as companyId,
+        external_ex_id as externalId,
+        user_u_id as userId
+        FROM basket
+        WHERE status = ?
+        LIMIT $offset, $limit",
+            [$status]);
+        $baskets = [];
+
+        foreach ($rows as $row) {
+            $baskets[] = new Basket($row);
         }
-        return 0;
+
+        return $baskets;
     }
+
+//    public function affectProductToBasket($prid, $bid) {
+//        $manager = DatabaseManager::getManager();
+//        $affectedRows = $manager->exec(
+//        'INSERT INTO
+//        basket_has_article (basket_b_id, product_pr_id)
+//        VALUES (?, ?)', [
+//           $bid, $prid
+//            ]);
+//        if ($affectedRows > 0) {
+//            return 1;
+//        }
+//        return 0;
+//    }
 
     // public function update(Product $product): ?Product {
     //     $manager = DatabaseManager::getManager();

@@ -28,19 +28,19 @@ class Basket implements JsonSerializable {
     public function getExternalId() {return $this->externalId;}
     public function getUserId() {return $this->userId;}
 
-    public function setBId($îd) {
+    public function setBId($id) {
         $this->bid = $id;
     }
-    public function setServiceId($îd) {
+    public function setServiceId($id) {
         $this->serviceId = $id;
     }
-    public function setCompanyId($îd) {
+    public function setCompanyId($id) {
         $this->companyId = $id;
     }
-    public function setExternalId($îd) {
+    public function setExternalId($id) {
         $this->externalId = $id;
     }
-    public function setUserId($îd) {
+    public function setUserId($id) {
         $this->userId = $id;
     }
 

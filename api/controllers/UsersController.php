@@ -8,6 +8,7 @@ include_once 'services/UserService.php';
 include_once 'services/BasketService.php';
 include_once 'services/SkillService.php';
 include_once 'services/ProductService.php';
+include_once 'services/ArticleService.php';
 
 
 
@@ -190,7 +191,7 @@ class UsersController {
         */
         if ( count($urlArray) == 3
         && ctype_digit($urlArray[1]) 
-        && $urlArray[2] == 'skills'
+        && $urlArray[2] == 'basket'
         && $method == 'POST') {
             $json = file_get_contents('php://input'); 
             $basket = json_decode($json, true);
@@ -210,11 +211,11 @@ class UsersController {
                     foreach ($basket['products'] as $productGroup) {
 
 
-                        $article = ArticleService::getInstance()->getOne($productGroup['product']);
+                        $article = ArticleService::getInstance()->getOne($productGroup['barcode']);
 
                         if ($article == null) {
                             
-                            $url = "https://world.openfoodfacts.org/api/v0/product/" . $product.getArticleId() . ".json";
+                            $url = "https://world.openfoodfacts.org/api/v0/product/" . $productGroup['barcode'] . ".json";
 
                             $curlArticle = json_decode(CurlManager::getManager()->curlGet($url));
                             
@@ -234,17 +235,20 @@ class UsersController {
                         }
 
                         foreach ($productGroup['peremptions'] as $peremptionProduct) {
-                            for ($i=0; $i < $finalProducts['quantity']; $i++) { 
+                            $quantity = isset($peremptionProduct['quantity'])? $peremptionProduct['quantity'] : 1;
+                            for ($i=0; $i < $quantity; $i++) {
                                 $newProduct = new Product(array(
                                     "limitDate" => $peremptionProduct['limitDate'],
                                     "state" => isset($peremptionProduct['state'])? $peremptionProduct['state'] : null,
-                                    "articleId" => $article.getAid()
+                                    "quantityUnit" => isset($peremptionProduct['quantityUnit'])? $peremptionProduct['quantityUnit'] : null,
+                                    "weightQuantity" => isset($peremptionProduct['weightQuantity'])? $peremptionProduct['weightQuantity'] : null,
+                                    "articleId" => $article->getAid()
                                 ));
 
                                 $product = ProductService::getInstance()->create($newProduct);
 
                                 if( $product) {
-                                    $inserted= BasketService::getInstance()->affectProductToBasket($product.getPrId(), $createdBasket.getBId());
+                                    $inserted= BasketService::getInstance()->affectProductToBasket($product->getPrid(), $createdBasket->getBId());
                                     if ($inserted) {
                                         return $basket;
                                     } else {
