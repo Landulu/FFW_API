@@ -100,7 +100,20 @@ class UserService {
     public function getOneByEmail(string $email) {
         $manager = DatabaseManager::getManager();
         $user = $manager->getOne(
-        "SELECT * 
+            "SELECT
+        u_id as uid, 
+        email, 
+        password, 
+        firstname, 
+        lastname,  
+        last_subscription as lastSubscription, 
+        end_subscription as endSubscription, 
+        last_edit as lastEdit, 
+        company_name as companyName, 
+        address_ad_id as addressId, 
+        status, 
+        rights,
+        tel
         FROM user
         WHERE email = ?"
         , [$email]);
