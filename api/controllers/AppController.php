@@ -46,6 +46,10 @@ class AppController {
         $url = $this->formatRoute($url);
 
         $urlArray = explode('/', $url);
+        $lastElement = $urlArray[count($urlArray) - 1];
+        if (strpos($lastElement, '?') !== false) {
+            $urlArray[count($urlArray) - 1] = explode('?', $lastElement)[0];
+        }
         $sorter = $urlArray[1];
 
         switch ($sorter) {
