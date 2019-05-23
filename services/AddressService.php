@@ -18,10 +18,10 @@ class AddressService {
 
     public function create(Address $address): ?Address {
         $manager = DatabaseManager::getManager();
-        $affectedRows = $manager->exec('
-        INSERT INTO
+        $affectedRows = $manager->exec(
+        "INSERT INTO
         address (street_address, city_name, city_code, country)
-        VALUES (?, ?, ?, ?)', [
+        VALUES (?, ?, ?, ?)", [
             $address->getStreetAddress(),
             $address->getCityName(),
             $address->getCityCode(),
@@ -34,15 +34,25 @@ class AddressService {
         return NULL;
     }
 
-    public function getAll() {
+    public function getAll($offset, $limit) {
         $manager = DatabaseManager::getManager();
-        $rows = $manager->getAll('
-        SELECT * from
-        address'
+        $rows = $manager->getAll( 
+        "SELECT 
+        ad_id as adid,
+        street_address as streetAddress,
+        city_name as cityName,
+        city_code as cityCode,
+        country as country
+        from
+        address
+        LIMIT $offset, $limit"
         );
-        if (sizeof($rows)  > 0) {
-            return $rows;
+        $addresses = [];
+
+        foreach ($rows as $row) {
+            $addresses[] = new Address($row);
         }
+
         return $addresses;
     }
 
@@ -70,12 +80,12 @@ class AddressService {
 
     public function update(Address $address): ?Address {
         $manager = DatabaseManager::getManager();
-        $affectedRows = $manager->exec('
-        UPDATE adress
+        $affectedRows = $manager->exec(
+        "UPDATE adress
         SET street_address = ?, 
         city_name = ?, 
         city_code = ?, 
-        country = ?', [
+        country = ?", [
             $address->getStreetAddress(),
             $address->getCityName(),
             $address->getCityCode(),

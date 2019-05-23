@@ -5,16 +5,12 @@ header('Content-Type: application/json');
 
 
 require_once __DIR__ . '/../../services/ProductService.php';
+$offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
+$limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
 
-$products = ProductService::getInstance()->getAll();
-if($products) {
-    http_response_code(200);
+
+$products = ProductService::getInstance()->getAll($offset, $limit);
     echo json_encode($products);
-} else {
-    http_response_code(400);
-}
-
-
 
 ?>

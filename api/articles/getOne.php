@@ -6,8 +6,9 @@ header('Content-Type: application/json');
 
 require_once __DIR__ . '/../../services/ArticleService.php';
 
+$articleId = $_GET['a_id'];
 
-$article = ArticleService::getInstance()->getOne();
+$article = ArticleService::getInstance()->getOne($articleId);
 if($article) {
     http_response_code(200);
     echo json_encode($article);

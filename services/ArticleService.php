@@ -19,10 +19,10 @@ class ArticleService {
 
     public function create(Article $article): ?Article {
         $manager = DatabaseManager::getManager();
-        $affectedRows = $manager->exec('
-        INSERT INTO
+        $affectedRows = $manager->exec(
+        "INSERT INTO
         article (name, category)
-        VALUES (?, ?)', [
+        VALUES (?, ?)", [
             $article->getName(),
             $article->getCategory(),
             ]);
@@ -33,24 +33,32 @@ class ArticleService {
         return NULL;
     }
 
-    public function getAll() {
+    public function getAll($offset, $limit) {
         $manager = DatabaseManager::getManager();
-        $rows = $manager->getAll('
-        SELECT * from
-        article'
+        $rows = $manager->getAll(
+        "SELECT 
+        a_id as aid,
+        name,
+        category
+        FROM article
+        LIMIT $offset, $limit"
         );
-        if (sizeof($rows)  > 0) {
-            return $rows;
+        $articles = [];
+
+        foreach ($rows as $row) {
+            $articles[] = new Article($row);
         }
+
+        return $articles;
     }
 
     public function update(Article $article): ?Article {
         $manager = DatabaseManager::getManager();
-        $affectedRows = $manager->exec('
-        UPDATE article
+        $affectedRows = $manager->exec(
+        "UPDATE article
         SET 
         name = ?, 
-        category =  ?', [
+        category =  ?", [
             $article->getName(),
             $article->getCategory(),
             ]);
@@ -59,6 +67,20 @@ class ArticleService {
             return $article;
         }
         return NULL;
+    }
+
+    public function getOne(string $aid) {
+        $manager = DatabaseManager::getManager();
+        $article = $manager->getOne('
+        select a_id as aid,
+        name,
+        category
+        FROM article
+        WHERE a_id = ?'
+        , [$aid]);
+        if ($article) {
+            return new Article($article);
+        }
     }
 
 }

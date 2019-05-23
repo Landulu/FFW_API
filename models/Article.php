@@ -11,7 +11,7 @@ class Article implements JsonSerializable {
         $this->category = $fields['category'];
     }
 
-    public function getAid(): int { return $this->aid;}
+    public function getAid():? int { return $this->aid;}
     public function getName(): string { return $this->name;}
     public function getCategory(): string { return $this->category;}
 

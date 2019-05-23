@@ -20,8 +20,8 @@ class UserService {
 
     public function create(User $user): ?User {
         $manager = DatabaseManager::getManager();
-        $affectedRows = $manager->exec('
-        INSERT INTO
+        $affectedRows = $manager->exec(
+        "INSERT INTO
         user (email, 
             password, 
             firstname, 
@@ -34,7 +34,7 @@ class UserService {
             status, 
             rights,
             tel)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
             $user->getEmail(),
             password_hash($user->getPassword(), PASSWORD_DEFAULT),
             $user->getFirstname(),
@@ -55,46 +55,77 @@ class UserService {
         return NULL;
     }
 
-    public function getAll() {
+    public function getAll($offset, $limit) {
         $manager = DatabaseManager::getManager();
-        $rows = $manager->getAll('
-        SELECT * from
-        address'
+        $rows = $manager->getAll(
+        "SELECT
+        u_id as uid, 
+        email, 
+        password, 
+        firstname, 
+        lastname,  
+        last_subscription as lastSubscription, 
+        end_subscription as endSubscription, 
+        last_edit as lastEdit, 
+        company_name as companyName, 
+        address_ad_id as addressId, 
+        status, 
+        rights,
+        tel
+        FROM user
+        LIMIT $offset, $limit"
         );
-        if (sizeof($rows)  > 0) {
-            return $rows;
+        $users = [];
+
+        foreach ($rows as $row) {
+            $users[] = new User($row);
         }
+
+        return $users;
     }
 
 
     public function getOne(int $uid) {
         $manager = DatabaseManager::getManager();
-        $user = $manager->getOne('
-        select * 
+        $user = $manager->getOne(
+        "SELECT * 
         FROM user
-        WHERE u_id = ?'
+        WHERE u_id = ?"
         , [$uid]);
-        if (sizeof($user)  > 0) {
+        if ($user) {
             return $user;
         }
     }
 
     public function getOneByEmail(string $email) {
         $manager = DatabaseManager::getManager();
-        $user = $manager->getOne('
-        select * 
+        $user = $manager->getOne(
+            "SELECT
+        u_id as uid, 
+        email, 
+        password, 
+        firstname, 
+        lastname,  
+        last_subscription as lastSubscription, 
+        end_subscription as endSubscription, 
+        last_edit as lastEdit, 
+        company_name as companyName, 
+        address_ad_id as addressId, 
+        status, 
+        rights,
+        tel
         FROM user
-        WHERE email LIKE ?'
-        , ["%" . $email . "%"]);
-        if (sizeof($user)  > 0) {
+        WHERE email = ?"
+        , [$email]);
+        if ($user) {
             return $user;
         }
     }
 
     public function update(User $user): ?User {
         $manager = DatabaseManager::getManager();
-        $affectedRows = $manager->exec('
-        UPDATE user
+        $affectedRows = $manager->exec(
+        "UPDATE user
         SET email = ?, 
             password = ?, 
             firstname = ?, 
@@ -106,7 +137,7 @@ class UserService {
             address_ad_id = ?,
             status = ?,
             rights = ?,
-            tel = ?', [
+            tel = ?", [
             $user->getEmail(),
             password_hash($user->getPassword(), PASSWORD_DEFAULT),
             $user->getFirstname(),

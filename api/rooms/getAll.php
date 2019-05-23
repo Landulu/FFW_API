@@ -6,14 +6,12 @@ header('Content-Type: application/json');
 
 require_once __DIR__ . '/../../services/RoomService.php';
 
+$offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
+$limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-$rooms = RoomService::getInstance()->getAll();
-if($rooms) {
-    http_response_code(200);
-    echo (json_encode($rooms));
-} else {
-    http_response_code(400);
-}
+
+$rooms = RoomService::getInstance()->getAll($offset, $limit);
+echo json_encode($rooms);
 
 
 

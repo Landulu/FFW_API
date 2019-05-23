@@ -12,7 +12,7 @@ include_once 'api/controllers/BasketsController.php';
 include_once 'api/controllers/UsersController.php';
 include_once 'api/controllers/SkillsController.php';
 include_once 'api/controllers/ExternalsController.php';
-//include_once 'api/controllers/ServicesController.php';
+// include_once 'api/controllers/ServicesController.php';
 
 
 
@@ -60,9 +60,7 @@ class AppController {
                 $result = $basketsController->proccessQuery(array_slice($urlArray, 1), $method);
                 return $result;
             case 'companies':
-                $companiesController = CompaniesController::getController();
-                $result = $companiesController->proccessQuery(array_slice($urlArray, 1), $method);
-                return $result;
+                # code...
             case 'externals':
                 $externalsController = ExternalsController::getController();
                 $result = $externalsController->proccessQuery(array_slice($urlArray, 1), $method);
