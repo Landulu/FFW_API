@@ -8,7 +8,9 @@ include_once 'services/BasketService.php';
 include_once 'services/UserService.php';
 include_once 'services/CompanyService.php';
 include_once 'services/ExternalService.php';
-include_once 'services/DetailedBasket.php';
+
+
+include_once 'models/DetailedBasket.php';
 
 
 class BasketsController {

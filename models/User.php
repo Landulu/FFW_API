@@ -24,7 +24,7 @@ class User implements JsonSerializable {
         $this->lastname = $fields['lastname'];
         $this->status = isset($fields['status']) ? $fields['status'] : NULL;
         $this->rights = isset($fields['rights']) ? $fields['rights'] : NULL;
-        $this->lastSubcription = isset($fields['lastSubcription']) ? $fields['lastSubcription'] : NULL;
+        $this->lastSubcription = isset($fields['lastSubscription']) ? $fields['lastSubscription'] : NULL;
         $this->endSubscription = isset($fields['endSubscription']) ? $fields['endSubscription'] : NULL;
         $this->lastEdit = isset($fields['lastEdit']) ? $fields['lastEdit'] : NULL;
         $this->companyName = isset($fields['companyName']) ? $fields['companyName'] : NULL;

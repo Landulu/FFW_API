@@ -4,7 +4,7 @@ require_once __DIR__.'/../models/Company.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
 
 
-class Company {
+class CompanyService {
     private static $instance;
 
     private function __construct(){}

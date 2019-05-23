@@ -12,6 +12,8 @@ header('Content-Type: application/json');
 include_once 'api/controllers/AppController.php';
 include_once 'utils/curl/CurlManager.php';
 
+include_once 'utils/pathfinding/CourseOptimiser.php';
+
 $appController = AppController::getController();
 echo json_encode($appController->proccessQuery($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']));
 
@@ -28,5 +30,16 @@ echo json_encode($appController->proccessQuery($_SERVER['REQUEST_URI'], $_SERVER
 
 // echo $appController->proccessQuery($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
 
+
+
+
+// $optimiser = CourseOptimiser::getInstance();
+
+// $adj[][] = [[0, 10, 15, 20], 
+//                         [10, 0, 35, 25], 
+//                         [15, 35, 0, 30], 
+//                         [20, 25, 30, 0] ]; 
+  
+// $optimiser->getShortestPath(adj); 
 
 

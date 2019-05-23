@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__.'/../models/Basket.php';
+require_once __DIR__.'/../models/DetailedBasket.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
 
 class BasketService {
