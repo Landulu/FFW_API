@@ -6,14 +6,14 @@ header('Content-Type: application/json');
 
 require_once __DIR__ . '/../../services/ArticleService.php';
 
+$offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
+$limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-$articles = ArticleService::getInstance()->getAll();
-if($articles) {
-    http_response_code(200);
-    echo json_encode($articles);
-} else {
-    http_response_code(400);
-}
+
+
+$articles = ArticleService::getInstance()->getAll($offset, $limit);
+
+echo json_encode($articles);
 
 
 

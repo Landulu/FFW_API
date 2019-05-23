@@ -1,23 +1,21 @@
 <?php
 
-class Product implements JsonSerializable {
+class Basket implements JsonSerializable {
 
     private $bid;
     private $createTime;
-    private $validationStatus;
+    private $status;
     private $role;
-    private $processed;
     private $serviceId;
     private $companyId;
     private $externalId;
     private $userId;
 
     public function __construct(array $fields) {
-        $this->pid = isset($fields['bid']) ? $fields['bid'] : NULL;
+        $this->bid = isset($fields['bid']) ? $fields['bid'] : NULL;
         $this->createTime = $fields['createTime'];
-        $this->validationStatus = $fields['validationStatus'];
+        $this->status = $fields['status'];
         $this->role = $fields['role'];  // in or out or trans
-        $this->processed = $fields['processed'];
         $this->serviceId = isset($fields['serviceId']) ? $fields['serviceId'] : NULL;
         $this->companyId = isset($fields['companyId']) ? $fields['companyId'] : NULL;
         $this->externalId = isset($fields['externalId']) ? $fields['externalId'] : NULL;
@@ -29,20 +27,23 @@ class Product implements JsonSerializable {
     public function getCompanyId() {return $this->companyId;}
     public function getExternalId() {return $this->externalId;}
     public function getUserId() {return $this->userId;}
+    public function getCreateTime() {return $this->createTime;}
+    public function getRole() {return $this->role;}
 
-    public function setBId($îd) {
+
+    public function setBId($id) {
         $this->bid = $id;
     }
-    public function setServiceId($îd) {
+    public function setServiceId($id) {
         $this->serviceId = $id;
     }
-    public function setCompanyId($îd) {
+    public function setCompanyId($id) {
         $this->companyId = $id;
     }
-    public function setExternalId($îd) {
+    public function setExternalId($id) {
         $this->externalId = $id;
     }
-    public function setUserId($îd) {
+    public function setUserId($id) {
         $this->userId = $id;
     }
 

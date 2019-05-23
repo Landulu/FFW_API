@@ -18,10 +18,10 @@ class RoomService {
 
     public function create(Room $room): ?Room {
         $manager = DatabaseManager::getManager();
-        $affectedRows = $manager->exec('
-        INSERT INTO
+        $affectedRows = $manager->exec(
+        "INSERT INTO
         room (name, is_unavailable, is_stockroom, local_lo_id)
-        VALUES (?, ?, ?, ?)', [
+        VALUES (?, ?, ?, ?)", [
         $room->getName(),
         $room->getIsUnavailable(),
         $room->getIsStockroom(),
@@ -36,10 +36,10 @@ class RoomService {
 
     public function getOne($id):?Room {
         $manager = DatabaseManager::getManager();
-        $room = $manager->getOne('
-        SELECT * FROM
+        $room = $manager->getOne(
+        "SELECT * FROM
         room
-        WHERE r_id = ?',
+        WHERE r_id = ?",
         [$id]
         );
         if ($room) {
@@ -58,39 +58,58 @@ class RoomService {
         return $room;
     }
 
-    public function getAll() {
+    public function getAll($offset, $limit) {
         $manager = DatabaseManager::getManager();
-        $rows = $manager->getAll('
-        SELECT * from
-        room'
+        $rows = $manager->getAll(
+        "SELECT 
+        r_id as rid,
+        name, 
+        is_unavailable as isUnavailable,
+        is_stockroom as isStockroom,
+        local_lo_id as loid
+        FROM room
+        LIMIT $offset, $limit"
         );
-        if (sizeof($rows)  > 0) {
-            return $rows;
+        $rooms = [];
+
+        foreach ($rows as $row) {
+            $rooms[] = new Room($row);
         }
+        return $rooms;
     }
 
 
 
-    public function getAllByLocal($lo_id) {
+    public function getAllByLocal($lo_id, $offset, $limit) {
         $manager = DatabaseManager::getManager();
-        $rows = $manager->getAll('
-        SELECT room.name, local_lo_id, r_id, is_stockroom from room 
-        JOIN local ON room.local_lo_id = local.lo_id AND local.lo_id = ?',
-        [$lo_id]
-        );
-        if (sizeof($rows)  > 0) {
-            return $rows;
+        $rows = $manager->getAll(
+            "SELECT 
+                room.r_id as rid,
+                room.name, 
+                room.is_unavailable as isUnavailable,
+                room.is_stockroom as isStockroom,
+                room.local_lo_id as loid
+            FROM room 
+            JOIN local ON room.local_lo_id = local.lo_id AND local.lo_id = ?
+            LIMIT $offset, $limit",
+            [$lo_id]
+            );
+        if($rows){
+            foreach ($rows as $row) {
+                $rooms[] = new Room($row);
+            }
+            return $rooms;
         }
     }
 
     public function update(Room $room): ?Room {
         $manager = DatabaseManager::getManager();
-        $affectedRows = $manager->exec('
-        UPDATE room
+        $affectedRows = $manager->exec(
+        "UPDATE room
         set name = ?, 
         is_unavailable = ?, 
         is_stockroom = ?, 
-        local_lo_id = ?)', [
+        local_lo_id = ?)", [
         $room->getName(),
         $room->getIsUnavailable(),
         $room->getIsStockroom(),

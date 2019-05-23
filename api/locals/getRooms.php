@@ -7,9 +7,11 @@ header('Content-Type: application/json');
 require_once __DIR__ . '/../../services/RoomService.php';
 
 
+$offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
+$limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 $localId = $_GET['local'];
 
-$rooms = RoomService::getInstance()->getAllByLocal($localId);
+$rooms = RoomService::getInstance()->getAllByLocal($localId, $offset, $limit);
 
 if($rooms) {
     http_response_code(200);

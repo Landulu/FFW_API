@@ -19,10 +19,10 @@ class VehicleService {
 
     public function create(Vehicle $vehicle): ?Vehicle {
         $manager = DatabaseManager::getManager();
-        $affectedRows = $manager->exec('
-        INSERT INTO
+        $affectedRows = $manager->exec(
+        "INSERT INTO
         vehicle (volume, insurance_date, last_revision, description)
-        VALUES (?, ?, ?, ?)', [
+        VALUES (?, ?, ?, ?)", [
             $vehicle->getVolume(),
             $vehicle->getInsuranceDate(),
             $vehicle->getLastRevision(),
@@ -37,13 +37,23 @@ class VehicleService {
 
     public function getAll() {
         $manager = DatabaseManager::getManager();
-        $rows = $manager->getAll('
-        SELECT * from
-        vehicle'
+        $rows = $manager->getAll(
+        "SELECT 
+        v_id as vid, 
+        volume, 
+        insurance_date as insuranceDate,
+        last_revision as lastRevision,
+        description 
+        FROM vehicle
+        LIMIT $offset, $limit"
         );
-        if (sizeof($rows)  > 0) {
-            return $rows;
+        $vehicles = [];
+
+        foreach ($rows as $row) {
+            $vehicles[] = new Vehicle($row);
         }
+
+        return $vehicles;
     }
 
 }

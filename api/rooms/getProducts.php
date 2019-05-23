@@ -8,15 +8,14 @@ require_once __DIR__ . '/../../services/ProductService.php';
 
 
 $roomId = $_GET['room'];
+$offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
+$limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-$products = ProductService::getInstance()->getAllByRoom($roomId);
 
-if($products) {
-    http_response_code(200);
-    echo json_encode($products);
-} else {
-    http_response_code(204);
-}
+$products = ProductService::getInstance()->getAllByRoom($roomId, $offset, $limit);
+
+echo json_encode($products);
+
 
 
 

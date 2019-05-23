@@ -14,7 +14,7 @@ $user = UserService::getInstance()->getOneByEmail($userEmail);
 if($user) {
     if (isset($userPwd) && isset($user['password'])){
         if( password_verify($userPwd, $user['password'])){
-            return $user;
+            echo json_encode($user);
         } else {
             http_response_code(403);
         }
