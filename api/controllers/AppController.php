@@ -50,7 +50,9 @@ class AppController {
 
         switch ($sorter) {
             case 'addresses':
-
+                $addressesController = AddressesController::getController();
+                $result = $addressesController->proccessQuery(array_slice($urlArray, 1), $method);
+                return $result;
             case 'articles':
                 $articlesController = ArticlesController::getController();
                 $result = $articlesController->proccessQuery(array_slice($urlArray, 1), $method);
@@ -66,18 +68,21 @@ class AppController {
             case 'externals':
                 $externalsController = ExternalsController::getController();
                 $result = $externalsController->proccessQuery(array_slice($urlArray, 1), $method);
+                return $result;
             case 'locals':
                 $localsController = LocalsController::getController();
                 $result = $localsController->proccessQuery(array_slice($urlArray, 1), $method);
                 return $result;
             case 'products':
                 # code...
+                break;
             case 'rooms':
                 $roomsController = RoomsController::getController();
                 $result = $roomsController->proccessQuery(array_slice($urlArray, 1), $method);
                 return $result;
             case 'scanners':
                 # code...
+                break;
             case 'services':
                 $servicesController = ServicesController::getController();
                 $result = $servicesController->proccessQuery(array_slice($urlArray, 1), $method);
@@ -92,6 +97,7 @@ class AppController {
                 return $result;
             case 'vehicles':
                 # code...
+                break;
             default:
                 http_response_code(404);
                 break;
