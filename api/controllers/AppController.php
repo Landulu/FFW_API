@@ -12,19 +12,19 @@ include_once 'api/controllers/BasketsController.php';
 include_once 'api/controllers/UsersController.php';
 include_once 'api/controllers/SkillsController.php';
 include_once 'api/controllers/ExternalsController.php';
-// include_once 'api/controllers/ServicesController.php';
+//include_once 'api/controllers/ServicesController.php';
 
 
 
 class AppController {
 
     private static $controller;
-    
+
 
 
     private function __construct(){}
 
-    
+
     public static function getController(): AppController {
         if(!isset(self::$controller)) {
             self::$controller = new AppController();
@@ -35,10 +35,10 @@ class AppController {
     private function formatRoute($route) {
         $result = rtrim($route, '/');
         if ($result === '') {
-          return '/';
+            return '/';
         }
         return $result;
-      }
+    }
 
 
     public function proccessQuery($url, $method) {
@@ -50,7 +50,7 @@ class AppController {
 
         switch ($sorter) {
             case 'addresses':
-                
+
             case 'articles':
                 $articlesController = ArticlesController::getController();
                 $result = $articlesController->proccessQuery(array_slice($urlArray, 1), $method);
@@ -60,7 +60,9 @@ class AppController {
                 $result = $basketsController->proccessQuery(array_slice($urlArray, 1), $method);
                 return $result;
             case 'companies':
-                # code...
+                $companiesController = CompaniesController::getController();
+                $result = $companiesController->proccessQuery(array_slice($urlArray, 1), $method);
+                return $result;
             case 'externals':
                 $externalsController = ExternalsController::getController();
                 $result = $externalsController->proccessQuery(array_slice($urlArray, 1), $method);

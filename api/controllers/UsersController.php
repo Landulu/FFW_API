@@ -171,7 +171,29 @@ class UsersController {
                 http_response_code(400);
             }
 
-        } 
+        }
+
+                /*
+        GET: 'users/{int}/companies'
+        */
+        // get companies by userId
+        if ( count($urlArray) == 3
+            && ctype_digit($urlArray[1])
+            && $urlArray[2] == 'companies'
+            && $method == 'GET') {
+
+            $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
+            $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
+
+            $companies = CompanyService::getInstance()->getAllByUser($urlArray[1], $offset, $limit);
+            if($companies) {
+                http_response_code(233);
+                return $companies;
+            } else {
+                http_response_code(400);
+            }
+
+        }
 
 
         //authentication
