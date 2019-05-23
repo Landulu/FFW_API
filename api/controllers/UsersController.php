@@ -181,7 +181,24 @@ class UsersController {
         if ( count($urlArray) == 2
         && $urlArray[1] == 'authentication'
         && $method == 'GET') {
-            return 0;
+            $userEmail = urldecode($_GET['email']);
+            $userPwd = urldecode($_GET['password']);
+
+
+            $user = UserService::getInstance()->getOneByEmail($userEmail);
+            if($user) {
+                if (isset($userPwd) && isset($user['password'])){
+                    if( password_verify($userPwd, $user['password'])){
+                        echo json_encode($user);
+                    } else {
+                        http_response_code(403);
+                    }
+                } else {
+                    http_response_code(400);
+                }
+            } else {
+                http_response_code(400);
+            }
         }
 
 
