@@ -95,7 +95,7 @@ class UsersController {
             users/byemail
         */
         if ( count($urlArray) == 2
-        && $urlArray[2] == 'byemail'        
+        && isset($urlArray[2]) && $urlArray[2] == 'byemail'
         && $method == 'GET') {
 
             
@@ -206,12 +206,11 @@ class UsersController {
             $userEmail = urldecode($_GET['email']);
             $userPwd = urldecode($_GET['password']);
 
-
             $user = UserService::getInstance()->getOneByEmail($userEmail);
             if($user) {
                 if (isset($userPwd) && isset($user['password'])){
                     if( password_verify($userPwd, $user['password'])){
-                        echo json_encode($user);
+                        return $user;
                     } else {
                         http_response_code(403);
                     }

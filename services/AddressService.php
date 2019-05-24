@@ -43,6 +43,8 @@ class AddressService {
         city_name as cityName,
         city_code as cityCode,
         country as country
+        latitude,
+        longitude
         from
         address
         LIMIT $offset, $limit"
@@ -66,6 +68,8 @@ class AddressService {
         city_name as cityName,
         city_code as cityCode,
         country as country
+        latitude,
+        longitude
         FROM
         address
         WHERE ad_id = ?"
@@ -89,30 +93,15 @@ class AddressService {
             $address->getStreetAddress(),
             $address->getCityName(),
             $address->getCityCode(),
-            $address->getCountry()
+            $address->getCountry(),
+            $address->getLatitude(),
+            $address->getLongitude()
             ]);
         if ($affectedRows > 0) {
             $address->setAdId($manager->lastInsertId());
             return $address;
         }
         return NULL;
-    }
-
-    public function getOne($adid) {
-        $manager = DatabaseManager::getManager();
-        $address = $manager->getOne(
-            "SELECT 
-        ad_id as adid,
-        street_address as streetAddress,
-        city_name as cityName,
-        city_code as cityCode,
-        country as country
-            FROM address
-            WHERE ad_id = ?", [$adid]
-        );
-        if ($address) {
-            return new Address($address);
-        }
     }
 
 

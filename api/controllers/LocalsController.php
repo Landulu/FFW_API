@@ -39,7 +39,13 @@ class LocalsController {
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
             $locals = LocalService::getInstance()->getAll($offset, $limit);
-            return $locals;
+
+            if($locals) {
+                http_response_code(200);
+                return $locals;
+            } else {
+                http_response_code(400);
+            }
         }
 
 
