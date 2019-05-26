@@ -40,12 +40,31 @@ class AddressesController{
         }
 
 
-        //create article
+        //create address
         if ( count($urlArray) == 1 && $method == 'POST') {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-            $address = AddressService::getInstance()->create(new Article($obj));
+            $address = AddressService::getInstance()->create(new Address($obj));
+            if($address) {
+                http_response_code(201);
+                return $address;
+            } else {
+                http_response_code(400);
+            }
+        }
+
+        /*
+        PUT: 'address/{int}'
+        */
+        // update One by Id
+
+        if ( count($urlArray) == 2 && $method == 'PUT') {
+            $json = file_get_contents('php://input');
+            $obj = json_decode($json, true);
+
+            $address = AddressService::getInstance()->update(new Address($obj),$urlArray[1]);
+
             if($address) {
                 http_response_code(201);
                 return $address;

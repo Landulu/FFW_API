@@ -78,7 +78,7 @@ class SkillService {
         }
     }
 
-    public function getAllByUser(string $uid) {
+    public function getAllByUser(string $uid,$offset, $limit) {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll(
         "SELECT 
@@ -87,7 +87,8 @@ class SkillService {
         FROM skill sk
         JOIN user_has_skill uhs
         ON sk.sk_id = uhs.skill_sk_id
-        WHERE uhs.user_u_id = ?",
+        WHERE uhs.user_u_id = ? 
+        LIMIT $offset, $limit",
         [$uid]
         );
         $skills = [];
@@ -97,6 +98,22 @@ class SkillService {
         }
 
         return $skills;
+    }
+
+    public function affectSkillToUser(string $uid, $skid, $status)
+    {
+
+        $manager = DatabaseManager::getManager();
+        $affectedRows = $manager->exec(
+            "INSERT INTO user_has_skill 
+        VALUES(?,?,?)",
+            [$uid, $skid, $status]
+        );
+
+        if ($affectedRows > 0) {
+            return true;
+        }
+        return false;
     }
 
 }

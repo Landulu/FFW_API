@@ -162,8 +162,11 @@ class UsersController {
         && ctype_digit($urlArray[1]) 
         && $urlArray[2] == 'skills'
         && $method == 'GET') {
-            
-            $skills = SkillService::getInstance()->getAllByUser($urlArray[1]);
+
+            $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
+            $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
+
+            $skills = SkillService::getInstance()->getAllByUser($urlArray[1],$offset,$limit);
             if($skills) {
                 http_response_code(200);
                 return $skills;
@@ -171,6 +174,27 @@ class UsersController {
                 http_response_code(400);
             }
 
+        }
+
+        // add skills by userid
+        /*
+            /users/{int}/skills
+        */
+        if ( count($urlArray) == 3
+            && ctype_digit($urlArray[1])
+            && $urlArray[2] == 'skills'
+            && $method == 'POST') {
+
+            $json = file_get_contents('php://input');
+            $obj = json_decode($json, true);
+
+            $result = SkillService::getInstance()->affectSkillToUser($urlArray[1],$obj['skid'],$obj['status']);
+
+            if($result) {
+                http_response_code(200);
+            } else {
+                http_response_code(400);
+            }
         }
 
                 /*
@@ -187,7 +211,7 @@ class UsersController {
 
             $companies = CompanyService::getInstance()->getAllByUser($urlArray[1], $offset, $limit);
             if($companies) {
-                http_response_code(233);
+                http_response_code(200);
                 return $companies;
             } else {
                 http_response_code(400);

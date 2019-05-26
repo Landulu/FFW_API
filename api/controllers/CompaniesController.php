@@ -41,7 +41,7 @@ class CompaniesController {
         /*
         POST: '/'
         */
-        //create room
+        //create company
         if ( count($urlArray) == 1 && $method == 'POST') {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
@@ -63,6 +63,27 @@ class CompaniesController {
         if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
 
             $company = CompanyService::getInstance()->getOne($urlArray[1]);
+            if($company) {
+                http_response_code(200);
+                return $company;
+            } else {
+                http_response_code(400);
+            }
+        }
+
+        /*
+        PUT: 'companies/{int}'
+        */
+        // update One by Id
+
+        if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'PUT') {
+
+            $json = file_get_contents('php://input');
+            $obj = json_decode($json, true);
+
+            $company = new Company($obj);
+
+            $company = CompanyService::getInstance()->update($company,$company->getCoId());
             if($company) {
                 http_response_code(200);
                 return $company;
