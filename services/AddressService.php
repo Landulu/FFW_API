@@ -65,7 +65,7 @@ class AddressService {
     }
 
     //Modifié le 22/05 Sacha BAILLEUL
-    public function getOne(string $addressId) {
+    public function getOne( $addressId) {
         $manager = DatabaseManager::getManager();
         $address = $manager->getOne(
             "SELECT 
@@ -117,6 +117,30 @@ class AddressService {
             return $address;
         }
         return NULL;
+    }
+
+    public function getOneByUserId( $uid) {
+        $manager = DatabaseManager::getManager();
+        $address = $manager->getOne(
+            "SELECT 
+        ad_id as adid,
+        house_number as houseNumber,
+        street_address as streetAddress,
+        complement,
+        city_name as cityName,
+        city_code as cityCode,
+        country as country,
+        latitude,
+        longitude
+        FROM
+        address
+        JOIN user ON ad_id = user.address_ad_id AND user.u_id = ?"
+            ,
+            [$uid]);
+
+        if($address){
+            return $address;
+        }
     }
 
 

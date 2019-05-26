@@ -1,6 +1,8 @@
 <?php
 
 require_once __DIR__.'/../models/User.php';
+require_once __DIR__.'/../models/CompleteUser.php';
+require_once __DIR__.'/../models/CompleteUser.php';
 require_once __DIR__.'/../utils/DateUtil.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
 
@@ -78,6 +80,48 @@ class UserService {
         $users = [];
 
         foreach ($rows as $row) {
+            $users[] = new CompleteUser($row);
+        }
+
+        return $users;
+    }
+
+    public function getAllFiltered($offset, $limit, $filters) {
+        $email = $filters['email'] ? $filters['email'] : '';
+        $firstname = $filters['firstname'] ? $filters['firstname'] : '';
+        $lastname = $filters['lastname'] ? $filters['lastname'] : '';
+        $skill =  $filters['skill'] ? $filters['skill'] : null;
+        $skillSQL = '';
+        if ($skill) {
+            $skillSQL = "JOIN user_has_skill uhs ON uhs.user_u_id = user.uid
+        JOIN skill ON skill.sk_id = ".$skill;
+        }
+        $manager = DatabaseManager::getManager();
+        $rows = $manager->getAll(
+            "SELECT
+        u_id as uid, 
+        email, 
+        password, 
+        firstname, 
+        lastname,  
+        last_subscription as lastSubscription, 
+        end_subscription as endSubscription, 
+        last_edit as lastEdit, 
+        company_name as companyName, 
+        address_ad_id as addressId, 
+        status, 
+        rights,
+        tel
+        FROM user
+        {$skill}
+        WHERE email LIKE '%{$email}%'
+        and firstname LIKE '%{$firstname}%'
+        and lastname LIKE '%{$lastname}%'
+        LIMIT $offset, $limit"
+        );
+        $users = [];
+
+        foreach ($rows as $row) {
             $users[] = new User($row);
         }
 
@@ -88,12 +132,25 @@ class UserService {
     public function getOne(int $uid) {
         $manager = DatabaseManager::getManager();
         $user = $manager->getOne(
-        "SELECT * 
+        "SELECT
+        u_id as uid, 
+        email, 
+        password, 
+        firstname, 
+        lastname,  
+        last_subscription as lastSubscription, 
+        end_subscription as endSubscription, 
+        last_edit as lastEdit, 
+        company_name as companyName, 
+        address_ad_id as addressId, 
+        status, 
+        rights,
+        tel
         FROM user
         WHERE u_id = ?"
         , [$uid]);
         if ($user) {
-            return $user;
+            return new CompleteUser($user);
         }
     }
 
@@ -160,6 +217,11 @@ class UserService {
 
     public function getAdherentsToday() {
         $todayDate = date("Y-m-d");
+    }
+
+
+    public function getAllBySkill(int $skid) {
+
     }
 
 }

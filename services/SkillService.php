@@ -78,7 +78,7 @@ class SkillService {
         }
     }
 
-    public function getAllByUser(string $uid,$offset, $limit) {
+    public function getAllByUser($uid,$offset, $limit) {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll(
         "SELECT 

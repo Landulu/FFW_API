@@ -3,10 +3,10 @@
 # rights status
 
 0 : suppr
+
 1 : just created
 2 :  volunteer
 4 :  adherent
-6 :  volunteer + adherent
 8 :  company
 
 16 : stock & collect & vehicles admin
