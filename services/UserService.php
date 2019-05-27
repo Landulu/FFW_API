@@ -87,13 +87,13 @@ class UserService {
     }
 
     public function getAllFiltered($offset, $limit, $filters) {
-        $email = $filters['email'] ? $filters['email'] : '';
-        $firstname = $filters['firstname'] ? $filters['firstname'] : '';
-        $lastname = $filters['lastname'] ? $filters['lastname'] : '';
-        $skill =  $filters['skill'] ? $filters['skill'] : null;
+        $email = isset($filters['email']) ? $filters['email'] : '';
+        $firstname = isset($filters['firstname']) ? $filters['firstname'] : '';
+        $lastname = isset($filters['lastname']) ? $filters['lastname'] : '';
+        $skill =  isset($filters['skill']) ? $filters['skill'] : null;
         $skillSQL = '';
         if ($skill) {
-            $skillSQL = "JOIN user_has_skill uhs ON uhs.user_u_id = user.uid
+            $skillSQL = "JOIN user_has_skill uhs ON uhs.user_u_id = user.u_id
         JOIN skill ON skill.sk_id = ".$skill;
         }
         $manager = DatabaseManager::getManager();
@@ -109,11 +109,11 @@ class UserService {
         last_edit as lastEdit, 
         company_name as companyName, 
         address_ad_id as addressId, 
-        status, 
+        user.status, 
         rights,
         tel
         FROM user
-        {$skill}
+        " . $skillSQL . "
         WHERE email LIKE '%{$email}%'
         and firstname LIKE '%{$firstname}%'
         and lastname LIKE '%{$lastname}%'
@@ -122,7 +122,7 @@ class UserService {
         $users = [];
 
         foreach ($rows as $row) {
-            $users[] = new User($row);
+            $users[] = new CompleteUser($row);
         }
 
         return $users;

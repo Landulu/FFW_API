@@ -50,7 +50,14 @@ class UsersController {
             if (count($params)) {
                 $users = Userservice::getInstance()->getAllFiltered($offset, $limit, $params);
                 foreach ($users as $user) {
-                    array_push($completeUsers, $this->decorateCompleteUser($user));
+                    if (isset($params['rights'])) {
+                        if ($this->isRightSet($user->getRights(), $params['rights'])) {
+                            array_push($completeUsers, $this->decorateCompleteUser($user));
+                        }
+
+                    } else {
+                        array_push($completeUsers, $this->decorateCompleteUser($user));
+                    }
                 }
             } else {
                 $users = Userservice::getInstance()->getAll($offset, $limit);
@@ -389,6 +396,15 @@ class UsersController {
         }
         http_response_code(200);
         return $completeUser;
+    }
+
+    function isRightSet($byteRight, $pos)
+    {
+        $new_num = $byteRight >> ($pos - 1);
+
+        // if it results to '1' then bit is set,
+        // else it results to '0' bit is unset
+        return ($new_num & 1);
     }
 
 }

@@ -11,7 +11,7 @@
 
 16 : stock & collect & vehicles admin
 32 : subscription admin
-64 : events & articles
+64 : events & announcements
 128 : Volunteers & employees, skills admin   === RIGHTS
 
 ==> 1111 1111 = TOUS LES DROITS = 255
