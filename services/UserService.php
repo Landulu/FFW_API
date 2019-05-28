@@ -91,12 +91,19 @@ class UserService {
         $firstname = isset($filters['firstname']) ? $filters['firstname'] : '';
         $lastname = isset($filters['lastname']) ? $filters['lastname'] : '';
         $skill =  isset($filters['skill']) ? $filters['skill'] : null;
+        $cityName = isset($filters['cityName']) ? $filters['cityName'] : null ;
         $skillSQL = '';
+        $cityNameSQL = '';
         if ($skill) {
-            $skillSQL = "JOIN user_has_skill uhs ON uhs.user_u_id = user.u_id
-        JOIN skill ON skill.sk_id = ".$skill;
+            $skillSQL = " JOIN (SELECT user_has_skill.user_u_id FROM user_has_skill WHERE  user_has_skill.skill_sk_id=$skill) AS uhs
+        ON uhs.user_u_id = user.u_id ";
+        }
+        if ($cityName) {
+            $cityNameSQL = " JOIN (SELECT address.ad_id FROM address WHERE  address.city_name LIKE '%{$cityName}%') AS addr
+        ON addr.ad_id = user.address_ad_id ";
         }
         $manager = DatabaseManager::getManager();
+
         $rows = $manager->getAll(
             "SELECT
         u_id as uid, 
@@ -113,7 +120,7 @@ class UserService {
         rights,
         tel
         FROM user
-        " . $skillSQL . "
+        " . $skillSQL .$cityNameSQL. "
         WHERE email LIKE '%{$email}%'
         and firstname LIKE '%{$firstname}%'
         and lastname LIKE '%{$lastname}%'
@@ -227,3 +234,4 @@ class UserService {
 }
 
 ?>
+

@@ -10,6 +10,7 @@ include_once 'services/BasketService.php';
 include_once 'services/SkillService.php';
 include_once 'services/ProductService.php';
 include_once 'services/ArticleService.php';
+include_once 'models/CompleteUser.php';
 
 
 
@@ -215,6 +216,29 @@ class UsersController {
             $result = SkillService::getInstance()->affectSkillToUser($urlArray[1],$obj['skid'],$obj['status']);
 
             if($result) {
+                return $result;
+                http_response_code(200);
+            } else {
+                http_response_code(400);
+            }
+        }
+
+        // update skills by userid
+        /*
+            /users/{int}/skills
+        */
+        if ( count($urlArray) == 3
+            && ctype_digit($urlArray[1])
+            && $urlArray[2] == 'skills'
+            && $method == 'PUT') {
+
+            $json = file_get_contents('php://input');
+            $obj = json_decode($json, true);
+
+            $result = SkillService::getInstance()->updateSkillByUser($urlArray[1],$obj['skid'],$obj['status']);
+
+            if($result) {
+                return $result;
                 http_response_code(200);
             } else {
                 http_response_code(400);
