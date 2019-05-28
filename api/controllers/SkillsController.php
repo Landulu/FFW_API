@@ -37,7 +37,7 @@ class SkillsController {
         }
 
 
-        //create article
+        //create skill
         if ( count($urlArray) == 1 && $method == 'POST') {
             $json = file_get_contents('php://input'); 
             $obj = json_decode($json, true);
@@ -61,9 +61,28 @@ class SkillsController {
             } else {
                 http_response_code(400);
             }
-        } 
+        }
 
-        
+
+        if ( count($urlArray) == 3
+            && ctype_digit($urlArray[1])
+            && $urlArray[2] == 'users'
+            && $method == 'GET') {
+
+            $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
+            $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
+
+            $users = UserService::getInstance()->getAllBySkill($urlArray[1], $offset, $limit);
+            if($users) {
+                http_response_code(200);
+                return $users;
+            } else {
+                http_response_code(400);
+            }
+
+        }
+
+
     }
 
 }

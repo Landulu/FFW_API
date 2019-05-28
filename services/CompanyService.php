@@ -11,7 +11,7 @@ class CompanyService {
 
     public static function getInstance(): CompanyService {
         if (!isset(self::$instance)) {
-            self::$instance = new Company();
+            self::$instance = new CompanyService();
         }
         return self::$instance;
     }
@@ -37,7 +37,7 @@ class CompanyService {
             $company->getUserId()
             ]);
         if ($affectedRows > 0) {
-            $company->setAdId($manager->lastInsertId());
+            $company->setCoId($manager->lastInsertId());
             return $company;
         }
         return NULL;
@@ -48,7 +48,7 @@ class CompanyService {
         $rows = $manager->getAll(
         "SELECT 
         co_id as coid,
-        SIRET,
+        SIRET as siret,
         status, 
         name, 
         address_ad_id as addressId,
@@ -66,7 +66,7 @@ class CompanyService {
         return $locals;
     }
 
-    public function update(Company $company): ?Company {
+    public function update(Company $company, $coid): ?Company {
         $manager = DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "UPDATE company
@@ -75,16 +75,17 @@ class CompanyService {
         name = ?, 
         address_ad_id = ?,
         tel = ?,
-        user_u_id = ?", [
+        user_u_id = ?
+        WHERE co_id=?", [
             $company->getSiret(),
             $company->getStatus(),
             $company->getName(),
             $company->getAddressId(),
             $company->getTel(),
-            $company->getUserId()
+            $company->getUserId(),
+            $coid
             ]);
         if ($affectedRows > 0) {
-            $company->setCoId($manager->lastInsertId());
             return $company;
         }
         return NULL;
@@ -96,7 +97,7 @@ class CompanyService {
         $rows = $manager->getAll(
             "SELECT 
         co_id AS coid,
-        company.SIRET,
+        company.SIRET as siret,
         company.status, 
         company.name, 
         company.address_ad_id AS addressId, 
@@ -106,10 +107,14 @@ class CompanyService {
         LIMIT $offset, $limit",
             [$user_id]
         );
-        foreach ($rows as $row) {
-            $company[] = new Company($row);
+        if(isset($rows)&&!empty($rows)){
+            foreach ($rows as $row) {
+                $company[] = new Company($row);
+            }
+            return $company;
         }
-        return $company;
+        return null;
+
     }
 
 }

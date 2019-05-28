@@ -12,6 +12,8 @@ include_once 'api/controllers/BasketsController.php';
 include_once 'api/controllers/UsersController.php';
 include_once 'api/controllers/SkillsController.php';
 include_once 'api/controllers/ExternalsController.php';
+include_once 'api/controllers/AddressesController.php';
+include_once 'api/controllers/CompaniesController.php';
 //include_once 'api/controllers/ServicesController.php';
 
 

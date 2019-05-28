@@ -38,7 +38,7 @@ class User implements JsonSerializable {
     public function getFirstname(): string {return $this->firstname;}
     public function getLastname(): string {return $this->lastname;}
     public function getStatus(): ?string {return $this->status;}
-    public function getRights(): ?string {return $this->rights;}
+    public function getRights(): ?int {return $this->rights;}
     public function getLastSubscription(): ?string {return $this->lastSubscription;}
     public function getEndSubscription(): ?string {return $this->endSubscription;}
     public function getLastEdit(): ?string {return $this->lastEdit;}

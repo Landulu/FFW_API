@@ -89,7 +89,7 @@ class RoomsController {
             
             $products = ProductService::getInstance()->getAllByRoom($urlArray[1], $offset, $limit);
             if($products) {
-                http_response_code(233);
+                http_response_code(200);
                 return $products;
             } else {
                 http_response_code(400);

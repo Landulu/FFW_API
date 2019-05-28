@@ -5,6 +5,7 @@ include_once 'utils/routing/Request.php';
 include_once 'utils/routing/Router.php';
 
 include_once 'services/UserService.php';
+include_once 'services/AddressService.php';
 include_once 'services/BasketService.php';
 include_once 'services/SkillService.php';
 include_once 'services/ProductService.php';
@@ -41,8 +42,49 @@ class UsersController {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-            $users = Userservice::getInstance()->getAll($offset, $limit);
-            return $users;
+//            $json = file_get_contents('php://input');
+//            $params = $json ? json_decode($json, true) : [];
+
+            $params = [];
+
+            if( $_GET['firstname']) {
+                $params['firstname'] = $_GET['firstname'];
+            }
+            if( $_GET['lastname']) {
+                $params['lastname'] = $_GET['lastname'];
+            }
+            if( $_GET['email']) {
+                $params['email'] = $_GET['email'];
+            }
+            if( $_GET['rights']) {
+                $params['rights'] = $_GET['rights'];
+            }
+            if( $_GET['skills']) {
+                $params['skills'] = $_GET['skill'];
+            }
+
+            $completeUsers = [];
+
+            if (count($params)) {
+                $users = Userservice::getInstance()->getAllFiltered($offset, $limit, $params);
+                foreach ($users as $user) {
+                    if (isset($params['rights'])) {
+                        if ($this->isRightSet($user->getRights(), $params['rights'])) {
+                            array_push($completeUsers, $this->decorateCompleteUser($user));
+                        }
+
+                    } else {
+                        array_push($completeUsers, $this->decorateCompleteUser($user));
+                    }
+                }
+            } else {
+                $users = Userservice::getInstance()->getAll($offset, $limit);
+                foreach ($users as $user) {
+                    array_push($completeUsers, $this->decorateCompleteUser($user));
+                }
+            }
+
+            return $completeUsers;
         }
 
 
@@ -63,10 +105,10 @@ class UsersController {
         // get One by Id
         if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
 
-            $user = UserService::getInstance()->getOne($urlArray[1]);
-            if($user) {
-                http_response_code(200);
-                return $user;
+            $completeUser = UserService::getInstance()->getOne($urlArray[1]);
+            if($completeUser) {
+                return $this->decorateCompleteUser($completeUser);
+
             } else {
                 http_response_code(400);
             }
@@ -95,17 +137,17 @@ class UsersController {
             users/byemail
         */
         if ( count($urlArray) == 2
-        && $urlArray[2] == 'byemail'        
+        && isset($urlArray[2]) && $urlArray[2] == 'byemail'
         && $method == 'GET') {
 
             
             if($_GET['email']) {
                 $userEmail = $_GET['email'];
 
-                $user = UserService::getInstance()->getOneByEmail($userEmail);
-                if($user) {
+                $completeUser = UserService::getInstance()->getOneByEmail($userEmail);
+                if($completeUser) {
                     http_response_code(200);
-                    return $user;
+                    return $completeUser;
                 } else {
                     http_response_code(400);
                 }
@@ -162,8 +204,11 @@ class UsersController {
         && ctype_digit($urlArray[1]) 
         && $urlArray[2] == 'skills'
         && $method == 'GET') {
-            
-            $skills = SkillService::getInstance()->getAllByUser($urlArray[1]);
+
+            $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
+            $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
+
+            $skills = SkillService::getInstance()->getAllByUser($urlArray[1],$offset,$limit);
             if($skills) {
                 http_response_code(200);
                 return $skills;
@@ -171,6 +216,27 @@ class UsersController {
                 http_response_code(400);
             }
 
+        }
+
+        // add skills by userid
+        /*
+            /users/{int}/skills
+        */
+        if ( count($urlArray) == 3
+            && ctype_digit($urlArray[1])
+            && $urlArray[2] == 'skills'
+            && $method == 'POST') {
+
+            $json = file_get_contents('php://input');
+            $obj = json_decode($json, true);
+
+            $result = SkillService::getInstance()->affectSkillToUser($urlArray[1],$obj['skid'],$obj['status']);
+
+            if($result) {
+                http_response_code(200);
+            } else {
+                http_response_code(400);
+            }
         }
 
                 /*
@@ -187,7 +253,7 @@ class UsersController {
 
             $companies = CompanyService::getInstance()->getAllByUser($urlArray[1], $offset, $limit);
             if($companies) {
-                http_response_code(233);
+                http_response_code(200);
                 return $companies;
             } else {
                 http_response_code(400);
@@ -206,12 +272,11 @@ class UsersController {
             $userEmail = urldecode($_GET['email']);
             $userPwd = urldecode($_GET['password']);
 
-
-            $user = UserService::getInstance()->getOneByEmail($userEmail);
-            if($user) {
-                if (isset($userPwd) && isset($user['password'])){
-                    if( password_verify($userPwd, $user['password'])){
-                        echo json_encode($user);
+            $completeUser = UserService::getInstance()->getOneByEmail($userEmail);
+            if($completeUser) {
+                if (isset($userPwd) && isset($completeUser['password'])){
+                    if( password_verify($userPwd, $completeUser['password'])){
+                        return $completeUser;
                     } else {
                         http_response_code(403);
                     }
@@ -316,4 +381,48 @@ class UsersController {
         
 
     }
+
+    private function decorateCompleteUser($completeUser) {
+        $offset = 0;
+        $limit = 20;
+        $skills = [];
+        $newSkills = [];
+        do {
+            $newSkills = SkillService::getInstance()->getAllByUser($completeUser->getUid(), $offset, $limit);
+            $skills = array_merge($skills, $newSkills);
+            $offset += 20;
+        } while (count($newSkills) == 20 );
+        if ($skills) {
+            $completeUser->setSkills($skills);
+        }
+
+        $address = AddressService::getInstance()->getOneByUserId($completeUser->getUid());
+        if($address) {
+            $completeUser->setAddress($address);
+        }
+
+        $offset = 0;
+        $companies = [];
+        $newCompanies = [];
+        do {
+            $newCompanies = CompanyService::getInstance()->getAllByUser($completeUser->getUid(), $offset, $limit);
+            $companies = array_merge($companies, $newCompanies);
+            $offset += 20;
+        } while (count($newCompanies) == 20);
+        if($companies) {
+            $completeUser->setCompanies($companies);
+        }
+        http_response_code(200);
+        return $completeUser;
+    }
+
+    function isRightSet($byteRight, $pos)
+    {
+        $new_num = $byteRight >> ($pos - 1);
+
+        // if it results to '1' then bit is set,
+        // else it results to '0' bit is unset
+        return ($new_num & 1);
+    }
+
 }
