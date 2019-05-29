@@ -55,11 +55,11 @@ class ProductsController {
 
             if ($product) {
                 
-                $article = ArticleService::getInstance()->getOne($product.getArticleId());
+                $article = ArticleService::getInstance()->getOne($product->getArticleId());
 
                 if ($article == null) {
                     
-                    $url = "https://world.openfoodfacts.org/api/v0/product/" . $product.getArticleId() . ".json";
+                    $url = "https://world.openfoodfacts.org/api/v0/product/" . $product->getArticleId() . ".json";
 
                     $curlArticle = json_decode(CurlManager::getManager()->curlGet($url));
 
