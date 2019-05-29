@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__.'/../models/Skill.php';
+require_once __DIR__.'/../models/CompleteSkill.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
 
 
@@ -83,7 +84,8 @@ class SkillService {
         $rows = $manager->getAll(
         "SELECT 
         sk.sk_id as skid,
-        sk.name
+        sk.name,
+        uhs.status
         FROM skill sk
         JOIN user_has_skill uhs
         ON sk.sk_id = uhs.skill_sk_id
@@ -94,7 +96,7 @@ class SkillService {
         $skills = [];
 
         foreach ($rows as $row) {
-            $skills[] = new Skill($row);
+            $skills[] = new CompleteSkill($row);
         }
 
         return $skills;
@@ -108,6 +110,24 @@ class SkillService {
             "INSERT INTO user_has_skill 
         VALUES(?,?,?)",
             [$uid, $skid, $status]
+        );
+
+        if ($affectedRows > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function updateSkillByUser(string $uid, $skid, $status)
+    {
+
+        $manager = DatabaseManager::getManager();
+        $affectedRows = $manager->exec(
+            "UPDATE user_has_skill 
+        SET user_has_skill.status=? 
+        WHERE user_has_skill.user_u_id=?
+        AND user_has_skill.skill_sk_id=?",
+            [ $status,$uid, $skid,]
         );
 
         if ($affectedRows > 0) {

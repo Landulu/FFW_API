@@ -33,7 +33,12 @@ class SkillsController {
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
             $skills = SkillService::getInstance()->getAll($offset, $limit);
-            return $skills;
+            if($skills) {
+                http_response_code(200);
+                return $skills;
+            } else {
+                http_response_code(400);
+            }
         }
 
 
