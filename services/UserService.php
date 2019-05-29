@@ -91,12 +91,18 @@ class UserService {
         $firstname = isset($filters['firstname']) ? $filters['firstname'] : '';
         $lastname = isset($filters['lastname']) ? $filters['lastname'] : '';
         $skill =  isset($filters['skill']) ? $filters['skill'] : null;
+        $status =  isset($filters['status']) ? $filters['status'] : null;
         $cityName = isset($filters['cityName']) ? $filters['cityName'] : null ;
         $skillSQL = '';
         $cityNameSQL = '';
-        if ($skill) {
-            $skillSQL = " JOIN (SELECT user_has_skill.user_u_id FROM user_has_skill WHERE  user_has_skill.skill_sk_id=$skill) AS uhs
-        ON uhs.user_u_id = user.u_id ";
+        if ($skill || $status) {
+            $skillCond=" user_has_skill.skill_sk_id='{$skill}'";
+            $statusCond=" user_has_skill.status='{$status}'";
+            $completCond=$skill&&$status?$skillCond." AND ".$statusCond : "";
+            $completCond=$skill&&!$status?$skillCond:$completCond;
+            $completCond=!$skill&&$status?$statusCond:$completCond;
+            $skillSQL = " JOIN (SELECT DISTINCT user_has_skill.user_u_id FROM user_has_skill WHERE $completCond ) AS uhs
+            ON uhs.user_u_id = user.u_id ";
         }
         if ($cityName) {
             $cityNameSQL = " JOIN (SELECT address.ad_id FROM address WHERE  address.city_name LIKE '%{$cityName}%') AS addr
@@ -201,7 +207,8 @@ class UserService {
             address_ad_id = ?,
             status = ?,
             rights = ?,
-            tel = ?", [
+            tel = ? 
+            WHERE user.u_id = ?", [
             $user->getEmail(),
             password_hash($user->getPassword(), PASSWORD_DEFAULT),
             $user->getFirstname(),
@@ -213,7 +220,8 @@ class UserService {
             $user->getAddressId(),
             $user->getStatus(),
             $user->getRights(),
-            $user->getTel()
+            $user->getTel(),
+            $user->getUid()
             ]);
         if ($affectedRows > 0) {
             $user->setUId($manager->lastInsertId());

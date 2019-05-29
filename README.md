@@ -2,19 +2,18 @@
 
 # rights status
 
-0 : suppr
+1 : suppr
 
-1 : just created
-2 :  volunteer
-4 :  adherent
-8 :  company
+2 : just created
+4 :  volunteer
+8 :  adherent
+16 :  company
 
-16 : stock & collect & vehicles admin
-32 : subscription admin
-64 : events & announcements
-128 : Volunteers & employees, skills admin   === RIGHTS
-
-==> 1111 1111 = TOUS LES DROITS = 255
+32 : stock & collect & vehicles admin
+64 : subscription admin
+128 : events & announcements
+256 : Volunteers & employees, skills admin   === RIGHTS
+512 : TOUS LES DROITS
 
 
 

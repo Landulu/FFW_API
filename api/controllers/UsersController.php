@@ -39,7 +39,7 @@ class UsersController {
         /*
             /users
         */
-        if ( count($urlArray) == 1 && $method == 'GET') {
+        if ( count($urlArray) == 1 && $method == 'POST') {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
@@ -81,6 +81,7 @@ class UsersController {
                 http_response_code(201);
                 return $newUser;
             } else {
+                return $newUser;
                 http_response_code(400);
             }
         }
@@ -284,6 +285,8 @@ class UsersController {
                     if( password_verify($userPwd, $completeUser['password'])){
                         return $completeUser;
                     } else {
+                        return $completeUser;
+
                         http_response_code(403);
                     }
                 } else {
@@ -412,9 +415,13 @@ class UsersController {
         $newCompanies = [];
         do {
             $newCompanies = CompanyService::getInstance()->getAllByUser($completeUser->getUid(), $offset, $limit);
-            $companies = array_merge($companies, $newCompanies);
-            $offset += 20;
-        } while (count($newCompanies) == 20);
+
+            if($newCompanies){
+                $companies = array_merge($companies, $newCompanies);
+                $offset += 20;
+            }
+
+        } while ( $newCompanies && count($newCompanies) == 20);
         if($companies) {
             $completeUser->setCompanies($companies);
         }
