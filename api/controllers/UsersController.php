@@ -43,8 +43,26 @@ class UsersController {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-            $json = file_get_contents('php://input');
-            $params = $json ? json_decode($json, true) : [];
+//            $json = file_get_contents('php://input');
+//            $params = $json ? json_decode($json, true) : [];
+
+            $params = [];
+
+            if( $_GET['firstname']) {
+                $params['firstname'] = $_GET['firstname'];
+            }
+            if( $_GET['lastname']) {
+                $params['lastname'] = $_GET['lastname'];
+            }
+            if( $_GET['email']) {
+                $params['email'] = $_GET['email'];
+            }
+            if( $_GET['rights']) {
+                $params['rights'] = $_GET['rights'];
+            }
+            if( $_GET['skills']) {
+                $params['skills'] = $_GET['skill'];
+            }
 
             $completeUsers = [];
 
