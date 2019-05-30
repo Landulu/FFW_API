@@ -1,7 +1,7 @@
 <?php
 
 
-class Affectation{
+class Affectation implements JsonSerializable{
 
     private $affid;
     private $role;
@@ -10,6 +10,7 @@ class Affectation{
     private $uid;
     private $serid;
     private $skid;
+
 
     /**
      * Affectation constructor.
@@ -139,6 +140,9 @@ class Affectation{
         $this->skid = $skid;
     }
 
+    public function JsonSerialize() {
+        return get_object_vars($this);
+    }
 
 
 }

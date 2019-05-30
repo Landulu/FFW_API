@@ -70,7 +70,7 @@ class AffectationService {
         aff_id as affid,
         role,
         start,
-        end,
+        affectation.end,
         user_u_id as uid,
         skill_sk_id as skid,
         service_ser_id as serid

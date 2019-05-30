@@ -6,7 +6,8 @@
  * Time: 15:03
  */
 
-
+include_once 'models/Affectation.php';
+include_once 'models/CompleteAffectation.php';
 include_once 'services/AffectationService.php';
 
 class AffectationController{
@@ -38,6 +39,7 @@ class AffectationController{
 
             if(isset($_GET['completeData'])){
                 $affectations = AffectationService::getInstance()->getAll($offset, $limit);
+                $affectations=AffectationController::decorateAffectation($affectations);
             }
 
             return $affectations;
@@ -88,4 +90,20 @@ class AffectationController{
             }
         }
     }
+
+    public static function decorateAffectation( $affectations){
+
+        $serviceManager= ServiceService::getInstance();
+        $affectations=json_decode(json_encode($affectations),true);
+
+        foreach($affectations as $key=>$affectation){
+            $affectation = new CompleteAffectation($affectation);
+            $affectation->setService($serviceManager->getOne($affectation->getSerid()));
+            $affectations[$key]=$affectation;
+        }
+
+        return $affectations;
+    }
+
+
 }
