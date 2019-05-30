@@ -13,7 +13,7 @@ class Product implements JsonSerializable {
 
     public function __construct(array $fields) {
         $this->prid = isset($fields['prid']) ? $fields['prid'] : NULL;
-        $this->limitDate = $fields['limitDate'];
+        $this->limitDate = isset($fields['limitDate']) ? $fields['limitDate'] : null;
         $this->state = isset($fields['state'])? $fields['state'] : 'GOOD';
         $this->state = isset($fields['$quantityUnit'])? $fields['$quantityUnit'] : null;
         $this->state = isset($fields['$weightQuantity']) ? $fields['$weightQuantity'] : null;
@@ -22,12 +22,12 @@ class Product implements JsonSerializable {
         $this->roomId = isset($fields['roomId'])? $fields['roomId'] : NULL;
     }
 
-    public function getAid(): ?int { return $this->prid;}
-    public function getLimitDate(): string { return $this->limitDate;}
-    public function getState(): string { return $this->state;}
+    public function getPrid(): ?int { return $this->prid;}
+    public function getLimitDate(): ?string { return $this->limitDate;}
+    public function getState(): ?string { return $this->state;}
     public function getArticleId(): string { return $this->articleId;}
     public function getBasketId(): ?int { return $this->basketId;}
-    public function getRoomId(): int { return $this->roomId;}
+    public function getRoomId(): ?int { return $this->roomId;}
 
     /**
      * @return mixed
