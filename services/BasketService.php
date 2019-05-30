@@ -16,7 +16,6 @@ class BasketService {
         }
         return self::$instance;
     }
-
     
 
     public function create(Basket $basket): ?Basket {
@@ -24,7 +23,15 @@ class BasketService {
         $affectedRows = $manager->exec(
         'INSERT INTO
         basket 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+        (create_time ,
+        validation_status,
+        role,
+        basket.order,
+        service_ser_id ,
+        company_co_id ,
+        external_ex_id ,
+        user_u_id )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [
             $basket->getCreateTime(),
             $basket->getStatus(),
             $basket->getRole(),
@@ -47,7 +54,7 @@ class BasketService {
         "SELECT 
         b_id as bid,
         create_time as createTime,
-        status,
+        validation_status,
         role,
         order,
         service_ser_id as serviceId,
@@ -84,7 +91,7 @@ class BasketService {
         "SELECT 
         b_id as bid,
         create_time as createTime,
-        status,
+        validation_status,
         role,
         order,
         service_ser_id as serviceId,
@@ -111,7 +118,7 @@ class BasketService {
             "SELECT 
         b_id as bid,
         create_time as createTime,
-        status,
+        validation_status,
         role,
         order,
         service_ser_id as serviceId,

@@ -59,6 +59,10 @@ class AppController {
                 $addressesController = AddressesController::getController();
                 $result = $addressesController->proccessQuery(array_slice($urlArray, 1), $method);
                 return $result;
+            case 'affectations':
+                $addressesController = AffectationController::getController();
+                $result = $addressesController->proccessQuery(array_slice($urlArray, 1), $method);
+                return $result;
             case 'articles':
                 $articlesController = ArticlesController::getController();
                 $result = $articlesController->proccessQuery(array_slice($urlArray, 1), $method);
