@@ -6,7 +6,7 @@
  * Time: 15:03
  */
 
-
+include_once 'models/CompleteAffectation.php';
 include_once 'services/AffectationService.php';
 
 class AffectationController{

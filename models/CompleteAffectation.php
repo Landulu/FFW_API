@@ -1,7 +1,7 @@
 <?php
 
 
-class CompleteAffectation{
+class CompleteAffectation implements  JsonSerializable {
 
     private $affid;
     private $role;
@@ -156,6 +156,8 @@ class CompleteAffectation{
         $this->service = $service;
     }
 
-
+    public function JsonSerialize() {
+        return get_object_vars($this);
+    }
 
 }

@@ -288,10 +288,9 @@ class UsersController {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-            $affectations = AffectationController::getInstance()->getAllByUser($urlArray[1], $offset, $limit);
+            $affectations = AffectationService::getInstance()->getAllByUser($urlArray[1], $offset, $limit);
 
             if(isset($_GET['completeData'])){
-                $affectations = AffectationService::getInstance()->getAll($offset, $limit);
                 $affectations=AffectationController::decorateAffectation($affectations);
             }
 
