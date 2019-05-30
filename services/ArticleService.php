@@ -21,8 +21,8 @@ class ArticleService {
         $manager = DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "INSERT INTO
-        article (name, category, category_cat_id)
-        VALUES (?, ?, 0)", [
+        article (name, category,is_custom, category_cat_id)
+        VALUES (?, ?, 0,0)", [
             $article->getName(),
             $article->getCategory(),
             ]);
@@ -39,7 +39,8 @@ class ArticleService {
         "SELECT 
         a_id as aid,
         name,
-        category
+        is_custom,
+        category,
         FROM article
         LIMIT $offset, $limit"
         );
@@ -74,6 +75,7 @@ class ArticleService {
         $article = $manager->getOne('
         select a_id as aid,
         name,
+        is_custom,
         category
         FROM article
         WHERE a_id = ?'

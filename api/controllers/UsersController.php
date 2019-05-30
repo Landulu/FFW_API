@@ -12,6 +12,8 @@ include_once 'services/ProductService.php';
 include_once 'services/ArticleService.php';
 include_once 'models/CompleteUser.php';
 
+include_once 'AffectationController.php';
+
 
 
 class UsersController {
@@ -275,8 +277,8 @@ class UsersController {
         }
 
         /*
-GET: 'users/{int}/companies'
-*/
+        GET: 'users/{int}/affectations'
+        */
         // get companies by userId
         if ( count($urlArray) == 3
             && ctype_digit($urlArray[1])
@@ -286,11 +288,15 @@ GET: 'users/{int}/companies'
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
+            $affectations = AffectationService::getInstance()->getAllByUser($urlArray[1], $offset, $limit);
 
-            $companies = CompanyService::getInstance()->getAllByUser($urlArray[1], $offset, $limit);
-            if($companies) {
+            if(isset($_GET['completeData'])){
+                $affectations=AffectationController::decorateAffectation($affectations);
+            }
+
+            if($affectations) {
                 http_response_code(200);
-                return $companies;
+                return $affectations;
             } else {
                 http_response_code(400);
             }
@@ -407,6 +413,8 @@ GET: 'users/{int}/companies'
                     }
      
                 } else {
+
+
                     http_response_code(400);
                 }
 
