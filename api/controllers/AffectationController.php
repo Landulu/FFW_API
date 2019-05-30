@@ -35,6 +35,11 @@ class AffectationController{
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
             $affectations = AffectationService::getInstance()->getAll($offset, $limit);
+
+            if(isset($_GET['completeData'])){
+                $affectations = AffectationService::getInstance()->getAll($offset, $limit);
+            }
+
             return $affectations;
         }
 
@@ -57,19 +62,19 @@ class AffectationController{
         */
         // update One by Id
 
-        if ( count($urlArray) == 2 && $method == 'PUT') {
-            $json = file_get_contents('php://input');
-            $obj = json_decode($json, true);
-
-            $affectation = AffectationService::getInstance()->update(new Affectation($obj),$urlArray[1]);
-
-            if($affectation) {
-                http_response_code(201);
-                return $affectation;
-            } else {
-                http_response_code(400);
-            }
-        }
+//        if ( count($urlArray) == 2 && $method == 'PUT') {
+//            $json = file_get_contents('php://input');
+//            $obj = json_decode($json, true);x
+//
+//            $affectation = AffectationService::getInstance()->update(new Affectation($obj),$urlArray[1]);
+//
+//            if($affectation) {
+//                http_response_code(201);
+//                return $affectation;
+//            } else {
+//                http_response_code(400);
+//            }
+//        }
 
         // get One by Id
         if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {

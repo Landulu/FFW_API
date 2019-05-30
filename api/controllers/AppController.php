@@ -14,7 +14,7 @@ include_once 'api/controllers/SkillsController.php';
 include_once 'api/controllers/ExternalsController.php';
 include_once 'api/controllers/AddressesController.php';
 include_once 'api/controllers/CompaniesController.php';
-//include_once 'api/controllers/ServicesController.php';
+include_once 'api/controllers/ServicesController.php';
 
 
 

@@ -39,30 +39,18 @@ class UsersController {
         /*
             /users
         */
-        if ( count($urlArray) == 1 && $method == 'POST') {
+        if ( count($urlArray) == 1 && $method == 'GET') {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-//            $json = file_get_contents('php://input');
-//            $params = $json ? json_decode($json, true) : [];
-
             $params = [];
 
-            if( $_GET['firstname']) {
-                $params['firstname'] = $_GET['firstname'];
+            foreach($_GET as $key=>$value){
+                if($key!="offset"&&$key!="limit"){
+                    $params[$key]=$value;
+                }
             }
-            if( $_GET['lastname']) {
-                $params['lastname'] = $_GET['lastname'];
-            }
-            if( $_GET['email']) {
-                $params['email'] = $_GET['email'];
-            }
-            if( $_GET['rights']) {
-                $params['rights'] = $_GET['rights'];
-            }
-            if( $_GET['skills']) {
-                $params['skills'] = $_GET['skill'];
-            }
+
 
             $completeUsers = [];
 
@@ -286,6 +274,29 @@ class UsersController {
 
         }
 
+        /*
+GET: 'users/{int}/companies'
+*/
+        // get companies by userId
+        if ( count($urlArray) == 3
+            && ctype_digit($urlArray[1])
+            && $urlArray[2] == 'affectations'
+            && $method == 'GET') {
+
+            $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
+            $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
+
+
+            $companies = CompanyService::getInstance()->getAllByUser($urlArray[1], $offset, $limit);
+            if($companies) {
+                http_response_code(200);
+                return $companies;
+            } else {
+                http_response_code(400);
+            }
+
+        }
+
 
         //authentication
         /*
@@ -327,14 +338,14 @@ class UsersController {
             $json = file_get_contents('php://input'); 
             $basket = json_decode($json, true);
 
-            $role = $_GET('role');
-            if ($basket && isset($basket['products']) && isset($basket['u_id']) && isset($role)) {
+            $role = $_GET['role'];
+            if ($basket && isset($basket['products']) && isset($role)) {
 
                 $newBasket = new Basket(array(
                     "createTime" => date('Y/m/d H:i:s'),
                     "status" => 'PENDING',
                     "role" => $role,
-                    "userId" => $basket['u_id']
+                    "userId" => $urlArray[1]
                 ));
                 $createdBasket = Basketservice::getInstance()->create($newBasket);
 
@@ -431,6 +442,7 @@ class UsersController {
         $offset = 0;
         $companies = [];
         $newCompanies = [];
+
         do {
             $newCompanies = CompanyService::getInstance()->getAllByUser($completeUser->getUid(), $offset, $limit);
 

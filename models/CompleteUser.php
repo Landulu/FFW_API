@@ -22,6 +22,7 @@ class CompleteUser implements JsonSerializable {
     private $skills;
     private $companies;
     private $address;
+    private $affectations;
 
 
 
@@ -41,6 +42,7 @@ class CompleteUser implements JsonSerializable {
         $this->address = isset($fields['address']) ? $fields['address'] : NULL;
         $this->skills = isset($fields['skills']) ? $fields['skills'] : NULL;
         $this->companies = isset($fields['companies']) ? $fields['companies'] : NULL;
+        $this->affectations = isset($fields['affectations']) ? $fields['affectations'] : NULL;
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 
 
-class Affectation{
+class CompleteAffectation{
 
     private $affid;
     private $role;
@@ -10,6 +10,7 @@ class Affectation{
     private $uid;
     private $serid;
     private $skid;
+    private $service;
 
     /**
      * Affectation constructor.
@@ -24,8 +25,8 @@ class Affectation{
         $this->uid = isset($fields['uid'])?$fields['uid']:NULL;
         $this->serid = isset($fields['serid'])?$fields['serid']:NULL;
         $this->skid = isset($fields['skid'])?$fields['skid']:NULL;
+        $this->service = isset($fields['service'])?$fields['service']:NULL;
     }
-
 
     /**
      * @return mixed
@@ -137,6 +138,22 @@ class Affectation{
     public function setSkid($skid): void
     {
         $this->skid = $skid;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getService()
+    {
+        return $this->service;
+    }
+
+    /**
+     * @param mixed|null $service
+     */
+    public function setService( $service): void
+    {
+        $this->service = $service;
     }
 
 

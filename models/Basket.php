@@ -6,6 +6,7 @@ class Basket implements JsonSerializable {
     private $createTime;
     private $status;
     private $role;
+    private $order;
     private $serviceId;
     private $companyId;
     private $externalId;
@@ -13,9 +14,10 @@ class Basket implements JsonSerializable {
 
     public function __construct(array $fields) {
         $this->bid = isset($fields['bid']) ? $fields['bid'] : NULL;
-        $this->createTime = $fields['createTime'];
-        $this->status = $fields['status'];
-        $this->role = $fields['role'];  // in or out or trans
+        $this->createTime = isset($fields['createTime'])?$fields['createTime'] : NULL;
+        $this->status = isset($fields['status'])?$fields['status'] : NULL;
+        $this->role = isset($fields['role'])?$fields['role'] : NULL;  // in or out or trans
+        $this->order = isset($fields['order'])?$fields['order'] : NULL;  // in or out or trans
         $this->serviceId = isset($fields['serviceId']) ? $fields['serviceId'] : NULL;
         $this->companyId = isset($fields['companyId']) ? $fields['companyId'] : NULL;
         $this->externalId = isset($fields['externalId']) ? $fields['externalId'] : NULL;
@@ -29,6 +31,39 @@ class Basket implements JsonSerializable {
     public function getUserId() {return $this->userId;}
     public function getCreateTime() {return $this->createTime;}
     public function getRole() {return $this->role;}
+
+    /**
+     * @return mixed|null
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    /**
+     * @param mixed|null $order
+     */
+    public function setOrder( $order): void
+    {
+        $this->order = $order;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status): void
+    {
+        $this->status = $status;
+    }
 
 
     public function setBId($id) {
