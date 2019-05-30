@@ -359,7 +359,7 @@ GET: 'users/{int}/companies'
                             
                             $url = "https://world.openfoodfacts.org/api/v0/product/" . $productGroup['barcode'] . ".json";
 
-                            $curlArticle = json_decode(CurlManager::getManager()->curlGet($url));
+                            $curlArticle = json_decode(CurlManager::getManager()->curlGet($url), true);
                             
 
                             if ($curlArticle['status_verbose'] == "product found") {
@@ -380,7 +380,7 @@ GET: 'users/{int}/companies'
                             $quantity = isset($peremptionProduct['quantity'])? $peremptionProduct['quantity'] : 1;
                             for ($i=0; $i < $quantity; $i++) {
                                 $newProduct = new Product(array(
-                                    "limitDate" => $peremptionProduct['limitDate'],
+                                    "limitDate" => isset($peremptionProduct['limitDate']) ? $peremptionProduct['limitDate'] : null ,
                                     "state" => isset($peremptionProduct['state'])? $peremptionProduct['state'] : null,
                                     "quantityUnit" => isset($peremptionProduct['quantityUnit'])? $peremptionProduct['quantityUnit'] : null,
                                     "weightQuantity" => isset($peremptionProduct['weightQuantity'])? $peremptionProduct['weightQuantity'] : null,
@@ -390,7 +390,7 @@ GET: 'users/{int}/companies'
                                 $product = ProductService::getInstance()->create($newProduct);
 
                                 if( $product) {
-                                    $inserted= BasketService::getInstance()->affectProductToBasket($product->getPrid(), $createdBasket->getBId());
+                                    $inserted = BasketService::getInstance()->affectProductToBasket($product->getPrid(), $createdBasket->getBId());
                                     if ($inserted) {
                                         return $basket;
                                     } else {

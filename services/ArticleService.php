@@ -21,8 +21,8 @@ class ArticleService {
         $manager = DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "INSERT INTO
-        article (name, category)
-        VALUES (?, ?)", [
+        article (name, category, category_cat_id)
+        VALUES (?, ?, 0)", [
             $article->getName(),
             $article->getCategory(),
             ]);
