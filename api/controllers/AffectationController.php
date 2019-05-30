@@ -6,6 +6,7 @@
  * Time: 15:03
  */
 
+include_once 'models/Affectation.php';
 include_once 'models/CompleteAffectation.php';
 include_once 'services/AffectationService.php';
 
@@ -90,13 +91,18 @@ class AffectationController{
         }
     }
 
-    public static function decorateAffectation(array $affectations){
+    public static function decorateAffectation( $affectations){
 
-        foreach($affectations as $affectation){
-
-            $affectation = new CompleteAffectation((array)$affectation);
-
+        $serviceManager= ServiceService::getInstance();
+        $affectations=json_decode(json_encode($affectations),true);
+        
+        foreach($affectations as $key=>$affectation){
+            $affectation = new CompleteAffectation($affectation);
+            $affectation->setService($serviceManager->getOne($affectation->getSerid()));
+            $affectations[$key]=$affectation;
         }
+
+        return $affectations;
     }
 
 
