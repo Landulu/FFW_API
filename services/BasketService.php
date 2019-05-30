@@ -25,7 +25,6 @@ class BasketService {
         'INSERT INTO
         basket 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [
-            $basket->getBId(),
             $basket->getCreateTime(),
             $basket->getStatus(),
             $basket->getRole(),

@@ -38,6 +38,7 @@ class AffectationController{
 
             if(isset($_GET['completeData'])){
                 $affectations = AffectationService::getInstance()->getAll($offset, $limit);
+                $affectations=AffectationController::decorateAffectation($affectations);
             }
 
             return $affectations;
@@ -88,4 +89,15 @@ class AffectationController{
             }
         }
     }
+
+    public static function decorateAffectation(array $affectations){
+
+        foreach($affectations as $affectation){
+
+            $affectation = new CompleteAffectation((array)$affectation);
+
+        }
+    }
+
+
 }
