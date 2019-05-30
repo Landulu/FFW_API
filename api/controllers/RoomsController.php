@@ -7,6 +7,10 @@ include_once 'utils/routing/Router.php';
 require_once 'services/ProductService.php';
 include_once 'services/RoomService.php';
 
+include_once 'models/CompleteRoom.php';
+
+
+
 
 class RoomsController {
 
@@ -96,5 +100,31 @@ class RoomsController {
             }
 
         } 
+    }
+
+    public static function decorateRoom( $rooms)
+    {
+
+        $productManager = ProductService::getInstance();
+
+        $rooms = json_decode(json_encode($rooms), true);
+
+        foreach ($rooms as $key => $room) {
+            $room = new CompleteRoom($room);
+            $products=[] ;
+            $offset = 0;
+            $limit = 20;
+
+            do {
+                $products=array_merge($products, $productManager->getAllByRoom($room->getRid(), $offset, $limit));
+                $offset += $limit;
+
+            } while (sizeof($products) % $limit == 0 && sizeof($products) > 0);
+
+            $room->setProducts($products);
+
+            $rooms[$key] = $room;
+        }
+        return $rooms;
     }
 }

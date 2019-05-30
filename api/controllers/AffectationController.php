@@ -95,7 +95,7 @@ class AffectationController{
 
         $serviceManager= ServiceService::getInstance();
         $affectations=json_decode(json_encode($affectations),true);
-        
+
         foreach($affectations as $key=>$affectation){
             $affectation = new CompleteAffectation($affectation);
             $affectation->setService($serviceManager->getOne($affectation->getSerid()));
