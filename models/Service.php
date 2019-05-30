@@ -23,13 +23,13 @@ class Service implements JsonSerializable{
 
     public function __construct(array $fields) {
         $this->serid = isset($fields['serid']) ? $fields['serid'] : NULL;
-        $this->name = $fields['name'];
+        $this->name = isset($fields['name']) ? $fields['name'] : null;
         $this->description = isset($fields['description']) ? $fields['description'] : null;
-        $this->createTime = $fields['createTime'];
-        $this->type = $fields['type'];
+        $this->createTime = isset($fields['createTime']) ? $fields['createTime'] : null;
+        $this->type = isset($fields['type']) ? $fields['type'] : null;
         $this->capacity = isset($fields['capacity']) ? $fields['capacity'] : null;
         $this->isPublic = isset($fields['isPublic']) ? $fields['isPublic'] : null;
-        $this->status = $fields['status'];
+        $this->status = isset($fields['status']) ? $fields['status'] : null;
         $this->isPremium = isset($fields['isPremium']) ? $fields['isPremium'] : null;
         $this->serviceTime = isset($fields['serviceTime']) ? $fields['serviceTime'] : null;
         $this->routeState = isset($fields['routeState']) ? $fields['routeState']: null;
@@ -39,7 +39,7 @@ class Service implements JsonSerializable{
     /**
      * @return mixed|null
      */
-    public function getSerid(): ?mixed
+    public function getSerid()
     {
         return $this->serid;
     }
@@ -47,7 +47,7 @@ class Service implements JsonSerializable{
     /**
      * @param mixed|null $serid
      */
-    public function setSerid(?mixed $serid): void
+    public function setSerid($serid): void
     {
         $this->serid = $serid;
     }
@@ -71,7 +71,7 @@ class Service implements JsonSerializable{
     /**
      * @return mixed|null
      */
-    public function getDescription(): ?mixed
+    public function getDescription()
     {
         return $this->description;
     }
@@ -79,7 +79,7 @@ class Service implements JsonSerializable{
     /**
      * @param mixed|null $description
      */
-    public function setDescription(?mixed $description): void
+    public function setDescription($description): void
     {
         $this->description = $description;
     }
@@ -119,7 +119,7 @@ class Service implements JsonSerializable{
     /**
      * @return mixed|null
      */
-    public function getCapacity(): ?mixed
+    public function getCapacity()
     {
         return $this->capacity;
     }
@@ -127,7 +127,7 @@ class Service implements JsonSerializable{
     /**
      * @param mixed|null $capacity
      */
-    public function setCapacity(?mixed $capacity): void
+    public function setCapacity($capacity): void
     {
         $this->capacity = $capacity;
     }
@@ -135,7 +135,7 @@ class Service implements JsonSerializable{
     /**
      * @return mixed|null
      */
-    public function getisPublic(): ?mixed
+    public function getisPublic()
     {
         return $this->isPublic;
     }
@@ -143,7 +143,7 @@ class Service implements JsonSerializable{
     /**
      * @param mixed|null $isPublic
      */
-    public function setIsPublic(?mixed $isPublic): void
+    public function setIsPublic($isPublic): void
     {
         $this->isPublic = $isPublic;
     }
@@ -167,7 +167,7 @@ class Service implements JsonSerializable{
     /**
      * @return mixed|null
      */
-    public function getisPremium(): ?mixed
+    public function getisPremium()
     {
         return $this->isPremium;
     }
@@ -175,7 +175,7 @@ class Service implements JsonSerializable{
     /**
      * @param mixed|null $isPremium
      */
-    public function setIsPremium(?mixed $isPremium): void
+    public function setIsPremium($isPremium): void
     {
         $this->isPremium = $isPremium;
     }
@@ -183,7 +183,7 @@ class Service implements JsonSerializable{
     /**
      * @return mixed|null
      */
-    public function getServiceTime(): ?mixed
+    public function getServiceTime()
     {
         return $this->serviceTime;
     }
@@ -191,7 +191,7 @@ class Service implements JsonSerializable{
     /**
      * @param mixed|null $serviceTime
      */
-    public function setServiceTime(?mixed $serviceTime): void
+    public function setServiceTime($serviceTime): void
     {
         $this->serviceTime = $serviceTime;
     }
@@ -199,7 +199,7 @@ class Service implements JsonSerializable{
     /**
      * @return mixed|null
      */
-    public function getRouteState(): ?mixed
+    public function getRouteState()
     {
         return $this->routeState;
     }
@@ -207,7 +207,7 @@ class Service implements JsonSerializable{
     /**
      * @param mixed|null $routeState
      */
-    public function setRouteState(?mixed $routeState): void
+    public function setRouteState($routeState): void
     {
         $this->routeState = $routeState;
     }
@@ -215,7 +215,7 @@ class Service implements JsonSerializable{
     /**
      * @return mixed|null
      */
-    public function getVehicleId(): ?mixed
+    public function getVehicleId()
     {
         return $this->vehicleId;
     }
@@ -223,7 +223,7 @@ class Service implements JsonSerializable{
     /**
      * @param mixed|null $vehicleId
      */
-    public function setVehicleId(?mixed $vehicleId): void
+    public function setVehicleId($vehicleId): void
     {
         $this->vehicleId = $vehicleId;
     }

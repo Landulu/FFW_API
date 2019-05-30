@@ -23,20 +23,13 @@ class BasketService {
         $manager = DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         'INSERT INTO
-        basket (b_id, 
-        create_time, 
-        status, 
-        role, 
-        order, 
-        service_ser_id, 
-        company_co_id, 
-        external_ex_id, 
-        user_u_id ) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+        basket 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [
             $basket->getBId(),
             $basket->getCreateTime(),
             $basket->getStatus(),
             $basket->getRole(),
+            $basket->getOrder(),
             $basket->getServiceId(),
             $basket->getCompanyId(),
             $basket->getExternalId(),
