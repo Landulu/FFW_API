@@ -80,6 +80,7 @@ class BasketsController {
             $status = $_GET['status'];
 
             $role = isset($_GET['role']) ? $_GET['role'] : null;
+            $start = isset($_GET['start']) ? new Date($_GET['start']) : null;
 
             if ($offset && $limit && $status) {
 
@@ -109,7 +110,14 @@ class BasketsController {
                                     "addressZipCode" => $address->getCityCode(),
                                     "addressName" => $address->getStreetAddress(). ' ' . $address->getCityName()
                                 ]);
-                                array_push($result, $basketElement);
+
+                                if ($start) {
+                                    if ($start < $basketElement) {
+                                        array_push($result, $basketElement);
+                                    }
+                                } else {
+                                    array_push($result, $basketElement);
+                                }
                             }
                         }
                     } else if ($basket->getExternalId()) {
@@ -128,7 +136,14 @@ class BasketsController {
                                     "addressZipCode" => $address->getCityCode(),
                                     "addressName" => $address->getStreetAddress(). ' ' . $address->getCityName()
                                 ]);
-                                array_push($result, $basketElement);
+
+                                if ($start) {
+                                    if ($start < $basketElement) {
+                                        array_push($result, $basketElement);
+                                    }
+                                } else {
+                                    array_push($result, $basketElement);
+                                }
                             }
                         }
 
@@ -148,7 +163,14 @@ class BasketsController {
                                     "addressZipCode" => $address->getCityCode(),
                                     "addressName" => $address->getStreetAddress(). ' ' . $address->getCityName()
                                 ]);
-                                array_push($result, $basketElement);
+
+                                if ($start) {
+                                    if ($start < $basketElement) {
+                                        array_push($result, $basketElement);
+                                    }
+                                } else {
+                                    array_push($result, $basketElement);
+                                }
                             }
                         }
                     }
