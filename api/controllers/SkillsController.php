@@ -33,6 +33,7 @@ class SkillsController {
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
             $skills = SkillService::getInstance()->getAll($offset, $limit);
+
             if($skills) {
                 http_response_code(200);
                 return $skills;
@@ -62,6 +63,21 @@ class SkillsController {
             $skill = SkillService::getInstance()->getOne($urlArray[1]);
             if($skill) {
                 http_response_code(200);
+                return $skill;
+            } else {
+                http_response_code(400);
+            }
+        }
+
+        // update one by Id
+        if ( count($urlArray) == 2 && $method == 'PUT') {
+            $json = file_get_contents('php://input');
+            $obj = json_decode($json, true);
+
+            $skill = SkillService::getInstance()->update(new Skill($obj),$urlArray[1]);
+
+            if($skill) {
+                http_response_code(201);
                 return $skill;
             } else {
                 http_response_code(400);

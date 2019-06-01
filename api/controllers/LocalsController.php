@@ -43,9 +43,24 @@ class LocalsController {
 
             $locals = LocalService::getInstance()->getAll($offset, $limit);
 
+            $params = [];
+
+            foreach($_GET as $key=>$value){
+                if($key!="offset"&&$key!="limit"&&$key!="completeData"){
+                    $params[$key]=$value;
+                }
+            }
+
+            if (count($params)) {
+                $locals = LocalService::getInstance()->getAllFiltered($offset, $limit, $params);
+            } else {
+                $locals = LocalService::getInstance()->getAll($offset, $limit);
+            }
+
             if(isset($_GET["completeData"])){
                 $locals=self::decorateLocal($locals);
             }
+
             if($locals) {
                 http_response_code(200);
                 return $locals;
@@ -125,14 +140,17 @@ class LocalsController {
             $limit=20;
 
             do{
-                $rooms=array_merge($rooms,$roomManager->getAllByLocal($local->getLoid(),$offset,$limit));
+                $newRooms = $roomManager->getAllByLocal($local->getLoid(),$offset,$limit);
+                if(is_array($newRooms)){
+                    $rooms=array_merge($rooms,$newRooms);
+                }
                 $offset+=$limit;
 
             }while(sizeof($rooms)%$limit==0 && sizeof($rooms)>0);
 
             $rooms=RoomsController::decorateRoom($rooms);
 
-            $local->setAddress($productManager->getOne($local->getAdid()));
+            $local->setAddress($addressManager->getOne($local->getAdid()));
             $local->setRooms($rooms);
 
             $locals[$key]=$local;
