@@ -101,8 +101,9 @@ class AddressesController{
 
         $curl=CurlManager::getManager();
 
-        $apiUrl = Configuration::get("gMapGeolocateUrl", "/");
-        $apiKey = Configuration::get("gMapApiKey", "/");
+        $apiKey="AIzaSyA8Fx6Cf3BFeFytXc07ZXnMnHhjJ8sN48I";
+        $apiUrl="https://maps.google.com/maps/api/geocode/json";
+
 
         $response= $curl->curlGet($apiUrl,array("key"=>$apiKey,"address"=>strval($address),"sensor"=>"false", "region"=>"fr"),array());
 
