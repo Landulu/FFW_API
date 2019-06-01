@@ -22,9 +22,10 @@ class SkillService {
         $manager = DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "INSERT INTO
-        skill (name)
-        VALUES (?)", [
+        skill (name,status)
+        VALUES (?,?)", [
             $skill->getName(),
+            $skill->getSkStatus(),
             ]);
         if ($affectedRows > 0) {
             $skill->setSkId($manager->lastInsertId());
@@ -38,7 +39,8 @@ class SkillService {
         $rows = $manager->getAll(
         "SELECT 
         sk_id as skid,
-        name
+        name,
+        skill.status as skStatus
         FROM skill
         LIMIT $offset, $limit"
         );
@@ -51,16 +53,20 @@ class SkillService {
         return $skills;
     }
 
-    public function update(Skill $skill): ?Skill {
+
+    public function update(Skill $skill, $skid): ?Skill {
         $manager = DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "UPDATE skill
         SET 
-        name = ?", [
+        name = ?, 
+        status = ?
+        WHERE sk_id= ?", [
             $skill->getName(),
+            $skill->getSkStatus(),
+            $skid
             ]);
         if ($affectedRows > 0) {
-            $skill->setSkId($manager->lastInsertId());
             return $skill;
         }
         return NULL;
@@ -70,7 +76,7 @@ class SkillService {
         $manager = DatabaseManager::getManager();
         $skill = $manager->getOne('
         select  
-        sk_id, name
+        sk_id, name, skill.status as skStatus
         FROM skill
         WHERE sk_id = ?'
         , [$skid]);
@@ -85,6 +91,7 @@ class SkillService {
         "SELECT 
         sk.sk_id as skid,
         sk.name,
+        sk.status as skStatus,
         uhs.status
         FROM skill sk
         JOIN user_has_skill uhs
@@ -135,6 +142,7 @@ class SkillService {
         }
         return false;
     }
+
 
 }
 

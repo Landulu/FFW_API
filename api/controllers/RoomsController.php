@@ -116,7 +116,10 @@ class RoomsController {
             $limit = 20;
 
             do {
-                $products=array_merge($products, $productManager->getAllByRoom($room->getRid(), $offset, $limit));
+                $newProducts=$productManager->getAllByRoom($room->getRid(), $offset, $limit);
+                if(is_array($newProducts)){
+                    $products=array_merge($products, $newProducts);
+                }
                 $offset += $limit;
 
             } while (sizeof($products) % $limit == 0 && sizeof($products) > 0);

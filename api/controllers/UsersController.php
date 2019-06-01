@@ -11,6 +11,7 @@ include_once 'services/SkillService.php';
 include_once 'services/ProductService.php';
 include_once 'services/ArticleService.php';
 include_once 'models/CompleteUser.php';
+include_once 'models/CompleteSkill.php';
 
 include_once 'AffectationController.php';
 
@@ -53,7 +54,6 @@ class UsersController {
                 }
             }
 
-
             $completeUsers = [];
 
             if (count($params)) {
@@ -74,8 +74,15 @@ class UsersController {
                     array_push($completeUsers, $this->decorateCompleteUser($user));
                 }
             }
+            if(sizeof($completeUsers)>0){
+                http_response_code(200);
+                return $completeUsers;
+            }
+            else{
+                http_response_code(400);
+            }
 
-            return $completeUsers;
+            return null;
         }
 
 
@@ -201,6 +208,8 @@ class UsersController {
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
             $skills = SkillService::getInstance()->getAllByUser($urlArray[1],$offset,$limit);
+
+
             if($skills) {
                 http_response_code(200);
                 return $skills;
