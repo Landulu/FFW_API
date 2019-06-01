@@ -7,6 +7,9 @@ include_once 'utils/routing/Router.php';
 include_once 'services/LocalService.php';
 include_once 'services/RoomService.php';
 
+include_once 'models/CompleteLocal.php';
+include_once 'RoomsController.php';
+
 
 class LocalsController {
 
@@ -40,6 +43,9 @@ class LocalsController {
 
             $locals = LocalService::getInstance()->getAll($offset, $limit);
 
+            if(isset($_GET["completeData"])){
+                $locals=self::decorateLocal($locals);
+            }
             if($locals) {
                 http_response_code(200);
                 return $locals;
@@ -100,5 +106,38 @@ class LocalsController {
             }
 
         } 
+    }
+
+    public static function decorateLocal( $locals){
+
+        $addressManager= AddressService::getInstance();
+        $roomManager= RoomService::getInstance();
+        $productManager= ProductService::getInstance();
+
+        $locals=json_decode(json_encode($locals),true);
+
+        foreach($locals as $key=>$local){
+            $local = new CompleteLocal($local);
+            $local->setAddress($addressManager->getOne($local->getAdid()));
+
+            $rooms=[];
+            $offset=0;
+            $limit=20;
+
+            do{
+                $rooms=array_merge($rooms,$roomManager->getAllByLocal($local->getLoid(),$offset,$limit));
+                $offset+=$limit;
+
+            }while(sizeof($rooms)%$limit==0 && sizeof($rooms)>0);
+
+            $rooms=RoomsController::decorateRoom($rooms);
+
+            $local->setAddress($productManager->getOne($local->getAdid()));
+            $local->setRooms($rooms);
+
+            $locals[$key]=$local;
+        }
+
+        return $locals;
     }
 }

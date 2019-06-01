@@ -111,37 +111,6 @@ class ServiceService {
         return $services;
     }
 
-    public function getAllByAffectation($affid, $offset, $limit) {
-        $manager = DatabaseManager::getManager();
-        $rows = $manager->getAll(
-            "SELECT 
-        service.ser_id as serid,
-        service.name,
-        service.description,
-        service.create_time as createTime,
-        service.type,
-        service.capacity,
-        service.is_public as isPublic,
-        service.service_time as serviceTime,
-        service.route_state as routeState,
-        service.vehicle_v_id as vehicleId,
-        service.status,
-        service.is_premium as isPremium
-        FROM service 
-        JOIN affectation on service.ser_id=affection.service_ser_id AND affectation.aff_id= ?
-        LIMIT $offset, $limit"
-            ,
-            [$affid]
-        );
-        $services = [];
-
-        foreach ($rows as $row) {
-            $services[] = new Service($row);
-        }
-
-        return $services;
-    }
-
 
     public function getOne( $serviceId) {
         $manager = DatabaseManager::getManager();
