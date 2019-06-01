@@ -130,6 +130,57 @@ class TspBranchBound
         return true;
     }
 
+    protected function buildCostMatrix () {
+        $this->costMatrix = array();
+        $n_locations = count($this->locations);
+        $coordinates = "";
+        for ($i = 0; $i < $n_locations; $i++) {
+            if ($i == 0) {
+                $coordinates = $coordinates. $this->locations[$i]->latitude . "," . $this->locations[$i]->longitude;
+            } else {
+                $coordinates = $coordinates . "|". $this->locations[$i]->latitude . "," . $this->locations[$i]->longitude;
+            }
+
+
+
+//            echo $i+1 . ". " . $this->locations[$i]->id . "\n";
+//            for ($j = 0; $j < $n_locations; $j++)
+//            {
+//                $distance = INF;
+//                if ($i!=$j)
+//                {
+//                    $loc1 = $this->locations[$i];
+//                    $loc2 = $this->locations[$j];
+//                    $distance = TspLocation::distance($loc1->latitude, $loc1->longitude, $loc2->latitude, $loc2->longitude);
+//                }
+//                $this->costMatrix[$i][$j] = $distance;
+//            }
+        }
+        // api key for now
+        $key ="AIzaSyAl0p7YX_rNrezTd_A4VOjvW0-cIKHbPo0";
+        $url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=".
+                $coordinates . "&destinations=" . $coordinates . "&key=" . $key;
+//            . "48.8223325,2.3611967&destinations=48.7716862,2.3267193&key=" .$key;
+            $response = json_decode(CurlManager::getManager()->curlGet($url));
+
+//        return CurlManager::getManager()->curlGet($url);
+//        return $response['status'];
+        if ($response['status'] == 'OK') {
+            return $response['rows'][0]['elements'][0]['duration']['value'];
+            for ($i = 0; $i <$n_locations; $i++) {
+                for ($j = 0; $j < $n_locations; $j++) {
+                    if ($i == $j) {
+                        $this->costMatrix[$i][$j] = 0;
+                    } else {
+                        $this->costMatrix[$i][$j] = $response['rows'][$i]['elements'][$j]['duration']['value'];
+                    }
+                }
+            }
+        } else {
+            return -1;
+        }
+    }
+
     protected function rowReduction(&$reducedMatrix, &$row)
     {
         // initialize row array to INF

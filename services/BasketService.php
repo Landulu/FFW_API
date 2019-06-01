@@ -139,6 +139,33 @@ class BasketService {
     }
 
 
+    public function getAllByStatusAndRole($status, $role, $offset, $limit) {
+        $manager = DatabaseManager::getManager();
+        $rows = $manager->getAll(
+            "SELECT 
+        b_id as bid,
+        create_time as createTime,
+        validation_status,
+        role,
+        order,
+        service_ser_id as serviceId,
+        company_co_id as companyId,
+        external_ex_id as externalId,
+        user_u_id as userId
+        FROM basket
+        WHERE status = ? AND role = ?
+        LIMIT $offset, $limit",
+            [$status, $role]);
+        $baskets = [];
+
+        foreach ($rows as $row) {
+            $baskets[] = new Basket($row);
+        }
+
+        return $baskets;
+    }
+
+
     public function affectProductToBasket($prid, $bid) {
         $manager = DatabaseManager::getManager();
         $affectedRows = $manager->exec(
