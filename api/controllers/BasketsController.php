@@ -82,9 +82,9 @@ class BasketsController {
             $role = isset($_GET['role']) ? $_GET['role'] : null;
             $start = isset($_GET['start']) ? new Date($_GET['start']) : null;
 
-            if ($offset && $limit && $status) {
+            if (isset($offset) && isset($limit) && isset($status)) {
 
-                if ($role == null) {
+                if (!isset($role)) {
                     $baskets = Basketservice::getInstance()->getAllByStatus($status, $offset, $limit);
                 } else {
                     $baskets = Basketservice::getInstance()->getAllByStatusAndRole($status, $role, $offset, $limit);
@@ -149,7 +149,7 @@ class BasketsController {
 
                     } else if ($basket->getUserId()) {
                         $user = UserService::getInstance()->getOne($basket->getUserId());
-                        if ($user->getAddressId()) {
+                        if ($user->getAddressId()!= null) {
                             $address = AddressService::getInstance()->getOne($user->getAddressId());
                             if ($address) {
                                 $basketElement = new DetailedBasket([
@@ -164,15 +164,27 @@ class BasketsController {
                                     "addressName" => $address->getStreetAddress(). ' ' . $address->getCityName()
                                 ]);
 
-                                if ($start) {
-                                    if ($start < $basketElement) {
+                                if (isset($address)) {
+
+
+                                    if (isset($start)) {
+                                        if ($start < $basketElement) {
+                                            array_push($result, $basketElement);
+                                        }
+                                    } else {
                                         array_push($result, $basketElement);
                                     }
                                 } else {
-                                    array_push($result, $basketElement);
+                                    http_response_code(500);
                                 }
+                            } else {
+                                http_response_code(500);
                             }
+                        } else {
+                            http_response_code(500);
                         }
+                    } else {
+                        http_response_code(500);
                     }
                 }
 
