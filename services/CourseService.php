@@ -1,19 +1,25 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: landulu
+ * Date: 27/05/19
+ * Time: 17:08
+ */
 
 
 require_once __DIR__.'/../models/Service.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
 
 
-class ServiceService {
+class CourseService {
 
     private static $instance;
 
     private function __construct(){}
 
-    public static function getInstance(): ServiceService {
+    public static function getInstance(): CourseService {
         if (!isset(self::$instance)) {
-            self::$instance = new ServiceService();
+            self::$instance = new CourseService();
         }
         return self::$instance;
     }
@@ -49,10 +55,10 @@ class ServiceService {
         $rows = $manager->getAll(
             "SELECT 
         ser_id as serid,
-        service.name as name,
+        name,
         description,
         create_time as createTime,
-        service.type as type,
+        type,
         capacity,
         is_public as isPublic,
         service_time as serviceTime,
@@ -61,7 +67,9 @@ class ServiceService {
         status,
         is_premium as isPremium
         from
-        ffw.service",[]
+        service WHERE type = 'course'
+        LIMIT $offset, $limit
+        "
         );
         $services = [];
 
@@ -69,7 +77,6 @@ class ServiceService {
             $services[] = new Service($row);
         }
         return $services;
-//        return  array("toto"=>"camarche");
     }
 
 
@@ -91,18 +98,18 @@ class ServiceService {
         service.status,
         service.is_premium as isPremium
         FROM service 
-        JOIN affectation on service.ser_id=affection.service_ser_id AND affectation.user_u_id= ?
+        JOIN affectation on service.ser_id=affection.service_ser_id AND affectation.user_u_id= ? AND service.type = 'course'
         LIMIT $offset, $limit"
             ,
             [$uid]
         );
-        $services = [];
+        $courses = [];
 
         foreach ($rows as $row) {
-            $services[] = new Service($row);
+            $courses[] = new Service($row);
         }
 
-        return $services;
+        return $courses;
     }
 
 
@@ -124,7 +131,7 @@ class ServiceService {
         is_premium as isPremium
         from
         service
-        WHERE ser_id = ?"
+        WHERE ser_id = ? AND type = 'course'"
             ,
             [$serviceId]);
 
