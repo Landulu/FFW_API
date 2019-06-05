@@ -109,15 +109,16 @@ class RoomService {
         set name = ?, 
         is_unavailable = ?, 
         is_stockroom = ?, 
-        local_lo_id = ?)", [
+        local_lo_id = ?
+        WHERE r_id = ?", [
         $room->getName(),
         $room->getIsUnavailable(),
         $room->getIsStockroom(),
-        $room->getLoId()
+        $room->getLoId(),
+        $room->getRId()
         ]);
         if($affectedRows > 0) {
-        $room->setRId($manager->lastInsertId());
-        return $room;
+            return $room;
         }
         return NULL;
     }

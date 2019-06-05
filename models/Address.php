@@ -11,7 +11,15 @@ class Address implements JsonSerializable {
     private $latitude;
     private $longitude;
 
-    public function __construct(array $fields) {
+    public function __construct($fields) {
+        if($fields==null){
+            throw new Exception('Address data missing',400);
+        }
+        foreach($fields as $key=>$value){
+            if(empty($fields[$key])&& $key!="latitude" && $key !="longitude" && $key != "complement" && $key!='adid'){
+                throw new Exception('Address data missing',400);
+            }
+        }
         $this->adid = isset($fields['adid']) ? $fields['adid'] : NULL;
         $this->houseNumber = $fields['houseNumber'];
         $this->streetAddress = $fields['streetAddress'];
