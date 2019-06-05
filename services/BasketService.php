@@ -118,15 +118,15 @@ class BasketService {
             "SELECT 
         b_id as bid,
         create_time as createTime,
-        validation_status,
+        status,
         role,
-        order,
+        basket.order,
         service_ser_id as serviceId,
         company_co_id as companyId,
         external_ex_id as externalId,
         user_u_id as userId
         FROM basket
-        WHERE status = ?
+        WHERE status LIKE ?
         LIMIT $offset, $limit",
             [$status]);
         $baskets = [];

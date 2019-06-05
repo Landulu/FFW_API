@@ -30,7 +30,6 @@ class CoursesController {
             $courses = CourseService::getInstance()->getAll($offset, $limit);
 
             if (count($courses) == 0) {
-
                 http_response_code(204);
                 return [];
             } else {
