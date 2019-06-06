@@ -5,7 +5,7 @@
  * Date: 27/05/19
  * Time: 17:04
  */
-include_once __DIR__ . '/../../services/ServiceService.php';
+include_once 'services/ServiceService.php';
 
 
 class ServicesController {
@@ -35,7 +35,6 @@ class ServicesController {
             $services = ServiceService::getInstance()->getAll($offset, $limit);
 
             return $services;
-//            return "toto";
         }
 
 

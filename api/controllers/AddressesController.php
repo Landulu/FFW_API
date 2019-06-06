@@ -45,12 +45,7 @@ class AddressesController{
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-
-            $address = new Address($obj);
-            $address = $this->gMapGeolocate($address);
-
-
-            $address = AddressService::getInstance()->create($address);
+            $address = AddressService::getInstance()->create(new Address($obj));
             if($address) {
                 http_response_code(201);
                 return $address;
@@ -68,12 +63,7 @@ class AddressesController{
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-
-
-            $address = new Address($obj);
-            $address = $this->gMapGeolocate($address);
-
-            $address = AddressService::getInstance()->update($address,$urlArray[1]);
+            $address = AddressService::getInstance()->update(new Address($obj),$urlArray[1]);
 
             if($address) {
                 http_response_code(201);
@@ -94,29 +84,5 @@ class AddressesController{
                 http_response_code(400);
             }
         }
-    }
-
-
-    public function gMapGeolocate(Address $address):?Address{
-
-        $curl=CurlManager::getManager();
-
-        $apiKey="AIzaSyA8Fx6Cf3BFeFytXc07ZXnMnHhjJ8sN48I";
-        $apiUrl="https://maps.google.com/maps/api/geocode/json";
-
-
-        $response= $curl->curlGet($apiUrl,array("key"=>$apiKey,"address"=>strval($address),"sensor"=>"false", "region"=>"fr"),array());
-
-        if($response["httpCode"]>=400){
-            return null;
-        }
-        $response= json_decode($response['result'],true);
-
-        if(isset($response['results'][0]['geometry']['location'])){
-            $location=$response['results'][0]['geometry']['location'];
-            $address->setLatitude($location['lat']);
-            $address->setLongitude($location['lng']);
-        }
-        return $address;
     }
 }

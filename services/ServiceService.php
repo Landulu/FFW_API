@@ -1,4 +1,10 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: landulu
+ * Date: 27/05/19
+ * Time: 17:08
+ */
 
 
 require_once __DIR__.'/../models/Service.php';
@@ -49,10 +55,10 @@ class ServiceService {
         $rows = $manager->getAll(
             "SELECT 
         ser_id as serid,
-        service.name as name,
+        name,
         description,
         create_time as createTime,
-        service.type as type,
+        type,
         capacity,
         is_public as isPublic,
         service_time as serviceTime,
@@ -61,7 +67,8 @@ class ServiceService {
         status,
         is_premium as isPremium
         from
-        ffw.service",[]
+        service
+        LIMIT $offset, $limit"
         );
         $services = [];
 
@@ -69,7 +76,6 @@ class ServiceService {
             $services[] = new Service($row);
         }
         return $services;
-//        return  array("toto"=>"camarche");
     }
 
 

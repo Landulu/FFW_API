@@ -118,33 +118,6 @@ class BasketService {
             "SELECT 
         b_id as bid,
         create_time as createTime,
-        status,
-        role,
-        basket.order,
-        service_ser_id as serviceId,
-        company_co_id as companyId,
-        external_ex_id as externalId,
-        user_u_id as userId
-        FROM basket
-        WHERE status LIKE ?
-        LIMIT $offset, $limit",
-            [$status]);
-        $baskets = [];
-
-        foreach ($rows as $row) {
-            $baskets[] = new Basket($row);
-        }
-
-        return $baskets;
-    }
-
-
-    public function getAllByStatusAndRole($status, $role, $offset, $limit) {
-        $manager = DatabaseManager::getManager();
-        $rows = $manager->getAll(
-            "SELECT 
-        b_id as bid,
-        create_time as createTime,
         validation_status,
         role,
         order,
@@ -153,9 +126,9 @@ class BasketService {
         external_ex_id as externalId,
         user_u_id as userId
         FROM basket
-        WHERE status = ? AND role = ?
+        WHERE status = ?
         LIMIT $offset, $limit",
-            [$status, $role]);
+            [$status]);
         $baskets = [];
 
         foreach ($rows as $row) {
