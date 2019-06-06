@@ -21,6 +21,7 @@ class CompleteUser implements JsonSerializable {
     private $companyName;
     private $skills;
     private $companies;
+    private $addressId;
     private $address;
     private $affectations;
 
@@ -40,9 +41,42 @@ class CompleteUser implements JsonSerializable {
         $this->lastEdit = isset($fields['lastEdit']) ? $fields['lastEdit'] : NULL;
         $this->companyName = isset($fields['companyName']) ? $fields['companyName'] : NULL;
         $this->address = isset($fields['address']) ? $fields['address'] : NULL;
+        $this->addressId = isset($fields['addressId']) ? $fields['addressId'] : NULL;
         $this->skills = isset($fields['skills']) ? $fields['skills'] : NULL;
         $this->companies = isset($fields['companies']) ? $fields['companies'] : NULL;
         $this->affectations = isset($fields['affectations']) ? $fields['affectations'] : NULL;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getAddressId()
+    {
+        return $this->addressId;
+    }
+
+    /**
+     * @param mixed|null $addressId
+     */
+    public function setAddressId( $addressId): void
+    {
+        $this->addressId = $addressId;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getAffectations()
+    {
+        return $this->affectations;
+    }
+
+    /**
+     * @param mixed|null $affectations
+     */
+    public function setAffectations( $affectations): void
+    {
+        $this->affectations = $affectations;
     }
 
     /**

@@ -1,22 +1,17 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: landulu
- * Date: 27/05/19
- * Time: 17:04
- */
-include_once __DIR__ . '/../../services/ServiceService.php';
+include_once __DIR__.'/../../services/ServiceService.php';
+include_once __DIR__.'/../../services/CourseService.php';
 
 
-class ServicesController {
+class CoursesController {
     private static $controller;
 
     private function __construct(){}
 
 
-    public static function getController(): ServicesController {
+    public static function getController(): CoursesController {
         if(!isset(self::$controller)) {
-            self::$controller = new ServicesController();
+            self::$controller = new CoursesController();
         }
         return self::$controller;
     }
@@ -26,30 +21,36 @@ class ServicesController {
 
         //get all
         /*
-            /services
+            /courses
         */
         if ( count($urlArray) == 1 && $method == 'GET') {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-            $services = ServiceService::getInstance()->getAll($offset, $limit);
+            $courses = CourseService::getInstance()->getAll($offset, $limit);
 
-            return $services;
-//            return "toto";
+            if (count($courses) == 0) {
+                http_response_code(204);
+                return [];
+            } else {
+                return $courses;
+
+            }
+
         }
 
 
-        //create services
+        //create course
         if ( count($urlArray) == 1 && $method == 'POST') {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-            $newService = ServiceService::getInstance()->create(new Service($obj));
-            if($newService) {
+            $newCourse = CourseService::getInstance()->create(new Service($obj));
+            if($newCourse) {
                 http_response_code(201);
-                return $newService;
+                return $newCourse;
             } else {
-                return $newService;
+                return $newCourse;
                 http_response_code(400);
             }
         }
@@ -57,9 +58,9 @@ class ServicesController {
         // get One by Id
         if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
 
-            $service = ServiceService::getInstance()->getOne($urlArray[1]);
-            if($service) {
-                return $service;
+            $course = CourseService::getInstance()->getOne($urlArray[1]);
+            if($course) {
+                return $course;
 
             } else {
                 http_response_code(400);
@@ -75,10 +76,10 @@ class ServicesController {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-            $newService = ServiceService::getInstance()->update(new Service($obj),$urlArray[1]);
-            if($newService) {
+            $newCourse = CourseService::getInstance()->update(new Service($obj),$urlArray[1]);
+            if($newCourse) {
                 http_response_code(201);
-                return $newService;
+                return $newCourse;
             } else {
                 http_response_code(400);
             }

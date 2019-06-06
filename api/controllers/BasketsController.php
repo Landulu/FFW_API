@@ -79,13 +79,47 @@ class BasketsController {
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
             $status = $_GET['status'];
 
-            if ($offset && $limit && $status) {
-                // TODO:$
+            $role = isset($_GET['role']) ? $_GET['role'] : null;
+            $start = isset($_GET['start']) ? new Date($_GET['start']) : null;
 
-                $baskets = Basketservice::getInstance()->getAllByStatus($status, $offset, $limit);
+            if (isset($offset) && isset($limit) && isset($status)) {
+
+                if (!isset($role)) {
+                    $baskets = Basketservice::getInstance()->getAllByStatus($status, $offset, $limit);
+                } else {
+                    $baskets = Basketservice::getInstance()->getAllByStatusAndRole($status, $role, $offset, $limit);
+                }
+
+                $result = [];
+
                 foreach ($baskets as $basket) {
                     if($basket->getCompanyId()) {
-                        // $company =
+
+                        $company = CompanyService::getInstance()->getOne($basket->getCompanyId());
+                        if ($company->getAddressId()) {
+                            $address = AddressService::getInstance()->getOne($company->getAddressId());
+                            if ($address) {
+                                $basketElement = new DetailedBasket([
+                                    "createTime" => $basket->getCreateTime(),
+                                    "status" => $basket->getStatus(),
+                                    "role" => $basket->getRole(),
+                                    "externalId" => $basket->getExternalId(),
+                                    "entityName" => $company->getName() != null ? $company->getName() :"Nom inféfini",
+                                    "tel" => $company->getTel() != null ? $company->getTel() : null,
+                                    "addressId" => $address->getAdId(),
+                                    "addressZipCode" => $address->getCityCode(),
+                                    "addressName" => $address->getStreetAddress(). ' ' . $address->getCityName()
+                                ]);
+
+                                if ($start) {
+                                    if ($start < $basketElement) {
+                                        array_push($result, $basketElement);
+                                    }
+                                } else {
+                                    array_push($result, $basketElement);
+                                }
+                            }
+                        }
                     } else if ($basket->getExternalId()) {
                         $external = ExternalService::getInstance()->getOne($basket->getExternalId());
                         if ($external->getAddressId()) {
@@ -102,12 +136,20 @@ class BasketsController {
                                     "addressZipCode" => $address->getCityCode(),
                                     "addressName" => $address->getStreetAddress(). ' ' . $address->getCityName()
                                 ]);
+
+                                if ($start) {
+                                    if ($start < $basketElement) {
+                                        array_push($result, $basketElement);
+                                    }
+                                } else {
+                                    array_push($result, $basketElement);
+                                }
                             }
                         }
 
                     } else if ($basket->getUserId()) {
                         $user = UserService::getInstance()->getOne($basket->getUserId());
-                        if ($user->getAddressId()) {
+                        if ($user->getAddressId()!= null) {
                             $address = AddressService::getInstance()->getOne($user->getAddressId());
                             if ($address) {
                                 $basketElement = new DetailedBasket([
@@ -121,9 +163,36 @@ class BasketsController {
                                     "addressZipCode" => $address->getCityCode(),
                                     "addressName" => $address->getStreetAddress(). ' ' . $address->getCityName()
                                 ]);
+
+                                if (isset($address)) {
+
+
+                                    if (isset($start)) {
+                                        if ($start < $basketElement) {
+                                            array_push($result, $basketElement);
+                                        }
+                                    } else {
+                                        array_push($result, $basketElement);
+                                    }
+                                } else {
+                                    http_response_code(500);
+                                }
+                            } else {
+                                http_response_code(500);
                             }
+                        } else {
+                            http_response_code(500);
                         }
+                    } else {
+                        http_response_code(500);
                     }
+                }
+
+                if(count($result) == 0) {
+                    http_response_code(204);
+                    return [];
+                } else {
+                    return $result;
                 }
 
             } else {

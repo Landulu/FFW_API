@@ -85,7 +85,7 @@ class AddressService {
         [$addressId]);
 
         if($address){
-            return $address;
+            return  new Address($address);
         }
     }
     //Fin modification
