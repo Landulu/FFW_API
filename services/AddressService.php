@@ -90,7 +90,7 @@ class AddressService {
     }
     //Fin modification
 
-    public function update(Address $address, $adid): ?Address {
+    public function update(Address $address): ?Address {
         $manager = DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "UPDATE address
@@ -111,7 +111,7 @@ class AddressService {
             $address->getCountry(),
             $address->getLatitude(),
             $address->getLongitude(),
-            $adid
+            $address->getAdId()
             ]);
         if ($affectedRows > 0) {
             return $address;

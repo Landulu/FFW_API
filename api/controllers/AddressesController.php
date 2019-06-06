@@ -45,12 +45,18 @@ class AddressesController{
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
+            try {
+                $address=new Address($obj);
+            }
+            catch(Exception $e){
+                http_response_code($e->getCode());
+                return $e->getMessage();
+            }
 
-            $address = new Address($obj);
             $address = $this->gMapGeolocate($address);
 
-
             $address = AddressService::getInstance()->create($address);
+
             if($address) {
                 http_response_code(201);
                 return $address;
@@ -64,13 +70,18 @@ class AddressesController{
         */
         // update One by Id
 
-        if ( count($urlArray) == 2 && $method == 'PUT') {
+        if ( count($urlArray) == 1 && $method == 'PUT') {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
+            try {
+                $address=new Address($obj);
+            }
+            catch(Exception $e){
+                http_response_code($e->getCode());
+                return $e->getMessage();
+            }
 
-
-            $address = new Address($obj);
             $address = $this->gMapGeolocate($address);
 
             $address = AddressService::getInstance()->update($address,$urlArray[1]);

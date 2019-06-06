@@ -85,6 +85,17 @@ class LocalsController {
                 http_response_code(400);
             }
         }
+        if ( count($urlArray) == 1 && $method == 'PUT') {
+            $json = file_get_contents('php://input');
+            $obj = json_decode($json, true);
+            $newLocal = LocalService::getInstance()->update(new Local($obj));
+            if($newLocal) {
+                http_response_code(201);
+                return $newLocal;
+            } else {
+                http_response_code(400);
+            }
+        }
 
         // get One by Id
         /*
@@ -97,7 +108,6 @@ class LocalsController {
             $local = LocalService::getInstance()->getOne($urlArray[1]);
             if($local) {
                 http_response_code(200);
-                return $local;
             } else {
                 http_response_code(400);
             }

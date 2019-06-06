@@ -62,6 +62,22 @@ class RoomsController {
             }
         }
 
+        if ( count($urlArray) == 1 && $method == 'PUT') {
+            $json = file_get_contents('php://input');
+            $obj = json_decode($json, true);
+
+            $room = RoomService::getInstance()->update(new Room($obj));
+
+            if($room) {
+                http_response_code(201);
+                return $room;
+            } else {
+                http_response_code(400);
+                return $obj;
+
+            }
+        }
+
 
         /*
         GET: 'rooms/{int}'
