@@ -31,6 +31,22 @@ class LocalService {
         }
         return NULL;
     }
+    public function update(Local $local): ?Local {
+        $manager = DatabaseManager::getManager();
+        $affectedRows = $manager->exec(
+            "UPDATE 
+        local 
+        SET name = ? , address_ad_id = ? 
+        WHERE lo_id= ?", [
+            $local->getName(),
+            $local->getAdId(),
+            $local->getLoId()
+        ]);
+        if($affectedRows > 0) {
+            return $local;
+        }
+        return NULL;
+    }
 
     public function getAll($offset, $limit) {
         $manager = DatabaseManager::getManager();
