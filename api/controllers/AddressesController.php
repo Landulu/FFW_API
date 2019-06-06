@@ -106,4 +106,28 @@ class AddressesController{
             }
         }
     }
+
+
+    public function gMapGeolocate(Address $address):?Address{
+
+        $curl=CurlManager::getManager();
+
+        $apiKey="AIzaSyA8Fx6Cf3BFeFytXc07ZXnMnHhjJ8sN48I";
+        $apiUrl="https://maps.google.com/maps/api/geocode/json";
+
+
+        $response= $curl->curlGet($apiUrl,array("key"=>$apiKey,"address"=>strval($address),"sensor"=>"false", "region"=>"fr"),array());
+
+        if($response["httpCode"]>=400){
+            return null;
+        }
+        $response= json_decode($response['result'],true);
+
+        if(isset($response['results'][0]['geometry']['location'])){
+            $location=$response['results'][0]['geometry']['location'];
+            $address->setLatitude($location['lat']);
+            $address->setLongitude($location['lng']);
+        }
+        return $address;
+    }
 }

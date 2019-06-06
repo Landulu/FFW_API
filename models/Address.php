@@ -109,6 +109,11 @@ class Address implements JsonSerializable {
     public function JsonSerialize() {
         return get_object_vars($this);
     }
+
+    public function __toString(){
+        return $this->houseNumber.' '.$this->streetAddress.' '.$this->cityName.' '.$this->cityName.' '.$this->country;
+    }
+
 }
 
 
