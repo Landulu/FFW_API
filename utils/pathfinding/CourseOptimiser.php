@@ -1,9 +1,4 @@
-
 <?php
-
-include_once 'models/Address.php';
-include_once 'utils/curl/CurlManager.php';
-
 
 class CourseOptimiser {
 
@@ -18,51 +13,7 @@ class CourseOptimiser {
     private $visited;
   
     // Stores the final minimum weight of shortest tour. 
-    private $finalRes = PHP_INT_MAX;
-
-    /**
-     * CourseOptimiser constructor.
-     */
-    public function __construct()
-    {
-    }
-
-
-    public function buildAdjMatrix($addresses) {
-        $adj = [];
-
-        for ($i = 0; $i < count($addresses); $i++) {
-            for($j = 0; $j < count($addresses); $j++) {
-                if ($j != $i) {
-                    $cost = $this->getDistanceBetweenAddresses($addresses[$i], $addresses[$j]);
-                    $adj[$i][$j] = $cost;
-                }
-            }
-        }
-
-
-    }
-
-    public function getDistanceBetweenAddresses(
-//        Address $addressA, Address $addressB
-    ) {
-        // api key for now
-        $key ="AIzaSyAl0p7YX_rNrezTd_A4VOjvW0-cIKHbPo0";
-        $url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins="
-//            . $addressA->getLatitude() . "," . $addressA->getLongitude() . "&destinations=" . $addressB->getLatitude() . "," . $addressB->getLongitude() . "&key=" . $key;
-            . "48.8223325,2.3611967&destinations=48.7716862,2.3267193&key=" .$key;
-//        $response = json_decode(CurlManager::getManager()->curlGet($url));
-
-          return CurlManager::getManager()->curlGet($url);
-//        return $response->status;
-//        if ($response->status == 'OK') {
-//            return $response->rows[0]['elements'][0]['duration']['value'];
-//        } else {
-//            return -1;
-//        }
-
-    }
-
+    private $finalRes = PHP_INT_MAX; 
     
     public function getShortestPath($adj) { 
         $currPath[] = []; 
@@ -78,8 +29,8 @@ class CourseOptimiser {
   
         // Compute initial bound 
         for ($i = 0; $i < $this->n; $i++) 
-            $currBound += ($this->firstMin($adj, $i) +
-                        $this->secondMin($adj, $i));
+            $currBound += (firstMin($adj, $i) + 
+                        secondMin($adj, $i)); 
   
         // Rounding off the lower bound to an integer 
         $currBound = ($currBound==1)? $currBound/2 + 1 : 
@@ -92,7 +43,7 @@ class CourseOptimiser {
   
         // Call to TSPRec for curr_weight equal to 
         // 0 and level 1 
-        $this->recursiveShortestPath($adj, $currBound, 0, 1, $currPath);
+        recursiveShortestPath($adj, $currBound, 0, 1, $currPath); 
     } 
 
     // Function to find the minimum edge cost 
@@ -147,13 +98,13 @@ class CourseOptimiser {
                 // curr_res has the total weight of the 
                 // solution we got 
                 $currRes = $currWeight + 
-                        $adj[$currPath[$level - 1]][$currPath[0]];
-
+                        $adj[$currPath[$level-1]][$currPath[0]]; 
+      
                 // Update final result and final path if 
                 // current result is better. 
-                if ($currRes < $this->finalRes)
-                {
-                    $this->copyToFinal($currPath);
+                if ($currRes < $finalRes) 
+                { 
+                    copyToFinal($currPath); 
                     $this->finalRes = $currRes; 
                 } 
             } 
@@ -175,10 +126,11 @@ class CourseOptimiser {
                 // different computation of curr_bound for 
                 // level 2 from the other levels 
                 if ($level==1) 
-                $currBound -= (($this->firstMin($adj, $currPath[$level - 1]) + $this->firstMin($adj, $i))/2);
+                $currBound -= ((firstMin($adj, $currPath[$level - 1]) + 
+                                firstMin($adj, $i))/2); 
                 else
-                $currBound -= (($this->secondMin($adj, $currPath[$level - 1]) +
-                        $this->firstMin($adj, $i))/2);
+                $currBound -= ((secondMin($adj, $currPath[$level - 1]) + 
+                                firstMin($adj, $i))/2); 
   
                 // $currBound + curr_weight is the actual lower bound 
                 // for the node that we have arrived on 
@@ -190,7 +142,7 @@ class CourseOptimiser {
                     $this->visited[$i] = true; 
   
                     // call TSPRec for the next level 
-                    $this->recursiveShortestPath($adj, $currBound, $currWeight, $level + 1,
+                    recursiveShortestPath($adj, $currBound, $currWeight, $level + 1, 
                         $currPath); 
                 } 
   
@@ -202,7 +154,7 @@ class CourseOptimiser {
                 // Also reset visited array 
                 $this->visited = array_fill( 0, count($this->visited), false); 
                 for ($j = 0; $j <= $level - 1; $j++) 
-                    $this->visited[$currPath[$j]] = true;
+                    $this->visited[$currPath[j]] = true; 
             } 
         } 
     } 

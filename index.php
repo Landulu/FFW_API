@@ -6,29 +6,40 @@ header('Content-Type: application/json');
 
 
 
+// include_once 'utils/routing/Request.php';
+// include_once 'utils/routing/Router.php';
 
 include_once 'api/controllers/AppController.php';
 include_once 'utils/curl/CurlManager.php';
-include_once 'utils/pathfinding/TspBranchBound.php';
+
+include_once 'utils/pathfinding/CourseOptimiser.php';
 
 $appController = AppController::getController();
 echo json_encode($appController->proccessQuery($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']));
 
-//
-//
-//try
-//{
-//    $tsp = TspBranchBound::getInstance();
-//    $tsp->addLocation(array('id'=>'newquay', 'latitude'=>50.413608, 'longitude'=>-5.083364));
-//    $tsp->addLocation(array('id'=>'manchester', 'latitude'=>53.480712, 'longitude'=>-2.234377));
-//    $tsp->addLocation(array('id'=>'london', 'latitude'=>51.500152, 'longitude'=>-0.126236));
-//    $tsp->addLocation(array('id'=>'birmingham', 'latitude'=>52.483003, 'longitude'=>-1.893561));
-//    $ans = $tsp->solve();
-//    echo "\nTotal cost: " . ceil($ans['cost']) . "\n\n";
-//}
-//catch (Exception $e)
-//{
-//    echo $e;
-//    exit;
-//}
+// $options = Array();
+
+
+
+// $curlArticle = json_decode(CurlManager::getManager()->curlGet("https://world.openfoodfacts.org/api/v0/product/3387390406719.json"), true);
+
+// print_r($curlArticle);
+
+// echo($curlArticle['product']['categories']);
+
+
+// echo $appController->proccessQuery($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
+
+
+
+
+// $optimiser = CourseOptimiser::getInstance();
+
+// $adj[][] = [[0, 10, 15, 20], 
+//                         [10, 0, 35, 25], 
+//                         [15, 35, 0, 30], 
+//                         [20, 25, 30, 0] ]; 
+  
+// $optimiser->getShortestPath(adj); 
+
 

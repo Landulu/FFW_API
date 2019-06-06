@@ -15,8 +15,6 @@ include_once 'api/controllers/ExternalsController.php';
 include_once 'api/controllers/AddressesController.php';
 include_once 'api/controllers/CompaniesController.php';
 include_once 'api/controllers/ServicesController.php';
-include_once 'api/controllers/CoursesController.php';
-
 
 
 
@@ -57,10 +55,6 @@ class AppController {
         $sorter = $urlArray[1];
 
         switch ($sorter) {
-            case 'courses':
-                $coursesController = CoursesController::getController();
-                $result = $coursesController->proccessQuery(array_slice($urlArray, 1), $method);
-                return $result;
             case 'addresses':
                 $addressesController = AddressesController::getController();
                 $result = $addressesController->proccessQuery(array_slice($urlArray, 1), $method);
