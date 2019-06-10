@@ -24,15 +24,14 @@ class BasketService {
         'INSERT INTO
         basket 
         (create_time ,
-        validation_status,
+        status,
         role,
         basket.order,
         service_ser_id ,
         company_co_id ,
         external_ex_id ,
         user_u_id )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [
-            $basket->getCreateTime(),
+        VALUES (now(), ?, ?, ?, ?, ?, ?, ?)', [
             $basket->getStatus(),
             $basket->getRole(),
             $basket->getOrder(),
@@ -54,9 +53,9 @@ class BasketService {
         "SELECT 
         b_id as bid,
         create_time as createTime,
-        validation_status,
+        status,
         role,
-        order,
+        basket.order,
         service_ser_id as serviceId,
         company_co_id as companyId,
         external_ex_id as externalId,
@@ -91,7 +90,7 @@ class BasketService {
         "SELECT 
         b_id as bid,
         create_time as createTime,
-        validation_status,
+        status,
         role,
         order,
         service_ser_id as serviceId,
@@ -99,7 +98,7 @@ class BasketService {
         external_ex_id as externalId,
         user_u_id as userId
         FROM basket
-        WHERE user_u_id
+        WHERE user_u_id = ?
         LIMIT $offset, $limit",
         [$userId]);
         $baskets = [];
@@ -118,15 +117,15 @@ class BasketService {
             "SELECT 
         b_id as bid,
         create_time as createTime,
-        validation_status,
+        status,
         role,
-        order,
+        basket.order,
         service_ser_id as serviceId,
         company_co_id as companyId,
         external_ex_id as externalId,
         user_u_id as userId
         FROM basket
-        WHERE status = ?
+        WHERE status LIKE ?
         LIMIT $offset, $limit",
             [$status]);
         $baskets = [];
@@ -139,23 +138,38 @@ class BasketService {
     }
 
 
-    public function getAllByStatusAndRole($status, $role, $offset, $limit) {
+    public function getAllFiltered($params, $offset, $limit) {
+
         $manager = DatabaseManager::getManager();
+
+
+        $roleSql=isset($params['role'])?" role = '{$params["role"]}'":null;
+        $statusSql=isset($params['status'])?" status = '{$params["status"]}'":null;
+
+        if(isset($params['role'])&&isset($params['status'])){
+            $finalSql=$roleSql." AND ".$statusSql;
+        }
+        else if(isset($params['role'])&&!isset($params['status'])){
+            $finalSql=$roleSql;
+        }
+        else{
+            $finalSql=$statusSql;
+        }
+
         $rows = $manager->getAll(
             "SELECT 
         b_id as bid,
         create_time as createTime,
-        validation_status,
+        status,
         role,
-        order,
+        basket.order,
         service_ser_id as serviceId,
         company_co_id as companyId,
         external_ex_id as externalId,
         user_u_id as userId
         FROM basket
-        WHERE status = ? AND role = ?
-        LIMIT $offset, $limit",
-            [$status, $role]);
+        WHERE $finalSql
+        LIMIT $offset,$limit");
         $baskets = [];
 
         foreach ($rows as $row) {
@@ -178,6 +192,36 @@ class BasketService {
             return 1;
         }
         return 0;
+    }
+    public function update(Basket $basket): ?Basket {
+        $manager = DatabaseManager::getManager();
+        $affectedRows = $manager->exec(
+            'UPDATE
+        basket 
+        SET create_time= ?,
+        status = ?,
+        role = ?,
+        basket.order = ?,
+        service_ser_id  = ?,
+        company_co_id  = ?,
+        external_ex_id  = ?,
+        user_u_id= ? 
+        WHERE basket_b_id= ? )
+        ', [
+            $basket->getCreateTime(),
+            $basket->getStatus(),
+            $basket->getRole(),
+            $basket->getOrder(),
+            $basket->getServiceId(),
+            $basket->getCompanyId(),
+            $basket->getExternalId(),
+            $basket->getUserId(),
+            $basket->getBid()
+        ]);
+        if ($affectedRows > 0) {
+            return $basket;
+        }
+        return NULL;
     }
 
     // public function update(Product $product): ?Product {

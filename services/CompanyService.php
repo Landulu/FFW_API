@@ -117,6 +117,25 @@ class CompanyService {
 
     }
 
+    public function getOne($companyId):?array {
+
+        $manager = DatabaseManager::getManager();
+        $company = $manager->getOne(
+            "SELECT 
+        co_id AS coid,
+        company.SIRET as siret,
+        company.status, 
+        company.name, 
+        company.address_ad_id AS addressId, 
+        company.tel, 
+        company.user_u_id AS userId 
+        FROM company WHERE co_id= ? ",
+            [$companyId]
+        );
+
+        return $company;
+    }
+
 }
 
 ?>

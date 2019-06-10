@@ -21,6 +21,19 @@
 "available"
 "not available"
 
+#service types
+"course" => collectes /tournées 
+"event" => evenement à inscription (lieu, staff attribué, dates, etc)
+"news" => posts de FFW
+"forum" => posts de users
+
+#basket status
+"pending"
+"validated"
+"refused"
+"canceled"
+"affected"
+"delivered"
 
 
 #skills status

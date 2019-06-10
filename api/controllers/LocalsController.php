@@ -137,7 +137,6 @@ class LocalsController {
 
         $addressManager= AddressService::getInstance();
         $roomManager= RoomService::getInstance();
-        $productManager= ProductService::getInstance();
 
         $locals=json_decode(json_encode($locals),true);
 
