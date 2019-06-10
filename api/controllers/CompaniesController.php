@@ -93,4 +93,22 @@ class CompaniesController {
         }
 
     }
+
+    public static function decorateCompany($companies,$optionsArr=["address"=>true]){
+
+
+        $addressManager= AddressService::getInstance();
+
+        $companies=json_decode(json_encode($companies),true);
+
+        foreach($companies as $key=>$company){
+            $company = new CompleteCompany($company);
+            if(isset($optionsArr["address"])){
+                $company->setAddress($addressManager->getOne($company->getAdid()));
+            }
+            $companies[$key]=$company;
+        }
+
+        return $companies;
+    }
 }

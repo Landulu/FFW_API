@@ -16,6 +16,7 @@ include_once 'api/controllers/AddressesController.php';
 include_once 'api/controllers/CompaniesController.php';
 include_once 'api/controllers/ServicesController.php';
 include_once 'api/controllers/CoursesController.php';
+include_once 'api/controllers/ProductsController.php';
 
 
 
@@ -90,7 +91,9 @@ class AppController {
                 $result = $localsController->proccessQuery(array_slice($urlArray, 1), $method);
                 return $result;
             case 'products':
-                # code...
+                $productsController = ProductsController::getController();
+                $result = $productsController->proccessQuery(array_slice($urlArray, 1), $method);
+                return $result;
                 break;
             case 'rooms':
                 $roomsController = RoomsController::getController();

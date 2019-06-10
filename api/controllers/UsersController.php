@@ -437,41 +437,50 @@ class UsersController {
 
     }
 
-    private function decorateCompleteUser($completeUser) {
+    public static function decorateCompleteUser($completeUser,$optionsArr=["skill"=>true,"address"=>true,"company"=>true]) {
         $offset = 0;
         $limit = 20;
         $skills = [];
         $newSkills = [];
-        do {
-            $newSkills = SkillService::getInstance()->getAllByUser($completeUser->getUid(), $offset, $limit);
-            $skills = array_merge($skills, $newSkills);
-            $offset += 20;
-        } while (count($newSkills) == 20 );
-        if ($skills) {
-            $completeUser->setSkills($skills);
-        }
 
-        $address = AddressService::getInstance()->getOneByUserId($completeUser->getUid());
-        if($address) {
-            $completeUser->setAddress($address);
-        }
-
-        $offset = 0;
-        $companies = [];
-        $newCompanies = [];
-
-        do {
-            $newCompanies = CompanyService::getInstance()->getAllByUser($completeUser->getUid(), $offset, $limit);
-
-            if($newCompanies){
-                $companies = array_merge($companies, $newCompanies);
+        if(isset($optionsArr["skill"])){
+            do {
+                $newSkills = SkillService::getInstance()->getAllByUser($completeUser->getUid(), $offset, $limit);
+                $skills = array_merge($skills, $newSkills);
                 $offset += 20;
+            } while (count($newSkills) == 20 );
+            if ($skills) {
+                $completeUser->setSkills($skills);
             }
-
-        } while ( $newCompanies && count($newCompanies) == 20);
-        if($companies) {
-            $completeUser->setCompanies($companies);
         }
+
+        if(isset($optionsArr["address"])){
+            $address = AddressService::getInstance()->getOneByUserId($completeUser->getUid());
+            if($address) {
+                $completeUser->setAddress($address);
+            }
+        }
+
+
+        if(isset($optionsArr["company"])) {
+
+            $offset = 0;
+            $companies = [];
+            $newCompanies = [];
+            do {
+                $newCompanies = CompanyService::getInstance()->getAllByUser($completeUser->getUid(), $offset, $limit);
+
+                if ($newCompanies) {
+                    $companies = array_merge($companies, $newCompanies);
+                    $offset += 20;
+                }
+
+            } while ($newCompanies && count($newCompanies) == 20);
+            if ($companies) {
+                $completeUser->setCompanies($companies);
+            }
+        }
+
         http_response_code(200);
         return $completeUser;
     }

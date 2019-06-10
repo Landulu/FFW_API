@@ -58,28 +58,28 @@ class User implements JsonSerializable {
         $this->password = $password;
     }
     public function setFirstName(string $firstname) {
-        $this->$firstname = $firstname;
+        $this->firstname = $firstname;
     }
     public function setLastname(string $lastname) {
-        $this->$lastname = $lastname;
+        $this->lastname = $lastname;
     }
     public function setLastSubscription(string $lastSubscription) {
-        $this->$lastSubscription = $lastSubscription;
+        $this->lastSubscription = $lastSubscription;
     }
     public function setEndSubscription(string $endSubscription) {
-        $this->$endSubscription = $endSubscription;
+        $this->endSubscription = $endSubscription;
     }
     public function setLastEdit(string $lastEdit) {
-        $this->$lastEdit = $lastEdit;
+        $this->lastEdit = $lastEdit;
     }
     public function setCompanyName(string $companyName) {
-        $this->$companyName = $companyName;
+        $this->companyName = $companyName;
     }
     public function setAddressId(int $addressId) {
-        $this->$addressId = $addressId;
+        $this->addressId = $addressId;
     }
     public function setStatus(int $status) {
-        $this->$status = $status;
+        $this->status = $status;
     }
 
     public function JsonSerialize() {

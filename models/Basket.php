@@ -24,13 +24,69 @@ class Basket implements JsonSerializable {
         $this->userId = isset($fields['userId']) ? $fields['userId'] : NULL;
     }
 
-    public function getBId() {return $this->bid;}
-    public function getServiceId() {return $this->serviceId;}
-    public function getCompanyId() {return $this->companyId;}
-    public function getExternalId() {return $this->externalId;}
-    public function getUserId() {return $this->userId;}
-    public function getCreateTime() {return $this->createTime;}
-    public function getRole() {return $this->role;}
+    /**
+     * @return mixed|null
+     */
+    public function getBid()
+    {
+        return $this->bid;
+    }
+
+    /**
+     * @param mixed|null $bid
+     */
+    public function setBid($bid): void
+    {
+        $this->bid = $bid;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getCreateTime()
+    {
+        return $this->createTime;
+    }
+
+    /**
+     * @param mixed|null $createTime
+     */
+    public function setCreateTime($createTime): void
+    {
+        $this->createTime = $createTime;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed|null $status
+     */
+    public function setStatus($status): void
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getRole()
+    {
+        return $this->role;
+    }
+
+    /**
+     * @param mixed|null $role
+     */
+    public function setRole($role): void
+    {
+        $this->role = $role;
+    }
 
     /**
      * @return mixed|null
@@ -43,44 +99,76 @@ class Basket implements JsonSerializable {
     /**
      * @param mixed|null $order
      */
-    public function setOrder( $order): void
+    public function setOrder($order): void
     {
         $this->order = $order;
     }
 
+    /**
+     * @return mixed|null
+     */
+    public function getServiceId()
+    {
+        return $this->serviceId;
+    }
 
     /**
-     * @return mixed
+     * @param mixed|null $serviceId
      */
-    public function getStatus()
+    public function setServiceId($serviceId): void
     {
-        return $this->status;
+        $this->serviceId = $serviceId;
     }
 
     /**
-     * @param mixed $status
+     * @return mixed|null
      */
-    public function setStatus($status): void
+    public function getCompanyId()
     {
-        $this->status = $status;
+        return $this->companyId;
+    }
+
+    /**
+     * @param mixed|null $companyId
+     */
+    public function setCompanyId($companyId): void
+    {
+        $this->companyId = $companyId;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getExternalId()
+    {
+        return $this->externalId;
+    }
+
+    /**
+     * @param mixed|null $externalId
+     */
+    public function setExternalId($externalId): void
+    {
+        $this->externalId = $externalId;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param mixed|null $userId
+     */
+    public function setUserId($userId): void
+    {
+        $this->userId = $userId;
     }
 
 
-    public function setBId($id) {
-        $this->bid = $id;
-    }
-    public function setServiceId($id) {
-        $this->serviceId = $id;
-    }
-    public function setCompanyId($id) {
-        $this->companyId = $id;
-    }
-    public function setExternalId($id) {
-        $this->externalId = $id;
-    }
-    public function setUserId($id) {
-        $this->userId = $id;
-    }
 
     public function JsonSerialize() {
         return get_object_vars($this);

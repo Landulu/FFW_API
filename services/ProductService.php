@@ -26,12 +26,16 @@ class ProductService {
         limit_date, 
         state, 
         article_a_id, 
+        product.quantity_unit , 
+        product.weight_quantity , 
         basket_b_id, 
         room_r_id)
-        VALUES (?, ?, ?, ?, ?)", [
+        VALUES (?, ?, ?, ?, ?, ?, ?)", [
             $product->getLimitDate(),
             $product->getState(),
             $product->getArticleId(),
+            $product->getQuantityUnit(),
+            $product->getWeightQuantity(),
             $product->getBasketId(),
             $product->getRoomId()
             ]);
@@ -49,6 +53,8 @@ class ProductService {
                 product.limit_date as limitDate, 
                 product.state as state, 
                 product.article_a_id as articleId, 
+                product.quantity_unit as quantityUnit, 
+                product.weight_quantity as weightQuantity, 
                 product.basket_b_id as basketId, 
                 product.room_r_id as roomId,
                 article.name as articleName,
@@ -77,6 +83,8 @@ class ProductService {
                 product.limit_date as limitDate, 
                 product.state as state, 
                 product.article_a_id as articleId, 
+                product.quantity_unit as quantityUnit, 
+                product.weight_quantity as weightQuantity, 
                 product.basket_b_id as basketId, 
                 product.room_r_id as roomId,
                 article.name as articleName,
@@ -96,23 +104,56 @@ class ProductService {
         }
     }
 
+    public function getAllByBasket($basket_b_id, $offset, $limit) {
+        $manager = DatabaseManager::getManager();
+        $rows = $manager->getAll(
+            "SELECT product.pr_id as prid, 
+                product.limit_date as limitDate, 
+                product.state as state, 
+                product.article_a_id as articleId, 
+                product.quantity_unit as quantityUnit, 
+                product.weight_quantity as weightQuantity, 
+                product.basket_b_id as basketId, 
+                product.room_r_id as roomId,
+                article.name as articleName,
+                article.category as articleCategory
+            FROM product
+            JOIN article ON article.a_id = product.article_a_id
+            WHERE product.basket_b_id= ?
+            LIMIT $offset, $limit",
+            [$basket_b_id]
+        );
+        $products = [];
+        if($rows) {
+            foreach ($rows as $row) {
+                $products[] = new DetailedProduct($row);
+            }
+            return $products;
+        }
+    }
+
     public function update(Product $product): ?Product {
         $manager = DatabaseManager::getManager();
         $affectedRows = $manager->exec(
-        "UPDATE products
+        "UPDATE product
         set limit_date = ?, 
         state = ?, 
         article_a_id = ?, 
+        quantity_unit = ?,
+        weight_quantity=?,
         basket_b_id = ?, 
-        room_r_id = ?)", [
+        room_r_id = ?
+        WHERE pr_id =?", [
             $product->getLimitDate(),
             $product->getState(),
             $product->getArticleId(),
+            $product->getQuantityUnit(),
+            $product->getWeightQuantity(),
             $product->getBasketId(),
-            $product->getRoomId()
+            $product->getRoomId(),
+            $product->getPrid()
             ]);
         if ($affectedRows > 0) {
-            $product->setPrId($manager->lastInsertId());
             return $product;
         }
         return NULL;

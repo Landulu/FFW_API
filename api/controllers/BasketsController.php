@@ -9,6 +9,11 @@ include_once 'services/UserService.php';
 include_once 'services/CompanyService.php';
 include_once 'services/ExternalService.php';
 
+include_once 'CompaniesController.php';
+include_once 'ExternalsController.php';
+include_once 'AddressesController.php';
+include_once 'UsersController.php';
+
 
 include_once 'models/DetailedBasket.php';
 
@@ -36,11 +41,33 @@ class BasketsController {
 
         //get all
         if ( count($urlArray) == 1 && $method == 'GET') {
+
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-            $baskets = Basketservice::getInstance()->getAll($offset, $limit);
-            return $baskets;
+
+            if ( isset($_GET['status']) || isset($_GET['role'])) {
+
+                $baskets = Basketservice::getInstance()->getAllFiltered($_GET, $offset, $limit);
+
+                if(count($baskets) == 0) {
+                    http_response_code(400);
+                    return $baskets;
+                } else {
+                    return self::decorateBasket($baskets);
+                }
+
+            } else {
+                $baskets = Basketservice::getInstance()->getAll($offset, $limit);
+                if($baskets){
+                    http_response_code(200);
+                    return $baskets;
+                }
+                else{
+                    http_response_code(400);
+                }
+            }
+
         }
 
 
@@ -48,8 +75,21 @@ class BasketsController {
         if ( count($urlArray) == 1 && $method == 'POST') {
             $json = file_get_contents('php://input'); 
             $obj = json_decode($json, true);
-            
-            $newBasket = Basketservice::getInstance()->create(new Basket($obj));
+
+            $newBasket = Basketservice::getInstance()->create( new Basket($obj));
+            if($newBasket) {
+                http_response_code(201);
+                return $newBasket;
+            } else {
+                http_response_code(400);
+            }
+        }
+
+        if ( count($urlArray) == 1 && $method == 'PUT') {
+            $json = file_get_contents('php://input');
+            $obj = json_decode($json, true);
+
+            $newBasket = Basketservice::getInstance()->update( new Basket($obj));
             if($newBasket) {
                 http_response_code(201);
                 return $newBasket;
@@ -74,133 +114,59 @@ class BasketsController {
         /*
          * GET  baskets/status
          */
-        if ( count($urlArray) == 2 && $method == 'GET' && $urlArray[1] == "status") {
-            $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
-            $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
-            $status = $_GET['status'];
 
-            $role = isset($_GET['role']) ? $_GET['role'] : null;
-            $start = isset($_GET['start']) ? new Date($_GET['start']) : null;
-
-            if (isset($offset) && isset($limit) && isset($status)) {
-
-                if (!isset($role)) {
-                    $baskets = Basketservice::getInstance()->getAllByStatus($status, $offset, $limit);
-                } else {
-                    $baskets = Basketservice::getInstance()->getAllByStatusAndRole($status, $role, $offset, $limit);
-                }
-
-                $result = [];
-
-                foreach ($baskets as $basket) {
-                    if($basket->getCompanyId()) {
-
-                        $company = CompanyService::getInstance()->getOne($basket->getCompanyId());
-                        if ($company->getAddressId()) {
-                            $address = AddressService::getInstance()->getOne($company->getAddressId());
-                            if ($address) {
-                                $basketElement = new DetailedBasket([
-                                    "createTime" => $basket->getCreateTime(),
-                                    "status" => $basket->getStatus(),
-                                    "role" => $basket->getRole(),
-                                    "externalId" => $basket->getExternalId(),
-                                    "entityName" => $company->getName() != null ? $company->getName() :"Nom inféfini",
-                                    "tel" => $company->getTel() != null ? $company->getTel() : null,
-                                    "addressId" => $address->getAdId(),
-                                    "addressZipCode" => $address->getCityCode(),
-                                    "addressName" => $address->getStreetAddress(). ' ' . $address->getCityName()
-                                ]);
-
-                                if ($start) {
-                                    if ($start < $basketElement) {
-                                        array_push($result, $basketElement);
-                                    }
-                                } else {
-                                    array_push($result, $basketElement);
-                                }
-                            }
-                        }
-                    } else if ($basket->getExternalId()) {
-                        $external = ExternalService::getInstance()->getOne($basket->getExternalId());
-                        if ($external->getAddressId()) {
-                            $address = AddressService::getInstance()->getOne($external->getAddressId());
-                            if ($address) {
-                                $basketElement = new DetailedBasket([
-                                    "createTime" => $basket->getCreateTime(),
-                                    "status" => $basket->getStatus(),
-                                    "role" => $basket->getRole(),
-                                    "externalId" => $basket->getExternalId(),
-                                    "entityName" => $external->getName() != null ? $external->getName() :"Nom inféfini",
-                                    "tel" => $external->getTel() != null ? $external->getTel() : null,
-                                    "addressId" => $address->getAdId(),
-                                    "addressZipCode" => $address->getCityCode(),
-                                    "addressName" => $address->getStreetAddress(). ' ' . $address->getCityName()
-                                ]);
-
-                                if ($start) {
-                                    if ($start < $basketElement) {
-                                        array_push($result, $basketElement);
-                                    }
-                                } else {
-                                    array_push($result, $basketElement);
-                                }
-                            }
-                        }
-
-                    } else if ($basket->getUserId()) {
-                        $user = UserService::getInstance()->getOne($basket->getUserId());
-                        if ($user->getAddressId()!= null) {
-                            $address = AddressService::getInstance()->getOne($user->getAddressId());
-                            if ($address) {
-                                $basketElement = new DetailedBasket([
-                                    "createTime" => $basket->getCreateTime(),
-                                    "status" => $basket->getStatus(),
-                                    "role" => $basket->getRole(),
-                                    "userId" => $basket->getUserId(),
-                                    "entityName" => $user->getLastname() . ' ' . $user->getFirstName(),
-                                    "tel" => $user->getTel() != null ? $user->getTel() : null,
-                                    "addressId" => $address->getAdId(),
-                                    "addressZipCode" => $address->getCityCode(),
-                                    "addressName" => $address->getStreetAddress(). ' ' . $address->getCityName()
-                                ]);
-
-                                if (isset($address)) {
-
-
-                                    if (isset($start)) {
-                                        if ($start < $basketElement) {
-                                            array_push($result, $basketElement);
-                                        }
-                                    } else {
-                                        array_push($result, $basketElement);
-                                    }
-                                } else {
-                                    http_response_code(500);
-                                }
-                            } else {
-                                http_response_code(500);
-                            }
-                        } else {
-                            http_response_code(500);
-                        }
-                    } else {
-                        http_response_code(500);
-                    }
-                }
-
-                if(count($result) == 0) {
-                    http_response_code(204);
-                    return [];
-                } else {
-                    return $result;
-                }
-
-            } else {
-                http_response_code(400);
-            }
-
-        }
 
         
+    }
+
+
+    public static function decorateBasket( $baskets, $optionsArr=["user"=>true,"company"=>true,"external"=>true,"products"=>true]){
+
+        $userManager= UserService::getInstance();
+        $companyManager= CompanyService::getInstance();
+        $externalManager= ExternalService::getInstance();
+        $productManager= ProductService::getInstance();
+
+        $baskets=json_decode(json_encode($baskets),true);
+
+        foreach($baskets as $key=>$basket){
+
+            $basket = new DetailedBasket($basket);
+
+            if($basket->getCompanyId()&&isset($optionsArr["company"])){
+                $basket->setCompany($companyManager->getOne($basket->getCompanyId()));
+                $basket->setCompany(CompaniesController::decorateCompany($basket->getCompany(),["address"=>true]));
+                $basket->setAddress($basket->getCompany()->getAddress());
+            }
+            else if($basket->getUserId()&&isset($optionsArr["user"])){
+                $basket->setUser($userManager->getOne($basket->getUserId()));
+                $basket->setUser(UsersController::decorateCompleteUser($basket->getUser(), ["address" => true]));
+                $basket->setAddress($basket->getUser()->getAddress());
+            }
+            else if($basket->getExternalId()&&isset($optionsArr["external"])){
+                $basket->setExternal($externalManager->getOne($basket->getExternal()));
+                $basket->setExternal(ExternalsController::decorateExternal($basket->getExternal(), ["address" => true]));
+                $basket->setAddress($basket->getExternal()->getAddress());
+            }
+
+            if(isset($optionsArr["products"])) {
+                $products = [];
+                $offset = 0;
+                $limit = 20;
+
+                do {
+                    $newProducts = $productManager->getAllByBasket($basket->getBId(), $offset, $limit);
+                    if (is_array($newProducts)) {
+                        $products = array_merge($products, $newProducts);
+                    }
+                    $offset += $limit;
+
+                } while (sizeof($products) % $limit == 0 && sizeof($products) > 0);
+                $basket->setProducts($products);
+            }
+            $baskets[$key]=$basket;
+        }
+
+        return $baskets;
     }
 }

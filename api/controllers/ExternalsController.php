@@ -96,4 +96,21 @@ class ExternalsController {
 
         // } 
     }
+    public static function decorateExternal($externals,$optionsArr=["address"=>true]){
+
+
+        $addressManager= AddressService::getInstance();
+
+        $externals=json_decode(json_encode($externals),true);
+
+        foreach($externals as $key=>$external){
+            $external = new CompleteExternal($external);
+            if(isset($optionsArr["address"])){
+                $external->setAddress($addressManager->getOne($external->getAddressId()));
+            }
+            $externals[$key]=$external;
+        }
+
+        return $externals;
+    }
 }
