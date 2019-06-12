@@ -1,6 +1,7 @@
 <?php
+require_once ("Model.php");
 
-class Product implements JsonSerializable {
+class Product extends Model implements JsonSerializable {
 
     private $prid;
     private $limitDate;
@@ -85,6 +86,12 @@ class Product implements JsonSerializable {
     public function setRoomId(int $roomId) {
         $this->roomId = $roomId;
     }
+
+    public function getMainId()
+    {
+        return $this->getPrid();
+    }
+
 
     public function JsonSerialize() {
         return get_object_vars($this);

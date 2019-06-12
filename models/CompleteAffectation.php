@@ -1,7 +1,8 @@
 <?php
+require_once ("Model.php");
 
 
-class CompleteAffectation implements  JsonSerializable {
+class CompleteAffectation extends Model implements  JsonSerializable {
 
     private $affid;
     private $role;
@@ -155,6 +156,12 @@ class CompleteAffectation implements  JsonSerializable {
     {
         $this->service = $service;
     }
+
+    public function getMainId()
+    {
+        return $this->getAffid();
+    }
+
 
     public function JsonSerialize() {
         return get_object_vars($this);

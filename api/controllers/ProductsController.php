@@ -8,9 +8,10 @@ include_once 'utils/curl/CurlManager.php';
 
 require_once 'services/ProductService.php';
 require_once 'services/ArticleService.php';
+require_once("Controller.php");
 
 
-class ProductsController {
+class ProductsController extends Controller {
 
 
     private static $controller;
@@ -62,8 +63,6 @@ class ProductsController {
                     $url = "https://world.openfoodfacts.org/api/v0/product/" . $product->getArticleId() . ".json";
 
                     $curlArticle = json_decode(CurlManager::getManager()->curlGet($url), true);
-
-                    
 
 
                     if ($curlArticle['status_verbose'] == "product found") {

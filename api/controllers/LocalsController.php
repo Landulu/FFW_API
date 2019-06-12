@@ -10,8 +10,10 @@ include_once 'services/RoomService.php';
 include_once 'models/CompleteLocal.php';
 include_once 'RoomsController.php';
 
+require_once("Controller.php");
 
-class LocalsController {
+
+class LocalsController extends Controller {
 
 
     private static $controller;
@@ -58,7 +60,13 @@ class LocalsController {
             }
 
             if(isset($_GET["completeData"])){
-                $locals=self::decorateLocal($locals);
+                $methodsArr=[
+                    "rooms"=>["serviceMethod"=>"getAllByLocal",
+                        "completeMethods"=>["products"=>["serviceMethod"=>"getAllByRoom"]]],
+                    "address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAdid"]
+                ];
+                $locals=parent::decorateModel($locals,$methodsArr);
+//                $locals=self::decorateLocal($locals);
             }
 
             if($locals) {
@@ -133,38 +141,40 @@ class LocalsController {
         } 
     }
 
-    public static function decorateLocal( $locals){
-
-        $addressManager= AddressService::getInstance();
-        $roomManager= RoomService::getInstance();
-
-        $locals=json_decode(json_encode($locals),true);
-
-        foreach($locals as $key=>$local){
-            $local = new CompleteLocal($local);
-            $local->setAddress($addressManager->getOne($local->getAdid()));
-
-            $rooms=[];
-            $offset=0;
-            $limit=20;
-
-            do{
-                $newRooms = $roomManager->getAllByLocal($local->getLoid(),$offset,$limit);
-                if(is_array($newRooms)){
-                    $rooms=array_merge($rooms,$newRooms);
-                }
-                $offset+=$limit;
-
-            }while(sizeof($rooms)%$limit==0 && sizeof($rooms)>0);
-
-            $rooms=RoomsController::decorateRoom($rooms);
-
-            $local->setAddress($addressManager->getOne($local->getAdid()));
-            $local->setRooms($rooms);
-
-            $locals[$key]=$local;
-        }
-
-        return $locals;
-    }
+//    public static function decorateLocal( $locals){
+//
+//        $addressManager= AddressService::getInstance();
+//        $roomManager= RoomService::getInstance();
+//
+//        $locals=json_decode(json_encode($locals),true);
+//
+//
+//
+//        foreach($locals as $key=>$local){
+//            $local = new CompleteLocal($local);
+//            $local->setAddress($addressManager->getOne($local->getAdid()));
+//
+//            $rooms=[];
+//            $offset=0;
+//            $limit=20;
+//
+//            do{
+//                $newRooms = $roomManager->getAllByLocal($local->getLoid(),$offset,$limit);
+//                if(is_array($newRooms)){
+//                    $rooms=array_merge($rooms,$newRooms);
+//                }
+//                $offset+=$limit;
+//
+//            }while(sizeof($rooms)%$limit==0 && sizeof($rooms)>0);
+//
+//            $rooms=RoomsController::decorateRoom($rooms);
+//
+//            $local->setAddress($addressManager->getOne($local->getAdid()));
+//            $local->setRooms($rooms);
+//
+//            $locals[$key]=$local;
+//        }
+//
+//        return $locals;
+//    }
 }

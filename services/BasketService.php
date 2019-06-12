@@ -1,7 +1,7 @@
 <?php
 
 require_once __DIR__.'/../models/Basket.php';
-require_once __DIR__.'/../models/DetailedBasket.php';
+require_once __DIR__ . '/../models/CompleteBasket.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
 
 class BasketService {
@@ -128,6 +128,32 @@ class BasketService {
         WHERE status LIKE ?
         LIMIT $offset, $limit",
             [$status]);
+        $baskets = [];
+
+        foreach ($rows as $row) {
+            $baskets[] = new Basket($row);
+        }
+
+        return $baskets;
+    }
+
+    public function getAllByService($serId, $offset, $limit) {
+        $manager = DatabaseManager::getManager();
+        $rows = $manager->getAll(
+            "SELECT 
+        b_id as bid,
+        create_time as createTime,
+        status,
+        role,
+        basket.order,
+        service_ser_id as serviceId,
+        company_co_id as companyId,
+        external_ex_id as externalId,
+        user_u_id as userId
+        FROM basket
+        WHERE service_ser_id = ?
+        LIMIT $offset, $limit",
+            [$serId]);
         $baskets = [];
 
         foreach ($rows as $row) {

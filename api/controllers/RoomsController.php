@@ -9,10 +9,11 @@ include_once 'services/RoomService.php';
 
 include_once 'models/CompleteRoom.php';
 
+require_once("Controller.php");
 
 
 
-class RoomsController {
+class RoomsController extends Controller {
 
 
     private static $controller;
@@ -118,32 +119,32 @@ class RoomsController {
         } 
     }
 
-    public static function decorateRoom( $rooms)
-    {
-
-        $productManager = ProductService::getInstance();
-
-        $rooms = json_decode(json_encode($rooms), true);
-
-        foreach ($rooms as $key => $room) {
-            $room = new CompleteRoom($room);
-            $products=[] ;
-            $offset = 0;
-            $limit = 20;
-
-            do {
-                $newProducts=$productManager->getAllByRoom($room->getRid(), $offset, $limit);
-                if(is_array($newProducts)){
-                    $products=array_merge($products, $newProducts);
-                }
-                $offset += $limit;
-
-            } while (sizeof($products) % $limit == 0 && sizeof($products) > 0);
-
-            $room->setProducts($products);
-
-            $rooms[$key] = $room;
-        }
-        return $rooms;
-    }
+//    public static function decorateRoom( $rooms)
+//    {
+//
+//        $productManager = ProductService::getInstance();
+//
+//        $rooms = json_decode(json_encode($rooms), true);
+//
+//        foreach ($rooms as $key => $room) {
+//            $room = new CompleteRoom($room);
+//            $products=[] ;
+//            $offset = 0;
+//            $limit = 20;
+//
+//            do {
+//                $newProducts=$productManager->getAllByRoom($room->getRid(), $offset, $limit);
+//                if(is_array($newProducts)){
+//                    $products=array_merge($products, $newProducts);
+//                }
+//                $offset += $limit;
+//
+//            } while (sizeof($products) % $limit == 0 && sizeof($products) > 0);
+//
+//            $room->setProducts($products);
+//
+//            $rooms[$key] = $room;
+//        }
+//        return $rooms;
+//    }
 }

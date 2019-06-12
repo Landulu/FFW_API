@@ -15,10 +15,13 @@ include_once 'AddressesController.php';
 include_once 'UsersController.php';
 
 
-include_once 'models/DetailedBasket.php';
+include_once 'models/CompleteBasket.php';
+
+require_once("Controller.php");
 
 
-class BasketsController {
+
+class BasketsController extends Controller {
 
 
     private static $controller;
@@ -54,8 +57,18 @@ class BasketsController {
                     http_response_code(400);
                     return $baskets;
                 } else {
-                    return self::decorateBasket($baskets);
+                    $methodsArr=[
+                        "company"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getCompanyId",
+                            "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAdid"]]],
+                        "user"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getUserId",
+                            "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
+                        "external"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getExternalId",
+                            "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
+                        "products"=>["serviceMethod"=>"getAllByBasket"]
+                        ];
+                    return parent::decorateModel($baskets,$methodsArr);
                 }
+
 
             } else {
                 $baskets = Basketservice::getInstance()->getAll($offset, $limit);
@@ -119,54 +132,54 @@ class BasketsController {
         
     }
 
-
-    public static function decorateBasket( $baskets, $optionsArr=["user"=>true,"company"=>true,"external"=>true,"products"=>true]){
-
-        $userManager= UserService::getInstance();
-        $companyManager= CompanyService::getInstance();
-        $externalManager= ExternalService::getInstance();
-        $productManager= ProductService::getInstance();
-
-        $baskets=json_decode(json_encode($baskets),true);
-
-        foreach($baskets as $key=>$basket){
-
-            $basket = new DetailedBasket($basket);
-
-            if($basket->getCompanyId()&&isset($optionsArr["company"])){
-                $basket->setCompany($companyManager->getOne($basket->getCompanyId()));
-                $basket->setCompany(CompaniesController::decorateCompany($basket->getCompany(),["address"=>true]));
-                $basket->setAddress($basket->getCompany()->getAddress());
-            }
-            else if($basket->getUserId()&&isset($optionsArr["user"])){
-                $basket->setUser($userManager->getOne($basket->getUserId()));
-                $basket->setUser(UsersController::decorateCompleteUser($basket->getUser(), ["address" => true]));
-                $basket->setAddress($basket->getUser()->getAddress());
-            }
-            else if($basket->getExternalId()&&isset($optionsArr["external"])){
-                $basket->setExternal($externalManager->getOne($basket->getExternal()));
-                $basket->setExternal(ExternalsController::decorateExternal($basket->getExternal(), ["address" => true]));
-                $basket->setAddress($basket->getExternal()->getAddress());
-            }
-
-            if(isset($optionsArr["products"])) {
-                $products = [];
-                $offset = 0;
-                $limit = 20;
-
-                do {
-                    $newProducts = $productManager->getAllByBasket($basket->getBId(), $offset, $limit);
-                    if (is_array($newProducts)) {
-                        $products = array_merge($products, $newProducts);
-                    }
-                    $offset += $limit;
-
-                } while (sizeof($products) % $limit == 0 && sizeof($products) > 0);
-                $basket->setProducts($products);
-            }
-            $baskets[$key]=$basket;
-        }
-
-        return $baskets;
-    }
+//
+//    public static function decorateBasket( $baskets, $optionsArr=["user"=>true,"company"=>true,"external"=>true,"products"=>true]){
+//
+//        $userManager= UserService::getInstance();
+//        $companyManager= CompanyService::getInstance();
+//        $externalManager= ExternalService::getInstance();
+//        $productManager= ProductService::getInstance();
+//
+//        $baskets=json_decode(json_encode($baskets),true);
+//
+//        foreach($baskets as $key=>$basket){
+//
+//            $basket = new CompleteBasket($basket);
+//
+//            if($basket->getCompanyId()&&isset($optionsArr["company"])){
+//                $basket->setCompany($companyManager->getOne($basket->getCompanyId()));
+//                $basket->setCompany(CompaniesController::decorateCompany($basket->getCompany(),["address"=>true]));
+//                $basket->setAddress($basket->getCompany()->getAddress());
+//            }
+//            else if($basket->getUserId()&&isset($optionsArr["user"])){
+//                $basket->setUser($userManager->getOne($basket->getUserId()));
+//                $basket->setUser(UsersController::decorateUser($basket->getUser(), ["address" => true]));
+//                $basket->setAddress($basket->getUser()->getAddress());
+//            }
+//            else if($basket->getExternalId()&&isset($optionsArr["external"])){
+//                $basket->setExternal($externalManager->getOne($basket->getExternal()));
+//                $basket->setExternal(ExternalsController::decorateExternal($basket->getExternal(), ["address" => true]));
+//                $basket->setAddress($basket->getExternal()->getAddress());
+//            }
+//
+//            if(isset($optionsArr["products"])) {
+//                $products = [];
+//                $offset = 0;
+//                $limit = 20;
+//
+//                do {
+//                    $newProducts = $productManager->getAllByBasket($basket->getBId(), $offset, $limit);
+//                    if (is_array($newProducts)) {
+//                        $products = array_merge($products, $newProducts);
+//                    }
+//                    $offset += $limit;
+//
+//                } while (sizeof($products) % $limit == 0 && sizeof($products) > 0);
+//                $basket->setProducts($products);
+//            }
+//            $baskets[$key]=$basket;
+//        }
+//
+//        return $baskets;
+//    }
 }

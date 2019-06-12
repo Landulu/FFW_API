@@ -51,7 +51,7 @@ class AffectationService {
         skill_sk_id as skid,
         service_ser_id as serid
         from
-        service
+        affectation
         LIMIT $offset, $limit"
         );
         $affectations = [];

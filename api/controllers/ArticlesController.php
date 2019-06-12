@@ -5,9 +5,10 @@ include_once 'utils/routing/Request.php';
 include_once 'utils/routing/Router.php';
 
 include_once 'services/ArticleService.php';
+require_once("Controller.php");
 
 
-class ArticlesController {
+class ArticlesController extends Controller {
 
 
     private static $controller;

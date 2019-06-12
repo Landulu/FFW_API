@@ -1,6 +1,7 @@
 <?php
+require_once ("Model.php");
 
-class Article implements JsonSerializable {
+class Article extends Model implements JsonSerializable {
     private $aid;
     private $name;
     private $category;
@@ -19,6 +20,12 @@ class Article implements JsonSerializable {
     public function setAId(int $aid) {
         $this->aid = $aid;
     }
+
+    public function getMainId()
+    {
+        return $this->getAid();
+    }
+
 
     public function JsonSerialize() {
         return get_object_vars($this);

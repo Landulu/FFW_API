@@ -1,9 +1,10 @@
 <?php
 include_once __DIR__.'/../../services/ServiceService.php';
 include_once __DIR__.'/../../services/CourseService.php';
+require_once("Controller.php");
 
 
-class CoursesController {
+class CoursesController extends Controller{
     private static $controller;
 
     private function __construct(){}
@@ -27,7 +28,13 @@ class CoursesController {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-            $courses = CourseService::getInstance()->getAll($offset, $limit);
+
+            if(isset($_GET['name']) || isset($_GET['routeState']) || isset($_GET['vehicleId']) || isset($_GET['createTime']) || isset($_GET['serviceTime'])){
+                $courses = CourseService::getInstance()->getAllFiltered($_GET,$offset, $limit);
+            }
+            else{
+                $courses = CourseService::getInstance()->getAll($offset, $limit);
+            }
 
             if (count($courses) == 0) {
                 http_response_code(204);

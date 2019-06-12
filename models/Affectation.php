@@ -1,7 +1,8 @@
 <?php
 
+require_once ("Model.php");
 
-class Affectation implements JsonSerializable{
+class Affectation extends Model implements JsonSerializable{
 
     private $affid;
     private $role;
@@ -139,6 +140,12 @@ class Affectation implements JsonSerializable{
     {
         $this->skid = $skid;
     }
+
+    public function getMainId()
+    {
+        return $this->getAffid();
+    }
+
 
     public function JsonSerialize() {
         return get_object_vars($this);

@@ -1,6 +1,7 @@
 <?php
+require_once ("Model.php");
 
-class Room implements JsonSerializable {
+class Room extends Model implements JsonSerializable {
     private $rid;
     private $name;
     private $isUnavailable;
@@ -15,19 +16,91 @@ class Room implements JsonSerializable {
         $this->loid = isset($fields['loid']) ? $fields['loid'] : NULL;
     }
 
-    public function getRId(): ?int {return $this->rid;}
-    public function getName(): string {return $this->name;}
-    public function getIsUnavailable(): string {return $this->isUnavailable;}
-    public function getIsStockroom(): int {return $this->isStockroom;}
-    public function getLoId(): ?int {return $this->loid;}
+    /**
+     * @return mixed|null
+     */
+    public function getRid()
+    {
+        return $this->rid;
+    }
 
-    public function setLoId(int $loid) {
+    /**
+     * @param mixed|null $rid
+     */
+    public function setRid($rid): void
+    {
+        $this->rid = $rid;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getisUnavailable()
+    {
+        return $this->isUnavailable;
+    }
+
+    /**
+     * @param mixed $isUnavailable
+     */
+    public function setIsUnavailable($isUnavailable): void
+    {
+        $this->isUnavailable = $isUnavailable;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getisStockroom()
+    {
+        return $this->isStockroom;
+    }
+
+    /**
+     * @param mixed $isStockroom
+     */
+    public function setIsStockroom($isStockroom): void
+    {
+        $this->isStockroom = $isStockroom;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getLoid()
+    {
+        return $this->loid;
+    }
+
+    /**
+     * @param mixed|null $loid
+     */
+    public function setLoid($loid): void
+    {
         $this->loid = $loid;
     }
 
-    public function setRId(int $rid) {
-        $this->rid = $rid;
+    public function getMainId()
+    {
+        return $this->getRid();
     }
+
 
     public function JsonSerialize() {
         return get_object_vars($this);

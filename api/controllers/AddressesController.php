@@ -8,13 +8,12 @@
 
 
 include_once 'services/AddressService.php';
+require_once("Controller.php");
 
-class AddressesController{
+class AddressesController extends Controller {
 
 
     private static $controller;
-    
-
 
     private function __construct(){}
 

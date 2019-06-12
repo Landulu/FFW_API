@@ -1,6 +1,7 @@
 <?php
+require_once ("Model.php");
 
-class DetailedBasket implements JsonSerializable {
+class CompleteBasket  extends Model implements JsonSerializable {
 
     private $bid;
     private $createTime;
@@ -276,6 +277,10 @@ class DetailedBasket implements JsonSerializable {
         $this->user = $user;
     }
 
+    public function getMainId()
+    {
+        return $this->getBid();
+    }
 
 
     public function JsonSerialize() {

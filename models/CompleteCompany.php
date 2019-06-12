@@ -5,8 +5,9 @@
  * Date: 26/05/19
  * Time: 22:48
  */
+require_once ("Model.php");
 
-class CompleteCompany implements JsonSerializable {
+class CompleteCompany extends Model implements JsonSerializable {
     private $coid;
     private $siret;
     private $status;
@@ -136,6 +137,12 @@ class CompleteCompany implements JsonSerializable {
     {
         $this->address = $address;
     }
+
+    public function getMainId()
+    {
+        return $this->getCoid();
+    }
+
 
     public function jsonSerialize()
     {

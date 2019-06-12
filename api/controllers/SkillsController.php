@@ -8,8 +8,9 @@ include_once 'services/SkillService.php';
 include_once 'services/UserService.php';
 include_once 'services/AffectationService.php';
 
+require_once("Controller.php");
 
-class SkillsController {
+class SkillsController extends Controller {
 
 
     private static $controller;

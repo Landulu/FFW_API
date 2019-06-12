@@ -8,8 +8,9 @@ include_once 'services/ExternalService.php';
 include_once 'services/AddressService.php';
 include_once 'services/BasketService.php';
 
+require_once("Controller.php");
 
-class ExternalsController {
+class ExternalsController extends Controller{
 
 
     private static $controller;

@@ -1,7 +1,8 @@
 <?php
+require_once ("Model.php");
 
 
-class CompleteLocal implements  JsonSerializable {
+class CompleteLocal extends Model implements  JsonSerializable {
 
     private $loid;
     private $name;
@@ -105,6 +106,11 @@ class CompleteLocal implements  JsonSerializable {
     public function setAddress($address): void
     {
         $this->address = $address;
+    }
+
+    public function getMainId()
+    {
+        return $this->getLoid();
     }
 
 

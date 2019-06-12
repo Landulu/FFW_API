@@ -9,8 +9,9 @@
 include_once 'models/Affectation.php';
 include_once 'models/CompleteAffectation.php';
 include_once 'services/AffectationService.php';
+require_once("Controller.php");
 
-class AffectationController{
+class AffectationController extends Controller{
 
 
     private static $controller;
@@ -38,8 +39,11 @@ class AffectationController{
             $affectations = AffectationService::getInstance()->getAll($offset, $limit);
 
             if(isset($_GET['completeData'])){
-                $affectations = AffectationService::getInstance()->getAll($offset, $limit);
-                $affectations=AffectationController::decorateAffectation($affectations);
+
+                $methodsArr=[
+                    "service"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getSerid"]
+                    ];
+                $affectations=parent::decorateModel($affectations,$methodsArr);
             }
 
             return $affectations;

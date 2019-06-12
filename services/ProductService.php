@@ -1,7 +1,7 @@
 <?php
 
 require_once __DIR__.'/../models/Article.php';
-require_once __DIR__.'/../models/DetailedProduct.php';
+require_once __DIR__ . '/../models/CompleteProduct.php';
 require_once __DIR__.'/../models/Product.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
 
@@ -68,7 +68,7 @@ class ProductService {
         $products = [];
 
         foreach ($rows as $row) {
-            $products[] = new DetailedProduct($row);
+            $products[] = new CompleteProduct($row);
         }
         return $products;
     }
@@ -98,7 +98,7 @@ class ProductService {
         $products = [];
         if($rows) {   
             foreach ($rows as $row) {
-                $products[] = new DetailedProduct($row);
+                $products[] = new CompleteProduct($row);
             }
             return $products;
         }
@@ -126,7 +126,7 @@ class ProductService {
         $products = [];
         if($rows) {
             foreach ($rows as $row) {
-                $products[] = new DetailedProduct($row);
+                $products[] = new CompleteProduct($row);
             }
             return $products;
         }

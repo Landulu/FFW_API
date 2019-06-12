@@ -1,6 +1,7 @@
 <?php
+require_once ("Model.php");
 
-class CompleteExternal implements JsonSerializable {
+class CompleteExternal extends Model implements JsonSerializable {
 
     private $exid;
     private $name;
@@ -118,6 +119,11 @@ class CompleteExternal implements JsonSerializable {
     public function setAddressId($addressId)
     {
         $this->addressId = $addressId;
+    }
+
+    public function getMainId()
+    {
+        return $this->getExid();
     }
 
 

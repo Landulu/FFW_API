@@ -1,6 +1,7 @@
 <?php
+require_once ("Model.php");
 
-class CompleteSkill implements JsonSerializable {
+class CompleteSkill extends Model implements JsonSerializable {
     private $skid;
     private $name;
     private $skStatus;
@@ -53,6 +54,12 @@ class CompleteSkill implements JsonSerializable {
     public function setSkId(int $skid) {
         $this->skid = $skid;
     }
+
+    public function getMainId()
+    {
+        return $this->getSkId();
+    }
+
 
     public function JsonSerialize() {
         return get_object_vars($this);

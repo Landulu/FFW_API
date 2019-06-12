@@ -14,15 +14,14 @@ include_once 'models/CompleteUser.php';
 include_once 'models/CompleteSkill.php';
 
 include_once 'AffectationController.php';
+require_once("Controller.php");
 
 
 
-class UsersController {
+class UsersController extends Controller {
 
 
     private static $controller;
-    
-
 
     private function __construct(){}
 
@@ -54,34 +53,28 @@ class UsersController {
                 }
             }
 
-            $completeUsers = [];
-
             if (count($params)) {
                 $users = Userservice::getInstance()->getAllFiltered($offset, $limit, $params);
-                foreach ($users as $user) {
-                    if (isset($params['rights'])) {
-                        if ($this->isRightSet($user->getRights(), $params['rights'])) {
-                            array_push($completeUsers, $this->decorateCompleteUser($user));
-                        }
-
-                    } else {
-                        array_push($completeUsers, $this->decorateCompleteUser($user));
+                foreach ($users as $key=>$user) {
+                    if (isset($params['rights']) && !$this->isRightSet($user->getRights(), $params['rights'])) {
+                        unset($users[$key]);
                     }
                 }
+                $users=array_values($users);
             } else {
                 $users = Userservice::getInstance()->getAll($offset, $limit);
-                foreach ($users as $user) {
-                    array_push($completeUsers, $this->decorateCompleteUser($user));
-                }
             }
-            if(sizeof($completeUsers)>0){
+            if(sizeof($users)>0){
                 http_response_code(200);
-                return $completeUsers;
+                $methodsArr=["skills"=>["serviceMethod"=>"getAllByUser"],
+                    "address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"],
+                    "companies"=>["serviceMethod"=>"getAllByUser"]
+                ];
+                return parent::decorateModel($users,$methodsArr);
             }
             else{
                 http_response_code(400);
             }
-
             return null;
         }
 
@@ -104,9 +97,13 @@ class UsersController {
         // get One by Id
         if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
 
-            $completeUser = UserService::getInstance()->getOne($urlArray[1]);
-            if($completeUser) {
-                return $this->decorateCompleteUser($completeUser);
+            $user = UserService::getInstance()->getOne($urlArray[1]);
+            if($user) {
+                $methodsArr=["skills"=>["serviceMethod"=>"getAllByUser"],
+                    "address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"],
+                    "companies"=>["serviceMethod"=>"getAllByUser"]
+                ];
+                return parent::decorateModel($user,$methodsArr);
 
             } else {
                 http_response_code(400);
@@ -437,53 +434,56 @@ class UsersController {
 
     }
 
-    public static function decorateCompleteUser($completeUser,$optionsArr=["skill"=>true,"address"=>true,"company"=>true]) {
-        $offset = 0;
-        $limit = 20;
-        $skills = [];
-        $newSkills = [];
-
-        if(isset($optionsArr["skill"])){
-            do {
-                $newSkills = SkillService::getInstance()->getAllByUser($completeUser->getUid(), $offset, $limit);
-                $skills = array_merge($skills, $newSkills);
-                $offset += 20;
-            } while (count($newSkills) == 20 );
-            if ($skills) {
-                $completeUser->setSkills($skills);
-            }
-        }
-
-        if(isset($optionsArr["address"])){
-            $address = AddressService::getInstance()->getOneByUserId($completeUser->getUid());
-            if($address) {
-                $completeUser->setAddress($address);
-            }
-        }
-
-
-        if(isset($optionsArr["company"])) {
-
-            $offset = 0;
-            $companies = [];
-            $newCompanies = [];
-            do {
-                $newCompanies = CompanyService::getInstance()->getAllByUser($completeUser->getUid(), $offset, $limit);
-
-                if ($newCompanies) {
-                    $companies = array_merge($companies, $newCompanies);
-                    $offset += 20;
-                }
-
-            } while ($newCompanies && count($newCompanies) == 20);
-            if ($companies) {
-                $completeUser->setCompanies($companies);
-            }
-        }
-
-        http_response_code(200);
-        return $completeUser;
-    }
+//    public static function decorateUser($completeUser, $optionsArr=["skill"=>true,"address"=>true,"company"=>true]) {
+//        $offset = 0;
+//        $limit = 20;
+//        $skills = [];
+//        $newSkills = [];
+//
+//
+//
+//
+//        if(isset($optionsArr["skill"])){
+//            do {
+//                $newSkills = SkillService::getInstance()->getAllByUser($completeUser->getUid(), $offset, $limit);
+//                $skills = array_merge($skills, $newSkills);
+//                $offset += 20;
+//            } while (count($newSkills) == 20 );
+//            if ($skills) {
+//                $completeUser->setSkills($skills);
+//            }
+//        }
+//
+//        if(isset($optionsArr["address"])){
+//            $address = AddressService::getInstance()->getOneByUserId($completeUser->getUid());
+//            if($address) {
+//                $completeUser->setAddress($address);
+//            }
+//        }
+//
+//
+//        if(isset($optionsArr["company"])) {
+//
+//            $offset = 0;
+//            $companies = [];
+//            $newCompanies = [];
+//            do {
+//                $newCompanies = CompanyService::getInstance()->getAllByUser($completeUser->getUid(), $offset, $limit);
+//
+//                if ($newCompanies) {
+//                    $companies = array_merge($companies, $newCompanies);
+//                    $offset += 20;
+//                }
+//
+//            } while ($newCompanies && count($newCompanies) == 20);
+//            if ($companies) {
+//                $completeUser->setCompanies($companies);
+//            }
+//        }
+//
+//        http_response_code(200);
+//        return $completeUser;
+//    }
 
     function isRightSet($byteRight, $pos)
     {

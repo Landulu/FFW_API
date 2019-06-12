@@ -6,9 +6,9 @@
  * Time: 17:04
  */
 include_once __DIR__ . '/../../services/ServiceService.php';
+require_once("Controller.php");
 
-
-class ServicesController {
+class ServicesController extends Controller {
     private static $controller;
 
     private function __construct(){}
@@ -33,6 +33,17 @@ class ServicesController {
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
             $services = ServiceService::getInstance()->getAll($offset, $limit);
+            $methodsArr=[
+                "vehicle"=>["serviceMethod"=>"getOne"],
+                "skill"=>["serviceMethod"=>"getAllByService"],
+                "affectation"=>["serviceMethod"=>"getAllByService"],
+                "baskets"=>[
+                    "serviceMethod"=>"getAllByService",
+                    "completeMethods"=>[
+                        "user"=>["serviceMethod"=>"getOne"]]
+                    ]];
+
+            return parent::decorateModel($services,$methodsArr);
 
             return $services;
 //            return "toto";
@@ -85,4 +96,6 @@ class ServicesController {
         }
 
     }
+
+
 }

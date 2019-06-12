@@ -1,6 +1,7 @@
 <?php
+require_once ("Model.php");
 
-class Vehicle implements JsonSerializable {
+class Vehicle extends Model implements JsonSerializable {
     private $vid;
     private $volume;
     private $insuranceDate;
@@ -15,18 +16,90 @@ class Vehicle implements JsonSerializable {
         $this->description = $fields['description'];
     }
 
-    public function getVId(): ?int {return $this->vid;}
+    /**
+     * @return mixed|null
+     */
+    public function getVid()
+    {
+        return $this->vid;
+    }
 
-    public function getVolume() : int{return $this->volume;}
+    /**
+     * @param mixed|null $vid
+     */
+    public function setVid($vid): void
+    {
+        $this->vid = $vid;
+    }
 
-    public function getInsuranceDate() : string{return $this->insuranceDate;}
+    /**
+     * @return mixed
+     */
+    public function getVolume()
+    {
+        return $this->volume;
+    }
 
-    public function getLastRevision() : string {return $this->lastRevision;}
+    /**
+     * @param mixed $volume
+     */
+    public function setVolume($volume): void
+    {
+        $this->volume = $volume;
+    }
 
-    public function getDescription() : string{ return $this->description;}
+    /**
+     * @return mixed
+     */
+    public function getInsuranceDate()
+    {
+        return $this->insuranceDate;
+    }
 
-    public function setVId(int $vid){$this->vid = $vid;}
+    /**
+     * @param mixed $insuranceDate
+     */
+    public function setInsuranceDate($insuranceDate): void
+    {
+        $this->insuranceDate = $insuranceDate;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getLastRevision()
+    {
+        return $this->lastRevision;
+    }
+
+    /**
+     * @param mixed $lastRevision
+     */
+    public function setLastRevision($lastRevision): void
+    {
+        $this->lastRevision = $lastRevision;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param mixed $description
+     */
+    public function setDescription($description): void
+    {
+        $this->description = $description;
+    }
+
+    public function getMainId()
+    {
+        return $this->getVid();
+    }
 
 
     public function JsonSerialize() {
