@@ -45,9 +45,11 @@ class CompleteBasket  extends Model implements JsonSerializable {
         }
 
         $getObjMethodsArr=["getUser","getExternal","getCompany"];
+        $address=null;
 
         foreach($getObjMethodsArr as $getObjMethod){
-            if($this->{$getObjMethod}()&&($address=$this->{$getObjMethod}()->getAddress())){
+            if($this->{$getObjMethod}()){
+                $address=$this->{$getObjMethod}()->getAddress()?$address=$this->{$getObjMethod}()->getAddress():null;
                 break;
             }
         }
@@ -105,7 +107,7 @@ class CompleteBasket  extends Model implements JsonSerializable {
     /**
      * @param mixed|null $products
      */
-    public function setProducts(array $products): void
+    public function setProducts($products): void
     {
         $this->products = $products;
     }
@@ -266,9 +268,15 @@ class CompleteBasket  extends Model implements JsonSerializable {
     /**
      * @param mixed $service
      */
-    public function setService($service=null): void
+    public function setService($service=null,$controlFlag=false): void
     {
-        $this->service = $service;
+        if(!$controlFlag){
+            $this->controlSetArr($service,"service",["local","user","external","company"]);
+        }
+        else{
+            $this->service=$service;
+            $this->chooseAddressByRole();
+        }
     }
 
     /**
@@ -282,9 +290,15 @@ class CompleteBasket  extends Model implements JsonSerializable {
     /**
      * @param mixed $company
      */
-    public function setCompany($company=null): void
+    public function setCompany($company=null,$controlFlag=false): void
     {
-        $this->controlSet($company,"company");
+        if(!$controlFlag){
+            $this->controlSetArr($company,"company",["local","user","external","company"]);
+        }
+        else{
+            $this->company=$company;
+            $this->chooseAddressByRole();
+        }
 
     }
 
@@ -299,9 +313,15 @@ class CompleteBasket  extends Model implements JsonSerializable {
     /**
      * @param mixed $external
      */
-    public function setExternal($external=null): void
+    public function setExternal($external=null,$controlFlag=false): void
     {
-        $this->controlSet($external,"external");
+        if(!$controlFlag){
+            $this->controlSetArr($external,"external",["local","user","external","company"]);
+        }
+        else{
+            $this->external=$external;
+            $this->chooseAddressByRole();
+        }
 
     }
 
@@ -316,9 +336,16 @@ class CompleteBasket  extends Model implements JsonSerializable {
     /**
      * @param mixed $user
      */
-    public function setUser($user=null): void
+    public function setUser($user=null,$controlFlag=false): void
     {
-        $this->controlSet($user,"user");
+        if(!!$controlFlag){
+            $this->controlSetArr($user,"user",["local","user","external","company"]);
+        }
+        else{
+            $this->user=$user;
+            $this->chooseAddressByRole();
+        }
+
     }
 
     /**
@@ -332,28 +359,18 @@ class CompleteBasket  extends Model implements JsonSerializable {
     /**
      * @param mixed $local
      */
-    public function setLocal($local=null ): void
+    public function setLocal($local=null ,$controlFlag=false): void
     {
-        $this->controlSet($local,"local");
-    }
-
-    private function controlSet($arg,$argName){
-
-
-        $controlArgNameArr=["local","user","external","company"];
-
-        foreach($controlArgNameArr as $controlArgName){
-            if($controlArgName==$argName){
-                if(is_array($arg)){
-                    $arg=$arg[0];
-                }
-
-                $this->{$argName}=$arg;
-                $this->chooseAddressByRole();
-                break;
-            }
+        if(!$controlFlag){
+            $this->controlSetArr($local,"local",["local","user","external","company"]);
         }
+        else{
+            $this->local=$local;
+            $this->chooseAddressByRole();
+        }
+
     }
+
 
     public function getMainId()
     {

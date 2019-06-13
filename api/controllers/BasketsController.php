@@ -64,7 +64,11 @@ class BasketsController extends Controller {
                             "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
                         "external"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getExternalId",
                             "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
-                        "products"=>["serviceMethod"=>"getAllByBasket"]
+                        "products"=>["serviceMethod"=>"getAllByBasket",
+                            "completeMethods"=>["article"=>
+                                ["serviceMethod"=>"getOne","relationIdMethod"=>"getArticleId","completeMethods"=>[
+                                    "ingredient"=>["serviceMethod"=>"getOne","idRelationMethod"=>"getIngredientId"]
+                                ]]]]
                         ];
                     return parent::decorateModel($baskets,$methodsArr);
                 }

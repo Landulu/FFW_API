@@ -54,7 +54,7 @@ class CoursesController extends Controller{
                     ]
                 ]
             ];
-            
+
             $courses=parent::decorateModel($courses,$arrMethods);
 
             if (count($courses) == 0) {

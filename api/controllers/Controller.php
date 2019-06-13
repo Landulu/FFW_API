@@ -17,19 +17,19 @@ class  Controller
         else if(!is_array($lightObjs)){
             $lightObjs=array($lightObjs);
         }
-        $className=get_class($lightObjs[0]);
-        $completeClassName=strpos($className,"Complete")!==false?$className:"Complete".$className;
-        include_once ("models/".$className.".php");
-        include_once ("models/".$completeClassName.".php");
-
-        $lightObjs=json_decode(json_encode($lightObjs),true);
-
 
         foreach($lightObjs as $objKey=>$lightObj){
 
+            $className=get_class($lightObj);
+            $completeClassName=strpos($className,"Complete")!==false?$className:"Complete".$className;
+            include_once ("models/".$className.".php");
+            include_once ("models/".$completeClassName.".php");
+            $lightObj=json_decode(json_encode($lightObj),true);
+
             $lightObj = new $completeClassName($lightObj);
 
-            foreach($methodsArr as $methodKey=>$method){
+//            var_dump($lightObj);
+            foreach($methodsArr as   $methodKey=>$method){
 
                 //relationIdMethod représente un identifiant présent dans un modèle mais qui n'est pas sont identifiant principale;
                 if(isset($method["relationIdMethod"])){
@@ -55,7 +55,11 @@ class  Controller
 
                     $serviceClass=ucfirst($serviceClass)."Service";
 
+                    include_once 'services/'.$serviceClass.'.php';
+
                     if(class_exists($serviceClass)) {
+
+//                        var_dump($method["serviceMethod"]);
 
                         $manager = call_user_func(array($serviceClass, "getInstance"));
 

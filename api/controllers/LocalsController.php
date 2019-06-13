@@ -62,9 +62,14 @@ class LocalsController extends Controller {
             if(isset($_GET["completeData"])){
                 $methodsArr=[
                     "rooms"=>["serviceMethod"=>"getAllByLocal",
-                        "completeMethods"=>["products"=>["serviceMethod"=>"getAllByRoom"]]],
+                        "completeMethods"=>[
+                            "products"=>["serviceMethod"=>"getAllByRoom","completeMethods"=>[
+                                "article"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getArticleId","completeMethods"=>[
+                                    "ingredient"=>["serviceMethod"=>"getOne","idRelationMethod"=>"getIngredientId"]
+                                ]]]]]],
                     "address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAdid"]
                 ];
+
                 $locals=parent::decorateModel($locals,$methodsArr);
 //                $locals=self::decorateLocal($locals);
             }

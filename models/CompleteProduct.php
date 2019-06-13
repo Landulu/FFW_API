@@ -128,11 +128,15 @@ class CompleteProduct extends Model implements JsonSerializable {
     /**
      * @param mixed|null $article
      */
-    public function setArticle($article): void
+    public function setArticle($article,$controlFlag=false): void
     {
-        $this->article = $article;
+        if(!$controlFlag){
+            $this->controlSetArr($article,"article",["article"]);
+        }
+        else{
+            $this->article=$article;
+        }
     }
-
 
     public function getMainId()
     {
