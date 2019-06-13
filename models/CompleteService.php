@@ -24,6 +24,7 @@ class CompleteService extends Model implements JsonSerializable{
     private $affectations;
     private $comments;
     private $baskets;
+    private $vehicle;
 
 
     public function __construct(array $fields) {
@@ -43,6 +44,7 @@ class CompleteService extends Model implements JsonSerializable{
         $this->affectations = isset($fields["affectations"]) ? $fields["affectations"] : null ;
         $this->comments = isset($fields["comments"]) ? $fields["comments"] : null ;
         $this->baskets = isset($fields["baskets"]) ? $fields["baskets"] : null ;
+        $this->vehicle = isset($fields["vehicle"]) ? $fields["vehicle"] : null ;
     }
 
     /**
@@ -144,7 +146,7 @@ class CompleteService extends Model implements JsonSerializable{
     /**
      * @return mixed|null
      */
-    public function getisPublic()
+    public function getIsPublic()
     {
         return $this->isPublic;
     }
@@ -300,6 +302,24 @@ class CompleteService extends Model implements JsonSerializable{
     {
         $this->baskets = $baskets;
     }
+
+    /**
+     * @return mixed|null
+     */
+    public function getVehicle()
+    {
+        return $this->vehicle;
+    }
+
+    /**
+     * @param mixed|null $vehicle
+     */
+    public function setVehicle($vehicle): void
+    {
+        $this->vehicle = $vehicle;
+    }
+
+
 
     public function getMainId()
     {

@@ -18,7 +18,7 @@ class  Controller
             $lightObjs=array($lightObjs);
         }
         $className=get_class($lightObjs[0]);
-        $completeClassName=strstr($className,"Complete")?$className:"Complete".$className;
+        $completeClassName=strpos($className,"Complete")!==false?$className:"Complete".$className;
         include_once ("models/".$className.".php");
         include_once ("models/".$completeClassName.".php");
 
@@ -60,7 +60,7 @@ class  Controller
                         $manager = call_user_func(array($serviceClass, "getInstance"));
 
                         if ($manager  && method_exists($serviceClass,$method["serviceMethod"]) && $requestId) {
-                            if (strstr($method["serviceMethod"], "getOne")) {
+                            if (strpos($method["serviceMethod"], "getOne")!==false) {
                                 $lightObj->{"set" . ucfirst($methodKey)}($manager->{$method["serviceMethod"]}($requestId));
                             } else if (strstr($method["serviceMethod"], "getAll")) {
 

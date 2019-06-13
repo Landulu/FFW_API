@@ -17,6 +17,7 @@ include_once 'api/controllers/CompaniesController.php';
 include_once 'api/controllers/ServicesController.php';
 include_once 'api/controllers/CoursesController.php';
 include_once 'api/controllers/ProductsController.php';
+include_once 'api/controllers/VehiclesController.php';
 
 
 
@@ -61,6 +62,10 @@ class AppController {
             case 'courses':
                 $coursesController = CoursesController::getController();
                 $result = $coursesController->proccessQuery(array_slice($urlArray, 1), $method);
+                return $result;
+            case 'vehicles':
+                $vehiclesController = VehiclesController::getController();
+                $result = $vehiclesController->proccessQuery(array_slice($urlArray, 1), $method);
                 return $result;
             case 'addresses':
                 $addressesController = AddressesController::getController();

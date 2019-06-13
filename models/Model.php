@@ -9,14 +9,5 @@ require_once ("Model.php");
 
 abstract class Model
 {
-
-
-    /**
-     * Model constructor.
-     */
-    public function __construct()
-    {
-    }
-
     public abstract function getMainId();
 }

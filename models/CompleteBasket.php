@@ -16,7 +16,10 @@ class CompleteBasket  extends Model implements JsonSerializable {
     private $company;
     private $external;
     private $user;
-    private $address;
+    private $products;
+    private $local;
+    private $srcAddress;
+    private $dstAddress;
 
     public function __construct(array $fields) {
         $this->bid = isset($fields['bid']) ? $fields['bid'] : NULL;
@@ -32,26 +35,64 @@ class CompleteBasket  extends Model implements JsonSerializable {
         $this->company = isset($fields["company"]) ? $fields["company"] : NULL;
         $this->external = isset($fields["external"]) ? $fields["external"] : NULL;
         $this->user = isset($fields["user"]) ? $fields["user"] : NULL;
-        $this->products = isset($fields["baskets"] )? $fields["baskets"] : NULL;
-        $this->address = isset($fields["baskets"] )? $fields["baskets"] : NULL;
+        $this->products = isset($fields["products"] )? $fields["products"] : NULL;
+    }
+
+    private function chooseAddressByRole(){
+
+        if(!$this->role){
+            return null;
+        }
+
+        $getObjMethodsArr=["getUser","getExternal","getCompany"];
+
+        foreach($getObjMethodsArr as $getObjMethod){
+            if($this->{$getObjMethod}()&&($address=$this->{$getObjMethod}()->getAddress())){
+                break;
+            }
+        }
+        if($this->role==="import"){
+            $this->srcAddress=$address;
+            $this->dstAddress=$this->getLocal() instanceof CompleteLocal ?$this->getLocal()->getAddress():null;
+        }
+        else if($this->role==="export"){
+            $this->dstAddress=$address;
+            $this->dstAddress=$this->getLocal() instanceof CompleteLocal ?$this->getLocal()->getAddress():null;
+
+        }
     }
 
     /**
-     * @return mixed|null
+     * @return mixed
      */
-    public function getAddress()
+    public function getSrcAddress()
     {
-        return $this->address;
+        return $this->srcAddress;
     }
 
     /**
-     * @param mixed|null $address
+     * @param mixed $srcAddress
      */
-    public function setAddress($address): void
+    public function setSrcAddress($srcAddress): void
     {
-        $this->address = $address;
+        $this->srcAddress = $srcAddress;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDstAddress()
+    {
+        return $this->dstAddress;
+    }
+
+    /**
+     * @param mixed $dstAddress
+     */
+    public function setDstAddress($dstAddress): void
+    {
+        $this->dstAddress = $dstAddress;
+    }
 
     /**
      * @return mixed|null
@@ -64,7 +105,7 @@ class CompleteBasket  extends Model implements JsonSerializable {
     /**
      * @param mixed|null $products
      */
-    public function setProducts($products): void
+    public function setProducts(array $products): void
     {
         $this->products = $products;
     }
@@ -114,6 +155,7 @@ class CompleteBasket  extends Model implements JsonSerializable {
      */
     public function setStatus($status): void
     {
+
         $this->status = $status;
     }
 
@@ -224,7 +266,7 @@ class CompleteBasket  extends Model implements JsonSerializable {
     /**
      * @param mixed $service
      */
-    public function setService($service): void
+    public function setService($service=null): void
     {
         $this->service = $service;
     }
@@ -240,9 +282,10 @@ class CompleteBasket  extends Model implements JsonSerializable {
     /**
      * @param mixed $company
      */
-    public function setCompany($company): void
+    public function setCompany($company=null): void
     {
-        $this->company = $company;
+        $this->controlSet($company,"company");
+
     }
 
     /**
@@ -256,9 +299,10 @@ class CompleteBasket  extends Model implements JsonSerializable {
     /**
      * @param mixed $external
      */
-    public function setExternal($external): void
+    public function setExternal($external=null): void
     {
-        $this->external = $external;
+        $this->controlSet($external,"external");
+
     }
 
     /**
@@ -272,9 +316,43 @@ class CompleteBasket  extends Model implements JsonSerializable {
     /**
      * @param mixed $user
      */
-    public function setUser($user): void
+    public function setUser($user=null): void
     {
-        $this->user = $user;
+        $this->controlSet($user,"user");
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLocal()
+    {
+        return $this->local;
+    }
+
+    /**
+     * @param mixed $local
+     */
+    public function setLocal($local=null ): void
+    {
+        $this->controlSet($local,"local");
+    }
+
+    private function controlSet($arg,$argName){
+
+
+        $controlArgNameArr=["local","user","external","company"];
+
+        foreach($controlArgNameArr as $controlArgName){
+            if($controlArgName==$argName){
+                if(is_array($arg)){
+                    $arg=$arg[0];
+                }
+
+                $this->{$argName}=$arg;
+                $this->chooseAddressByRole();
+                break;
+            }
+        }
     }
 
     public function getMainId()

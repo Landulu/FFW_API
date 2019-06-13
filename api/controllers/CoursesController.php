@@ -36,6 +36,27 @@ class CoursesController extends Controller{
                 $courses = CourseService::getInstance()->getAll($offset, $limit);
             }
 
+            $arrMethods=[
+            "vehicle"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getVehicleId"],
+                "skill"=>["serviceMethod"=>"getAllByService"],
+                "affectation"=>["serviceMethod"=>"getAllByService"],
+                "baskets"=>[
+                    "serviceMethod"=>"getAllByService",
+                    "completeMethods"=>[
+                        "company"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getCompanyId",
+                            "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAdid"]]],
+                        "user"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getUserId",
+                            "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
+                        "external"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getExternalId",
+                            "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
+                        "local"=>["serviceMethod"=>"getOneByBasket",
+                            "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAdid"]]]
+                    ]
+                ]
+            ];
+
+            $courses=parent::decorateModel($courses,$arrMethods);
+
             if (count($courses) == 0) {
                 http_response_code(204);
                 return [];
