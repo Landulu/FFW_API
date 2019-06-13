@@ -9,18 +9,16 @@ class CompleteProduct extends Model implements JsonSerializable {
     private $articleId;
     private $basketId;
     private $roomId;
-    private $articleName;
-    private $articleCategory;
+    private $article;
 
     public function __construct(array $fields) {
         $this->prid = isset($fields['prid']) ? $fields['prid'] : NULL;
-        $this->limitDate = $fields['limitDate'];
-        $this->state = $fields['state'];
-        $this->articleId = $fields['articleId'];
-        $this->basketId = $fields['basketId'];
-        $this->roomId = $fields['roomId'];
-        $this->articleName = $fields['articleName'];
-        $this->articleCategory = $fields['articleCategory'];
+        $this->limitDate = isset($fields['limitDate']) ? $fields['limitDate'] : NULL;
+        $this->state = isset($fields['state']) ? $fields['state'] : NULL;
+        $this->articleId = isset($fields['articleId']) ? $fields['articleId'] : NULL;
+        $this->basketId = isset($fields['basketId']) ? $fields['basketId'] : NULL;
+        $this->roomId = isset($fields['roomId']) ? $fields['roomId'] : NULL;
+        $this->article = isset($fields['article']) ? $fields['article'] : NULL;
     }
 
     /**
@@ -120,36 +118,21 @@ class CompleteProduct extends Model implements JsonSerializable {
     }
 
     /**
-     * @return mixed
+     * @return mixed|null
      */
-    public function getArticleName()
+    public function getArticle()
     {
-        return $this->articleName;
+        return $this->article;
     }
 
     /**
-     * @param mixed $articleName
+     * @param mixed|null $article
      */
-    public function setArticleName($articleName): void
+    public function setArticle($article): void
     {
-        $this->articleName = $articleName;
+        $this->article = $article;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getArticleCategory()
-    {
-        return $this->articleCategory;
-    }
-
-    /**
-     * @param mixed $articleCategory
-     */
-    public function setArticleCategory($articleCategory): void
-    {
-        $this->articleCategory = $articleCategory;
-    }
 
     public function getMainId()
     {

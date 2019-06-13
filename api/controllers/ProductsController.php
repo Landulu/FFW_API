@@ -29,7 +29,7 @@ class ProductsController extends Controller {
     }
 
 
-    public function proccessQuery($urlArray, $method) {
+    public function processQuery($urlArray, $method) {
 
         /*
         GET: '/'
@@ -40,7 +40,13 @@ class ProductsController extends Controller {
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
             $products = Productservice::getInstance()->getAll($offset, $limit);
-            return $products;
+            $methodsArr=
+                ["article"=>[
+                    "serviceMethod"=>"getOne","idRelationMethod"=>"getArticleId","completeMethod"=>
+                        ["ingredient"=>["serviceMethod"=>"getOne","idRelationMethod"=>"getIngredientId"]]
+                ]
+                ];
+            return self::decorateModel($products,$methodsArr);
         }
 
 
@@ -69,8 +75,7 @@ class ProductsController extends Controller {
                         // COOL I GUESS
                         $newArticle = new Article(array(
                             "aid" => $curlArticle['code'],
-                            "name" => $curlArticle['product']['product_name'] . ' ' . $curlArticle['product']['generic_name'],
-                            "category" => $curlArticle['product']['categories']
+                            "name" => $curlArticle['product']['product_name'] . ' ' . $curlArticle['product']['generic_name']
                         ));
     
                         $article = ArticleService::getInstance()->create($newArticle);
@@ -104,7 +109,13 @@ class ProductsController extends Controller {
             $product = ProductService::getInstance()->getOne($urlArray[1]);
             if($product) {
                 http_response_code(200);
-                return $product;
+                $methodsArr=
+                    ["article"=>[
+                        "serviceMethod"=>"getOne","idRelationMethod"=>"getArticleId","completeMethod"=>
+                            ["ingredient"=>["serviceMethod"=>"getOne","idRelationMethod"=>"getIngredientId"]]
+                        ]
+                    ];
+                return self::decorateModel($product,$methodsArr);
             } else {
                 http_response_code(400);
             }

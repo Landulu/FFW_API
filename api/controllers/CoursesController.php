@@ -17,7 +17,7 @@ class CoursesController extends Controller{
         return self::$controller;
     }
 
-    public function proccessQuery($urlArray, $method){
+    public function processQuery($urlArray, $method){
 
 
         //get all
@@ -54,7 +54,7 @@ class CoursesController extends Controller{
                     ]
                 ]
             ];
-
+            
             $courses=parent::decorateModel($courses,$arrMethods);
 
             if (count($courses) == 0) {

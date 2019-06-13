@@ -34,7 +34,7 @@ class UsersController extends Controller {
     }
 
 
-    public function proccessQuery($urlArray, $method) {
+    public function processQuery($urlArray, $method) {
 
 
         //get all
@@ -377,8 +377,7 @@ class UsersController extends Controller {
                             if ($curlArticle['status_verbose'] == "product found") {
                                 $newArticle = new Article(array(
                                     "aid" => $curlArticle['code'],
-                                    "name" => $curlArticle['product']['product_name'] . ' ' . $curlArticle['product']['generic_name'],
-                                    "category" => $curlArticle['product']['categories']
+                                    "name" => $curlArticle['product']['product_name'] . ' ' . $curlArticle['product']['generic_name']
                                 ));
             
                                 $article = ArticleService::getInstance()->create($newArticle);

@@ -31,7 +31,7 @@ class RoomsController extends Controller {
     }
 
 
-    public function proccessQuery($urlArray, $method) {
+    public function processQuery($urlArray, $method) {
 
         /*
         GET: '/'

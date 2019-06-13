@@ -21,7 +21,7 @@ class ServicesController extends Controller {
         return self::$controller;
     }
 
-    public function proccessQuery($urlArray, $method){
+    public function processQuery($urlArray, $method){
 
 
         //get all

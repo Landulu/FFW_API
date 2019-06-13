@@ -56,19 +56,14 @@ class ProductService {
                 product.quantity_unit as quantityUnit, 
                 product.weight_quantity as weightQuantity, 
                 product.basket_b_id as basketId, 
-                product.room_r_id as roomId,
-                article.name as articleName,
-                article.category as articleCategory
+                product.room_r_id as roomId
         FROM product
-        JOIN room ON room.r_id = product.room_r_id
-        JOIN article ON article.a_id = product.article_a_id
-        
         LIMIT $offset, $limit"
         );
         $products = [];
 
         foreach ($rows as $row) {
-            $products[] = new CompleteProduct($row);
+            $products[] = new Product($row);
         }
         return $products;
     }
@@ -86,19 +81,16 @@ class ProductService {
                 product.quantity_unit as quantityUnit, 
                 product.weight_quantity as weightQuantity, 
                 product.basket_b_id as basketId, 
-                product.room_r_id as roomId,
-                article.name as articleName,
-                article.category as articleCategory
+                product.room_r_id as roomId
             FROM product
             JOIN room ON room.r_id = product.room_r_id AND room.r_id = ?
-            JOIN article ON article.a_id = product.article_a_id
             LIMIT $offset, $limit",
             [$room_id]
             );
         $products = [];
         if($rows) {   
             foreach ($rows as $row) {
-                $products[] = new CompleteProduct($row);
+                $products[] = new Product($row);
             }
             return $products;
         }
@@ -114,11 +106,8 @@ class ProductService {
                 product.quantity_unit as quantityUnit, 
                 product.weight_quantity as weightQuantity, 
                 product.basket_b_id as basketId, 
-                product.room_r_id as roomId,
-                article.name as articleName,
-                article.category as articleCategory
+                product.room_r_id as roomId
             FROM product
-            JOIN article ON article.a_id = product.article_a_id
             WHERE product.basket_b_id= ?
             LIMIT $offset, $limit",
             [$basket_b_id]
@@ -126,7 +115,7 @@ class ProductService {
         $products = [];
         if($rows) {
             foreach ($rows as $row) {
-                $products[] = new CompleteProduct($row);
+                $products[] = new Product($row);
             }
             return $products;
         }

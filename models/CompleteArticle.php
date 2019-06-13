@@ -9,9 +9,9 @@ class CompleteArticle extends Model implements JsonSerializable {
 
     public function __construct(array $fields) {
         $this->aid = isset($fields['aid']) ? $fields['aid'] : NULL;
-        $this->name = $fields['name'];
-        $this->ingredientId = $fields['ingredientId'];
-        $this->ingredient = $fields['ingredient'];
+        $this->name = isset($fields['name']) ? $fields['name'] : NULL;
+        $this->ingredientId = isset($fields['ingredientId']) ? $fields['ingredientId'] : NULL;
+        $this->ingredient = isset($fields['ingredient']) ? $fields['ingredient'] : NULL;
     }
 
     /**

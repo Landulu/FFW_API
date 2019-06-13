@@ -72,7 +72,7 @@ class BasketService {
         return $baskets;
     }
     
-    public function getOne(int $bid) {
+    public function getOne($bid) {
         $manager = DatabaseManager::getManager();
         $basket = $manager->getOne(
         "SELECT * 

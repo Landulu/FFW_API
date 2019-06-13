@@ -28,7 +28,7 @@ class SkillsController extends Controller {
     }
 
 
-    public function proccessQuery($urlArray, $method) {
+    public function processQuery($urlArray, $method) {
 
         //get all
         if ( count($urlArray) == 1 && $method == 'GET') {
