@@ -43,7 +43,10 @@ class ProductsController extends Controller {
             $methodsArr=
                 ["article"=>[
                     "serviceMethod"=>"getOne","idRelationMethod"=>"getArticleId","completeMethod"=>
-                        ["ingredient"=>["serviceMethod"=>"getOne","idRelationMethod"=>"getIngredientId"]]
+                        ["article"=>
+                            ["serviceMethod"=>"getOne","relationIdMethod"=>"getArticleId","completeMethods"=>[
+                                "ingredient"=>["serviceMethod"=>"getOne","idRelationMethod"=>"getIngredientId"]
+                            ]]]
                 ]
                 ];
             return self::decorateModel($products,$methodsArr);

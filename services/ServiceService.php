@@ -23,10 +23,9 @@ class ServiceService {
         $affectedRows = $manager->exec(
             "INSERT INTO
         service(name, description, create_time, type, capacity, is_public, service_time, route_state, vehicle_v_id, status, is_premium)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
+        VALUES (?, ?, Now(), ?, ?, ?, ?, ?, ?, ?, ?)", [
             $service->getName(),
             $service->getDescription(),
-            $service->getCreateTime(),
             $service->getType(),
             $service->getCapacity(),
             $service->getisPublic(),
