@@ -26,27 +26,33 @@ class ServicesController extends Controller {
 
         //get all
         /*
-            /services
+            /service
         */
         if ( count($urlArray) == 1 && $method == 'GET') {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
-
-            $services = ServiceService::getInstance()->getAll($offset, $limit);
-            $methodsArr=[
-                "vehicle"=>["serviceMethod"=>"getOne"],
-                "skill"=>["serviceMethod"=>"getAllByService"],
-                "affectation"=>["serviceMethod"=>"getAllByService"],
-                "baskets"=>[
-                    "serviceMethod"=>"getAllByService",
-                    "completeMethods"=>[
-                        "user"=>["serviceMethod"=>"getOne"]]
-                    ]];
-
-            return parent::decorateModel($services,$methodsArr);
-
+            if($_GET['type']){
+                $serviceType = $_GET['type'];
+                $services = ServiceService::getInstance()->getAllByType($serviceType, $offset, $limit);
+                if ($services){
+                    http_response_code(200);
+                } else {
+                    http_response_code(400);
+                }
+            } else {
+                $services = ServiceService::getInstance()->getAll($offset, $limit);
+                $methodsArr=[
+                    "vehicle"=>["serviceMethod"=>"getOne"],
+                    "skill"=>["serviceMethod"=>"getAllByService"],
+                    "affectation"=>["serviceMethod"=>"getAllByService"],
+                    "baskets"=>[
+                        "serviceMethod"=>"getAllByService",
+                        "completeMethods"=>[
+                            "user"=>["serviceMethod"=>"getOne"]]
+                        ]];
+                return parent::decorateModel($services,$methodsArr);
+            }
             return $services;
-//            return "toto";
         }
 
 
@@ -80,7 +86,7 @@ class ServicesController extends Controller {
 
         // update One by Id
         /*
-            /services/{uid}
+            /service/{uid}
         */
         if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'PUT') {
             $json = file_get_contents('php://input');
@@ -94,6 +100,13 @@ class ServicesController extends Controller {
                 http_response_code(400);
             }
         }
+
+
+        /*
+            /service/bytype?type=news/
+        */
+
+        
 
     }
 
