@@ -7,7 +7,7 @@
  */
 require_once ("Model.php");
 
-class Service extends Model implements JsonSerializable{
+class CompleteService extends Model implements JsonSerializable{
     private $serid;
     private $name;
     private $description;
@@ -20,6 +20,11 @@ class Service extends Model implements JsonSerializable{
     private $serviceTime;
     private $routeState;
     private $vehicleId;
+    private $skills;
+    private $affectations;
+    private $comments;
+    private $baskets;
+    private $vehicle;
 
 
     public function __construct(array $fields) {
@@ -35,6 +40,11 @@ class Service extends Model implements JsonSerializable{
         $this->serviceTime = isset($fields['serviceTime']) ? $fields['serviceTime'] : null;
         $this->routeState = isset($fields['routeState']) ? $fields['routeState']: null;
         $this->vehicleId = isset($fields['vehicleId']) ? $fields['vehicleId'] : null;
+        $this->skills = isset($fields["skills"]) ? $fields["skills"] : null ;
+        $this->affectations = isset($fields["affectations"]) ? $fields["affectations"] : null ;
+        $this->comments = isset($fields["comments"]) ? $fields["comments"] : null ;
+        $this->baskets = isset($fields["baskets"]) ? $fields["baskets"] : null ;
+        $this->vehicle = isset($fields["vehicle"]) ? $fields["vehicle"] : null ;
     }
 
     /**
@@ -136,7 +146,7 @@ class Service extends Model implements JsonSerializable{
     /**
      * @return mixed|null
      */
-    public function getisPublic()
+    public function getIsPublic()
     {
         return $this->isPublic;
     }
@@ -229,10 +239,93 @@ class Service extends Model implements JsonSerializable{
         $this->vehicleId = $vehicleId;
     }
 
+    /**
+     * @return mixed|null
+     */
+    public function getSkills()
+    {
+        return $this->skills;
+    }
+
+    /**
+     * @param mixed|null $skills
+     */
+    public function setSkills($skills): void
+    {
+        $this->skills = $skills;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getAffectations()
+    {
+        return $this->affectations;
+    }
+
+    /**
+     * @param mixed|null $affectations
+     */
+    public function setAffectations($affectations): void
+    {
+        $this->affectations = $affectations;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param mixed|null $comments
+     */
+    public function setComments($comments): void
+    {
+        $this->comments = $comments;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getBaskets()
+    {
+        return $this->baskets;
+    }
+
+    /**
+     * @param mixed|null $baskets
+     */
+    public function setBaskets($baskets): void
+    {
+        $this->baskets = $baskets;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getVehicle()
+    {
+        return $this->vehicle;
+    }
+
+    /**
+     * @param mixed|null $vehicle
+     */
+    public function setVehicle($vehicle): void
+    {
+        $this->vehicle = $vehicle;
+    }
+
+
+
     public function getMainId()
     {
         return $this->getSerid();
     }
+
 
     /**
      * Specify data which should be serialized to JSON
@@ -241,8 +334,6 @@ class Service extends Model implements JsonSerializable{
      * which is a value of any type other than a resource.
      * @since 5.4.0
      */
-
-
     public function jsonSerialize()
     {
         return get_object_vars($this);

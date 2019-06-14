@@ -1,6 +1,7 @@
 <?php
+require_once ("Model.php");
 
-class Company implements JsonSerializable {
+class Company extends Model implements JsonSerializable {
     private $coid;
     private $siret;
     private $status;
@@ -38,7 +39,12 @@ class Company implements JsonSerializable {
     {
         $this->addressId = $addressId;
     }
-    
+
+    public function getMainId()
+    {
+        return $this->getCoId();
+    }
+
 
     public function JsonSerialize() {
         return get_object_vars($this);

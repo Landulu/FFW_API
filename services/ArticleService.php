@@ -21,10 +21,10 @@ class ArticleService {
         $manager = DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "INSERT INTO
-        article (name, category,is_custom, category_cat_id)
+        article (name, ingredient_in_id)
         VALUES (?, ?, 0,0)", [
             $article->getName(),
-            $article->getCategory(),
+            $article->getIngredientId(),
             ]);
         if ($affectedRows > 0) {
             $article->setAId($manager->lastInsertId());
@@ -39,8 +39,7 @@ class ArticleService {
         "SELECT 
         a_id as aid,
         name,
-        is_custom,
-        category,
+        ingredient_in_id as ingredientId
         FROM article
         LIMIT $offset, $limit"
         );
@@ -59,9 +58,9 @@ class ArticleService {
         "UPDATE article
         SET 
         name = ?, 
-        category =  ?", [
+        ingredient_in_id =  ?", [
             $article->getName(),
-            $article->getCategory(),
+            $article->getIngredientId(),
             ]);
         if ($affectedRows > 0) {
             $article->setAId($manager->lastInsertId());
@@ -75,8 +74,7 @@ class ArticleService {
         $article = $manager->getOne('
         select a_id as aid,
         name,
-        is_custom,
-        category
+        ingredient_in_id as ingredientId
         FROM article
         WHERE a_id = ?'
         , [$aid]);

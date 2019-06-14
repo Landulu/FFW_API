@@ -1,6 +1,7 @@
 <?php
+require_once ("Model.php");
 
-class Skill implements JsonSerializable {
+class Skill extends Model implements JsonSerializable {
     private $skid;
     private $name;
     private $skStatus;
@@ -11,8 +12,37 @@ class Skill implements JsonSerializable {
         $this->skStatus = isset($fields['skStatus']) ? $fields['skStatus'] :NULL;
     }
 
-    public function getSkId(): int { return $this->skid;}
-    public function getName(): string { return $this->name;}
+    /**
+     * @return mixed|null
+     */
+    public function getSkid()
+    {
+        return $this->skid;
+    }
+
+    /**
+     * @param mixed|null $skid
+     */
+    public function setSkid( $skid): void
+    {
+        $this->skid = $skid;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed|null $name
+     */
+    public function setName( $name): void
+    {
+        $this->name = $name;
+    }
 
     /**
      * @return mixed|null
@@ -30,11 +60,11 @@ class Skill implements JsonSerializable {
         $this->skStatus = $skStatus;
     }
 
-
-
-    public function setSkId(int $skid) {
-        $this->skid = $skid;
+    public function getMainId()
+    {
+        return $this->getSkid();
     }
+
 
     public function JsonSerialize() {
         return get_object_vars($this);

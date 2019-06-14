@@ -1,6 +1,7 @@
 <?php
+require_once ("Model.php");
 
-class Product implements JsonSerializable {
+class Product extends Model implements JsonSerializable {
 
     private $prid;
     private $limitDate;
@@ -15,8 +16,8 @@ class Product implements JsonSerializable {
         $this->prid = isset($fields['prid']) ? $fields['prid'] : NULL;
         $this->limitDate = isset($fields['limitDate']) ? $fields['limitDate'] : null;
         $this->state = isset($fields['state'])? $fields['state'] : 'GOOD';
-        $this->state = isset($fields['$quantityUnit'])? $fields['$quantityUnit'] : null;
-        $this->state = isset($fields['$weightQuantity']) ? $fields['$weightQuantity'] : null;
+        $this->state = isset($fields['quantityUnit'])? $fields['quantityUnit'] : null;
+        $this->state = isset($fields['weightQuantity']) ? $fields['weightQuantity'] : null;
         $this->articleId = $fields['articleId'];
         $this->basketId = isset($fields['basketId'])? $fields['basketId'] : NULL;
         $this->roomId = isset($fields['roomId'])? $fields['roomId'] : NULL;
@@ -85,6 +86,12 @@ class Product implements JsonSerializable {
     public function setRoomId(int $roomId) {
         $this->roomId = $roomId;
     }
+
+    public function getMainId()
+    {
+        return $this->getPrid();
+    }
+
 
     public function JsonSerialize() {
         return get_object_vars($this);

@@ -7,12 +7,12 @@ header('Content-Type: application/json');
 
 
 
-include_once 'api/controllers/AppController.php';
+include_once 'controllers/AppController.php';
 include_once 'utils/curl/CurlManager.php';
 include_once 'utils/pathfinding/TspBranchBound.php';
 
 $appController = AppController::getController();
-echo json_encode($appController->proccessQuery($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']));
+echo json_encode($appController->processQuery($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']));
 
 //
 //

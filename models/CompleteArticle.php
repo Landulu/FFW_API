@@ -1,15 +1,17 @@
 <?php
 require_once ("Model.php");
 
-class Article extends Model implements JsonSerializable {
+class CompleteArticle extends Model implements JsonSerializable {
     private $aid;
     private $name;
     private $ingredientId;
+    private $ingredient;
 
     public function __construct(array $fields) {
         $this->aid = isset($fields['aid']) ? $fields['aid'] : NULL;
-        $this->name = $fields['name'];
-        $this->ingredientId = $fields['ingredientId'];
+        $this->name = isset($fields['name']) ? $fields['name'] : NULL;
+        $this->ingredientId = isset($fields['ingredientId']) ? $fields['ingredientId'] : NULL;
+        $this->ingredient = isset($fields['ingredient']) ? $fields['ingredient'] : NULL;
     }
 
     /**
@@ -58,6 +60,22 @@ class Article extends Model implements JsonSerializable {
     public function setIngredientId($ingredientId): void
     {
         $this->ingredientId = $ingredientId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIngredient()
+    {
+        return $this->ingredient;
+    }
+
+    /**
+     * @param mixed $ingredient
+     */
+    public function setIngredient($ingredient): void
+    {
+        $this->ingredient = $ingredient;
     }
 
 

@@ -1,7 +1,8 @@
 <?php
+require_once ("Model.php");
 
 
-class CompleteAffectation implements  JsonSerializable {
+class CompleteAffectation extends Model implements  JsonSerializable {
 
     private $affid;
     private $role;
@@ -11,6 +12,7 @@ class CompleteAffectation implements  JsonSerializable {
     private $serid;
     private $skid;
     private $service;
+    private $user;
 
     /**
      * Affectation constructor.
@@ -26,6 +28,7 @@ class CompleteAffectation implements  JsonSerializable {
         $this->serid = isset($fields['serid'])?$fields['serid']:NULL;
         $this->skid = isset($fields['skid'])?$fields['skid']:NULL;
         $this->service = isset($fields['service'])?$fields['service']:NULL;
+        $this->user = isset($fields['user'])?$fields['user']:NULL;
     }
 
     /**
@@ -155,6 +158,30 @@ class CompleteAffectation implements  JsonSerializable {
     {
         $this->service = $service;
     }
+
+    /**
+     * @return null
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param null $user
+     */
+    public function setUser($user): void
+    {
+        $this->user = $user;
+    }
+
+
+
+    public function getMainId()
+    {
+        return $this->getAffid();
+    }
+
 
     public function JsonSerialize() {
         return get_object_vars($this);

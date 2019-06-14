@@ -1,7 +1,8 @@
 <?php
 
+require_once ("Model.php");
 
-class CompleteRoom implements JsonSerializable {
+class CompleteRoom extends Model implements JsonSerializable {
     private $rid;
     private $name;
     private $isUnavailable;
@@ -112,6 +113,11 @@ class CompleteRoom implements JsonSerializable {
     public function setProducts($products): void
     {
         $this->products = $products;
+    }
+
+    public function getMainId()
+    {
+        return $this->getRid();
     }
 
 

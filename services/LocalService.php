@@ -111,6 +111,29 @@ class LocalService {
         }
     }
 
+    public function getOneByBasket($basketId) {
+        $manager = DatabaseManager::getManager();
+        $local = $manager->getOne(
+            "SELECT 
+            local.lo_id as loid, 
+            local.name, 
+            local.address_ad_id as adid 
+            FROM local JOIN(
+              SELECT 
+              room.local_lo_id FROM room JOIN(
+                SELECT product.room_r_id 
+                FROM product WHERE product.basket_b_id=? LIMIT 1) 
+              AS subRoomId ON room.r_id=subRoomId.room_r_id)
+            AS subLocalId  ON subLocalId.local_lo_id=local.lo_id",
+            [$basketId]
+        );
+        if ($local) {
+            return new Local($local);
+        }
+    }
+
+
+
 }
 
 

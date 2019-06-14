@@ -35,7 +35,7 @@ class VehicleService {
         return NULL;
     }
 
-    public function getAll() {
+    public function getAll($offset,$limit) {
         $manager = DatabaseManager::getManager();
         $rows = $manager->getAll(
         "SELECT 
@@ -56,6 +56,24 @@ class VehicleService {
         return $vehicles;
     }
 
+    public function getOne($vid) {
+        $manager = DatabaseManager::getManager();
+        $vehicle = $manager->getOne(
+            "SELECT 
+        v_id as vid, 
+        volume, 
+        insurance_date as insuranceDate,
+        last_revision as lastRevision,
+        description 
+        FROM vehicle
+        WHERE v_id=?",[$vid]
+        );
+
+        if($vehicle){
+            return new Vehicle($vehicle);
+        }
+        return null;
+    }
 }
 
 ?>

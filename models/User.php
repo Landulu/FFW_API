@@ -1,6 +1,7 @@
 <?php
+require_once ("Model.php");
 
-class User implements JsonSerializable {
+class User extends Model implements JsonSerializable {
     private $uid;
     private $email;
     private $tel;
@@ -24,63 +25,226 @@ class User implements JsonSerializable {
         $this->lastname = $fields['lastname'];
         $this->status = isset($fields['status']) ? $fields['status'] : NULL;
         $this->rights = isset($fields['rights']) ? $fields['rights'] : NULL;
-        $this->lastSubcription = isset($fields['lastSubscription']) ? $fields['lastSubscription'] : NULL;
+        $this->lastSubscription = isset($fields['lastSubscription']) ? $fields['lastSubscription'] : NULL;
         $this->endSubscription = isset($fields['endSubscription']) ? $fields['endSubscription'] : NULL;
         $this->lastEdit = isset($fields['lastEdit']) ? $fields['lastEdit'] : NULL;
         $this->companyName = isset($fields['companyName']) ? $fields['companyName'] : NULL;
         $this->addressId = isset($fields['addressId']) ? $fields['addressId'] : NULL;
     }
 
-    public function getUid(): ?int {return $this->uid;}
-    public function getEmail(): string {return $this->email;}
-    public function getTel(): ?string {return $this->tel;}
-    public function getPassword(): string {return $this->password;}
-    public function getFirstname(): string {return $this->firstname;}
-    public function getLastname(): string {return $this->lastname;}
-    public function getStatus(): ?string {return $this->status;}
-    public function getRights(): ?int {return $this->rights;}
-    public function getLastSubscription(): ?string {return $this->lastSubscription;}
-    public function getEndSubscription(): ?string {return $this->endSubscription;}
-    public function getLastEdit(): ?string {return $this->lastEdit;}
-    public function getCompanyName(): ?string {return $this->companyName;}
-    public function getAddressId(): ?int {return $this->addressId;}
+    /**
+     * @return mixed|null
+     */
+    public function getUid()
+    {
+        return $this->uid;
+    }
 
-    public function setUId(int $uid) {
+    /**
+     * @param mixed|null $uid
+     */
+    public function setUid($uid): void
+    {
         $this->uid = $uid;
     }
-    public function setEmail(string $email) {
+
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param mixed $email
+     */
+    public function setEmail($email): void
+    {
         $this->email = $email;
     }
-    public function setTel(string $tel) {
+
+    /**
+     * @return mixed|null
+     */
+    public function getTel()
+    {
+        return $this->tel;
+    }
+
+    /**
+     * @param mixed|null $tel
+     */
+    public function setTel($tel): void
+    {
         $this->tel = $tel;
     }
-    public function setPassword(string $password) {
+
+    /**
+     * @return mixed
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * @param mixed $password
+     */
+    public function setPassword($password): void
+    {
         $this->password = $password;
     }
-    public function setFirstName(string $firstname) {
-        $this->$firstname = $firstname;
+
+    /**
+     * @return mixed
+     */
+    public function getFirstname()
+    {
+        return $this->firstname;
     }
-    public function setLastname(string $lastname) {
-        $this->$lastname = $lastname;
+
+    /**
+     * @param mixed $firstname
+     */
+    public function setFirstname($firstname): void
+    {
+        $this->firstname = $firstname;
     }
-    public function setLastSubscription(string $lastSubscription) {
-        $this->$lastSubscription = $lastSubscription;
+
+    /**
+     * @return mixed
+     */
+    public function getLastname()
+    {
+        return $this->lastname;
     }
-    public function setEndSubscription(string $endSubscription) {
-        $this->$endSubscription = $endSubscription;
+
+    /**
+     * @param mixed $lastname
+     */
+    public function setLastname($lastname): void
+    {
+        $this->lastname = $lastname;
     }
-    public function setLastEdit(string $lastEdit) {
-        $this->$lastEdit = $lastEdit;
+
+    /**
+     * @return mixed|null
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
-    public function setCompanyName(string $companyName) {
-        $this->$companyName = $companyName;
+
+    /**
+     * @param mixed|null $status
+     */
+    public function setStatus($status): void
+    {
+        $this->status = $status;
     }
-    public function setAddressId(int $addressId) {
-        $this->$addressId = $addressId;
+
+    /**
+     * @return mixed|null
+     */
+    public function getRights()
+    {
+        return $this->rights;
     }
-    public function setStatus(int $status) {
-        $this->$status = $status;
+
+    /**
+     * @param mixed|null $rights
+     */
+    public function setRights($rights): void
+    {
+        $this->rights = $rights;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLastSubscription()
+    {
+        return $this->lastSubscription;
+    }
+
+    /**
+     * @param mixed $lastSubscription
+     */
+    public function setLastSubscription($lastSubscription): void
+    {
+        $this->lastSubscription = $lastSubscription;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getEndSubscription()
+    {
+        return $this->endSubscription;
+    }
+
+    /**
+     * @param mixed|null $endSubscription
+     */
+    public function setEndSubscription($endSubscription): void
+    {
+        $this->endSubscription = $endSubscription;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getLastEdit()
+    {
+        return $this->lastEdit;
+    }
+
+    /**
+     * @param mixed|null $lastEdit
+     */
+    public function setLastEdit($lastEdit): void
+    {
+        $this->lastEdit = $lastEdit;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getCompanyName()
+    {
+        return $this->companyName;
+    }
+
+    /**
+     * @param mixed|null $companyName
+     */
+    public function setCompanyName($companyName): void
+    {
+        $this->companyName = $companyName;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getAddressId()
+    {
+        return $this->addressId;
+    }
+
+    /**
+     * @param mixed|null $addressId
+     */
+    public function setAddressId($addressId): void
+    {
+        $this->addressId = $addressId;
+    }
+
+    public function getMainId()
+    {
+        return $this->getUid();
+    }
+
 
     public function JsonSerialize() {
         return get_object_vars($this);

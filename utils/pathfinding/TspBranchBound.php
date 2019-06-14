@@ -161,7 +161,7 @@ class TspBranchBound
         $url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=".
                 $coordinates . "&destinations=" . $coordinates . "&key=" . $key;
 //            . "48.8223325,2.3611967&destinations=48.7716862,2.3267193&key=" .$key;
-            $response = json_decode(CurlManager::getManager()->curlGet($url));
+            $response = json_decode(CurlManager::getManager()->curlGet($url)["result"],true);
 
 //        return CurlManager::getManager()->curlGet($url);
 //        return $response['status'];

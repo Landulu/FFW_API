@@ -67,7 +67,7 @@ class CourseService {
         status,
         is_premium as isPremium
         from
-        service WHERE type = 'course'
+        service WHERE service.type = 'course'
         LIMIT $offset, $limit
         "
         );
@@ -76,6 +76,54 @@ class CourseService {
         foreach ($rows as $row) {
             $services[] = new Service($row);
         }
+        return $services;
+    }
+
+
+    public function getAllFiltered($params, $offset, $limit) {
+
+        $manager = DatabaseManager::getManager();
+        $sqlArr=[];
+        $i=0;
+        $finalSql=null;
+
+        if(isset($params['name'])){ $sqlArr["nameSql"] = " name  LIKE '%{$params["name"]}%'"; }
+        if(isset($params['routeState'])){ $sqlArr["routeStateSql"] = " route_state = '{$params["routeState"]}'"; }
+        if(isset($params['vehicleId'])){ $sqlArr["vehicleIdSql"] = " vehicle_v_id = ".$params["vehicleId"]; }
+        if(isset($params['createTime'])){ $sqlArr["createTimeSql"] = " create_time = '{$params["createTime"]}'"; }
+        if(isset($params['serviceTime'])){ $sqlArr["serviceTimeSql"] = " service_time = '{$params["serviceTime"]}'"; }
+
+        foreach($sqlArr as $sql){
+            $finalSql=$finalSql.$sql;
+            if($i<count($sqlArr)-1){
+                $finalSql=$finalSql." AND ";
+            }
+            $i++;
+        }
+        $rows = $manager->getAll(
+            "SELECT 
+        service.ser_id as serid,
+        service.name,
+        service.description,
+        service.create_time as createTime,
+        service.type,
+        service.capacity,
+        service.is_public as isPublic,
+        service.service_time as serviceTime,
+        service.route_state as routeState,
+        service.vehicle_v_id as vehicleId,
+        service.status,
+        service.is_premium as isPremium
+        FROM service 
+        WHERE service.type='course' AND  $finalSql
+        LIMIT $offset,$limit");
+
+        $services = [];
+
+        foreach ($rows as $row) {
+            $services[] = new Service($row);
+        }
+
         return $services;
     }
 

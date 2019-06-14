@@ -1,6 +1,7 @@
 <?php
+require_once ("Model.php");
 
-class Local implements JsonSerializable {
+class Local extends Model implements JsonSerializable {
     private $loid;
     private $name;
     private $adid;
@@ -11,17 +12,59 @@ class Local implements JsonSerializable {
         $this->adid = isset($fields['adid']) ? $fields['adid'] : NULL;
     }
 
-    public function getLoId(): ?int {return $this->loid;}
-    public function getName(): string {return $this->name;}
-    public function getAdId(): ?int {return $this->adid;}
+    /**
+     * @return mixed|null
+     */
+    public function getLoid()
+    {
+        return $this->loid;
+    }
 
-    public function setLoId(int $loid) {
+    /**
+     * @param mixed|null $loid
+     */
+    public function setLoid($loid): void
+    {
         $this->loid = $loid;
     }
 
-    public function setAdId(int $adid) {
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getAdid()
+    {
+        return $this->adid;
+    }
+
+    /**
+     * @param mixed|null $adid
+     */
+    public function setAdid($adid): void
+    {
         $this->adid = $adid;
     }
+
+    public function getMainId()
+    {
+        return $this->getLoid();
+    }
+
 
     public function JsonSerialize() {
         return get_object_vars($this);

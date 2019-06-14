@@ -1,13 +1,14 @@
 <?php
 require_once ("Model.php");
 
-class External extends Model  implements JsonSerializable {
+class CompleteExternal extends Model implements JsonSerializable {
 
     private $exid;
     private $name;
     private $tel;
     private $mail;
     private $addressId;
+    private $address;
 
     /**
      * External constructor.
@@ -19,7 +20,24 @@ class External extends Model  implements JsonSerializable {
         $this->name = isset($fields['name'])? $fields['name'] : null;
         $this->tel = isset($fields['tel'])? $fields['tel'] : null;
         $this->mail = isset($fields['mail'])? $fields['mail'] : null;
-        $this->addressId = $fields['addressId'];
+        $this->addressId = isset($fields["addressId"]) ? $fields['addressId']: null;
+        $this->address = isset($fields['address']) ? $fields["address"] : null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     * @param mixed $address
+     */
+    public function setAddress($address): void
+    {
+        $this->address = $address;
     }
 
 

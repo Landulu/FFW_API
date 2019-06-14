@@ -5,8 +5,9 @@
  * Date: 26/05/19
  * Time: 22:42
  */
+require_once ("Model.php");
 
-class CompleteUser implements JsonSerializable {
+class CompleteUser extends Model  implements JsonSerializable {
     private $uid;
     private $email;
     private $tel;
@@ -318,6 +319,12 @@ class CompleteUser implements JsonSerializable {
     {
         $this->address = $address;
     }
+
+    public function getMainId()
+    {
+        return $this->getUid();
+    }
+
 
     public function jsonSerialize() {
         return get_object_vars($this);

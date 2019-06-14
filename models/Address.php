@@ -1,6 +1,6 @@
 <?php
-
-class Address implements JsonSerializable {
+require_once ("Model.php");
+class Address extends Model implements JsonSerializable {
     private $adid;
     private $houseNumber;
     private $streetAddress;
@@ -105,6 +105,12 @@ class Address implements JsonSerializable {
     public function setAdId(int $adid) {
         $this->adid = $adid;
     }
+
+    public function getMainId()
+    {
+        return $this->getAdId();
+    }
+
 
     public function JsonSerialize() {
         return get_object_vars($this);

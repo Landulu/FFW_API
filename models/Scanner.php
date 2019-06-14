@@ -1,6 +1,7 @@
 <?php
+require_once ("Model.php");
 
-class Scanner implements JsonSerializable {
+class Scanner extends Model implements JsonSerializable {
     private $scid;
     private $version;
     private $buildDate;
@@ -15,15 +16,91 @@ class Scanner implements JsonSerializable {
         $this->state = $fields['state'];
     }
 
-    public function getScId(): ?int {return $this->scid;}
-    public function getVersion(): string {return $this->version;}
-    public function getBuildDate(): string {return $this->buildDate;}
-    public function getEmitDate(): string {return $this->emitDate;}
-    public function getState(): string {return $this->state;}
+    /**
+     * @return mixed|null
+     */
+    public function getScid()
+    {
+        return $this->scid;
+    }
 
-    public function setScId(int $scid) {
+    /**
+     * @param mixed|null $scid
+     */
+    public function setScid($scid): void
+    {
         $this->scid = $scid;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * @param mixed $version
+     */
+    public function setVersion($version): void
+    {
+        $this->version = $version;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBuildDate()
+    {
+        return $this->buildDate;
+    }
+
+    /**
+     * @param mixed $buildDate
+     */
+    public function setBuildDate($buildDate): void
+    {
+        $this->buildDate = $buildDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmitDate()
+    {
+        return $this->emitDate;
+    }
+
+    /**
+     * @param mixed $emitDate
+     */
+    public function setEmitDate($emitDate): void
+    {
+        $this->emitDate = $emitDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * @param mixed $state
+     */
+    public function setState($state): void
+    {
+        $this->state = $state;
+    }
+
+    public function getMainId()
+    {
+        $this->getScid();
+    }
+
 
     public function JsonSerialize() {
         return get_object_vars($this);
