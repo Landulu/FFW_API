@@ -169,6 +169,37 @@ class ServiceService {
     }
 
 
+    public function getAllByType($serviceType, $offset, $limit){
+        $manager = DatabaseManager::getManager();
+        $rows = $manager->getAll(
+            "SELECT 
+        service.ser_id as serid,
+        service.name,
+        service.description,
+        service.create_time as createTime,
+        service.type,
+        service.capacity,
+        service.is_public as isPublic,
+        service.service_time as serviceTime,
+        service.route_state as routeState,
+        service.vehicle_v_id as vehicleId,
+        service.status,
+        service.is_premium as isPremium
+        FROM service 
+        WHERE service.type = ?
+        LIMIT $offset, $limit"
+            ,
+            [$serviceType]
+        );
+        $services = [];
+
+        foreach ($rows as $row) {
+            $services[] = new Service($row);
+        }
+
+        return $services;
+    }
+
 //
 //    public function getOneByUserId( $uid) {
 //        $manager = DatabaseManager::getManager();
