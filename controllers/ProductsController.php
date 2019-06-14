@@ -42,12 +42,10 @@ class ProductsController extends Controller {
             $products = Productservice::getInstance()->getAll($offset, $limit);
             $methodsArr=
                 ["article"=>[
-                    "serviceMethod"=>"getOne","idRelationMethod"=>"getArticleId","completeMethod"=>
-                        ["article"=>
-                            ["serviceMethod"=>"getOne","relationIdMethod"=>"getArticleId","completeMethods"=>[
-                                "ingredient"=>["serviceMethod"=>"getOne","idRelationMethod"=>"getIngredientId"]
-                            ]]]
-                ]
+                    "serviceMethod"=>"getOne","idRelationMethod"=>"getArticleId","completeMethods"=>[
+                        "ingredient"=>["serviceMethod"=>"getOne","idRelationMethod"=>"getIngredientId"]
+                        ]
+                    ]
                 ];
             return self::decorateModel($products,$methodsArr);
         }
