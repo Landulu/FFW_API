@@ -109,9 +109,17 @@ class RoomsController extends Controller {
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
             
             $products = ProductService::getInstance()->getAllByRoom($urlArray[1], $offset, $limit);
+
+            $methodsArr=
+                ["article"=>[
+                    "serviceMethod"=>"getOne","idRelationMethod"=>"getArticleId","completeMethods"=>[
+                        "ingredient"=>["serviceMethod"=>"getOne","idRelationMethod"=>"getIngredientId"]
+                    ]
+                ]
+                ];
             if($products) {
                 http_response_code(200);
-                return $products;
+                return self::decorateModel($products,$methodsArr);
             } else {
                 http_response_code(400);
             }
