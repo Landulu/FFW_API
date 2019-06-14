@@ -72,7 +72,12 @@ class  Controller
                                 $offset = 0;
                                 $limit = 20;
                                 do {
-                                    $newItems = $manager->{$method["serviceMethod"]}($requestId, $offset, $limit);
+                                    if(isset($method["filters"])){
+                                        $newItems = $manager->{$method["serviceMethod"]}($requestId, $offset, $limit,$method["filters"]);
+                                    }
+                                    else{
+                                        $newItems = $manager->{$method["serviceMethod"]}($requestId, $offset, $limit);
+                                    }
                                     if (is_array($newItems)) {
                                         $items = array_merge($items, $newItems);
                                     }

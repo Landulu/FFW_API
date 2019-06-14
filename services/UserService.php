@@ -169,6 +169,31 @@ class UserService {
         }
     }
 
+    public function getOneByAffectation(int $affectationId) {
+        $manager = DatabaseManager::getManager();
+        $user = $manager->getOne(
+            "SELECT
+        u_id as uid, 
+        email, 
+        password, 
+        firstname, 
+        lastname,  
+        last_subscription as lastSubscription, 
+        end_subscription as endSubscription, 
+        last_edit as lastEdit, 
+        company_name as companyName, 
+        address_ad_id as addressId, 
+        status, 
+        rights,
+        tel
+        FROM user
+        WHERE u_id = (SELECT user_u_id FROM affectation WHERE aff_id= ?) LIMIT 1"
+            , [$affectationId]);
+        if ($user) {
+            return new User($user);
+        }
+    }
+
     public function getOneByEmail(string $email) {
         $manager = DatabaseManager::getManager();
         $user = $manager->getOne(

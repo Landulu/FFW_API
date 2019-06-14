@@ -88,6 +88,32 @@ class AffectationService {
         return $affectations;
     }
 
+    public function getAllByService($serviceId, $offset, $limit) {
+        $manager = DatabaseManager::getManager();
+        $rows = $manager->getAll(
+            "SELECT
+        aff_id as affid,
+        role,
+        start,
+        affectation.end,
+        user_u_id as uid,
+        skill_sk_id as skid,
+        service_ser_id as serid
+        FROM affectation
+        WHERE  service_ser_id = ? 
+        LIMIT $offset, $limit",
+            [$serviceId]
+        );
+        $affectations = [];
+
+        foreach ($rows as $row) {
+            $affectations[] = new Affectation($row);
+        }
+
+        return $affectations;
+    }
+
+
 
 
     public function getAllByUserBetweenDates($uid, $start, $end) {
@@ -134,6 +160,7 @@ class AffectationService {
             return new Affectation($affectation);
         }
     }
+
     //Fin modification
 
     public function update(Affectation $affectation, $affid): ?Affectation {

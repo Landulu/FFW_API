@@ -7,7 +7,7 @@ header('Content-Type: application/json');
 
 
 
-include_once 'api/controllers/AppController.php';
+include_once 'controllers/AppController.php';
 include_once 'utils/curl/CurlManager.php';
 include_once 'utils/pathfinding/TspBranchBound.php';
 

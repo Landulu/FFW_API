@@ -338,7 +338,7 @@ class CompleteBasket  extends Model implements JsonSerializable {
      */
     public function setUser($user=null,$controlFlag=false): void
     {
-        if(!!$controlFlag){
+        if(!$controlFlag){
             $this->controlSetArr($user,"user",["local","user","external","company"]);
         }
         else{

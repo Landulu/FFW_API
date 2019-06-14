@@ -1,6 +1,6 @@
 <?php
-include_once __DIR__.'/../../services/ServiceService.php';
-include_once __DIR__.'/../../services/CourseService.php';
+include_once __DIR__ . '/../services/ServiceService.php';
+include_once __DIR__ . '/../services/CourseService.php';
 require_once("Controller.php");
 
 
@@ -39,7 +39,9 @@ class CoursesController extends Controller{
             $arrMethods=[
             "vehicle"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getVehicleId"],
                 "skill"=>["serviceMethod"=>"getAllByService"],
-                "affectation"=>["serviceMethod"=>"getAllByService"],
+                "affectations"=>["serviceMethod"=>"getAllByService","completeMethods"=>[
+                    "user"=>["serviceMethod"=>"getOneByAffectation"]
+                ]],
                 "baskets"=>[
                     "serviceMethod"=>"getAllByService",
                     "completeMethods"=>[

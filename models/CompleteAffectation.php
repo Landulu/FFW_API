@@ -12,6 +12,7 @@ class CompleteAffectation extends Model implements  JsonSerializable {
     private $serid;
     private $skid;
     private $service;
+    private $user;
 
     /**
      * Affectation constructor.
@@ -27,6 +28,7 @@ class CompleteAffectation extends Model implements  JsonSerializable {
         $this->serid = isset($fields['serid'])?$fields['serid']:NULL;
         $this->skid = isset($fields['skid'])?$fields['skid']:NULL;
         $this->service = isset($fields['service'])?$fields['service']:NULL;
+        $this->user = isset($fields['user'])?$fields['user']:NULL;
     }
 
     /**
@@ -156,6 +158,24 @@ class CompleteAffectation extends Model implements  JsonSerializable {
     {
         $this->service = $service;
     }
+
+    /**
+     * @return null
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param null $user
+     */
+    public function setUser($user): void
+    {
+        $this->user = $user;
+    }
+
+
 
     public function getMainId()
     {

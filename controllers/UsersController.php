@@ -371,7 +371,7 @@ class UsersController extends Controller {
                             
                             $url = "https://world.openfoodfacts.org/api/v0/product/" . $productGroup['barcode'] . ".json";
 
-                            $curlArticle = json_decode(CurlManager::getManager()->curlGet($url), true);
+                            $curlArticle = json_decode(CurlManager::getManager()->curlGet($url)["result"], true);
                             
 
                             if ($curlArticle['status_verbose'] == "product found") {

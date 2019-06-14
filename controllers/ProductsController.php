@@ -68,7 +68,7 @@ class ProductsController extends Controller {
                     
                     $url = "https://world.openfoodfacts.org/api/v0/product/" . $product->getArticleId() . ".json";
 
-                    $curlArticle = json_decode(CurlManager::getManager()->curlGet($url), true);
+                    $curlArticle = json_decode(CurlManager::getManager()->curlGet($url)["result"], true);
 
 
                     if ($curlArticle['status_verbose'] == "product found") {

@@ -83,7 +83,7 @@ class AddressesController extends Controller {
 
             $address = $this->gMapGeolocate($address);
 
-            $address = AddressService::getInstance()->update($address,$urlArray[1]);
+            $address = AddressService::getInstance()->update($address);
 
             if($address) {
                 http_response_code(201);

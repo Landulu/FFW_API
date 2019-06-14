@@ -45,7 +45,7 @@ class AppController {
         $sorter = $urlArray[1];
 
         $className=ucfirst($sorter)."Controller";
-        include_once 'api/controllers/'.$className.'.php';
+        include_once 'controllers/'.$className.'.php';
         if(class_exists($className)){
             $controller=$className::getController();
             return $result=$controller->processQuery(array_slice($urlArray,1),$method);
