@@ -39,6 +39,8 @@ class AppController {
 
 
         $urlArray = explode('/', $url);
+        var_dump($urlArray);
+
         $lastElement = $urlArray[count($urlArray) - 1];
         if (strpos($lastElement, '?') !== false) {
             $urlArray[count($urlArray) - 1] = explode('?', $lastElement)[0];

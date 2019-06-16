@@ -57,14 +57,53 @@ class CompanyService {
         from company
         LIMIT $offset, $limit"
         );
-        $locals = [];
+        $companies = [];
 
         foreach ($rows as $row) {
-            $locals[] = new Local($row);
+            $companies[] = new Company($row);
         }
 
-        return $locals;
+        return $companies;
     }
+
+
+
+    public function getAllFiltered($offset, $limit, $filters) {
+        $siret = isset($filters['siret']) ? $filters['siret'] : '';
+        $name = isset($filters['name']) ? $filters['name'] : '';
+        $cityName = isset($filters['cityName']) ? $filters['cityName'] : '';
+
+        $cityNameSQL = '';
+        if ($cityName) {
+            $cityNameSQL = " JOIN (SELECT address.ad_id FROM address WHERE  address.city_name LIKE '%{$cityName}%') AS addr
+        ON addr.ad_id = company.address_ad_id ";
+        }
+        $manager = DatabaseManager::getManager();
+
+        $rows = $manager->getAll(
+            "SELECT
+        co_id as coid,
+        SIRET as siret,
+        status, 
+        name, 
+        address_ad_id as addressId,
+        tel,
+        user_u_id as userId 
+        FROM company
+        " .$cityNameSQL. "
+        WHERE SIRET LIKE '%{$siret}%'
+        and name LIKE '%{$name}%'
+        LIMIT $offset, $limit"
+        );
+        $companies = [];
+
+        foreach ($rows as $row) {
+            $companies[] = new Company($row);
+        }
+
+        return $companies;
+    }
+
 
     public function update(Company $company, $coid): ?Company {
         $manager = DatabaseManager::getManager();

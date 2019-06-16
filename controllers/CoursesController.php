@@ -1,6 +1,9 @@
 <?php
 include_once __DIR__ . '/../services/ServiceService.php';
 include_once __DIR__ . '/../services/CourseService.php';
+include_once __DIR__ . '/../services/AddressService.php';
+include_once __DIR__ . '/../services/BasketService.php';
+include_once __DIR__ . '/../utils/pathfinding/TspBranchBound.php';
 require_once("Controller.php");
 
 
@@ -67,6 +70,44 @@ class CoursesController extends Controller{
 
             }
 
+        }
+
+        if ( count($urlArray) == 2 && $method == 'GET') {
+            $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
+            $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
+
+
+
+            if(isset($urlArray[1])){
+                if($urlArray[1]=="pathFinding"&&$_GET["basketAddressIds"]){
+
+                    $tspManager=TspBranchBound::getInstance();
+                    $addressManager=AddressService::getInstance();
+                    $basketManager=BasketService::getInstance();
+
+                    $arrBasketAddressIds=explode(",",$_GET["basketAddressIds"]);
+
+                    foreach($arrBasketAddressIds as $key=>$basketAddressId){
+
+                        $arrBasketAddressIds[$key]=explode("||",$basketAddressId);
+
+                        $addressId=count($arrBasketAddressIds[$key])==2?$arrBasketAddressIds[$key][1]:$arrBasketAddressIds[$key][0];
+
+                        $address=$addressManager->getOne($addressId);
+
+                        $tspManager->addLocation(array('id'=>$basketAddressId[0], 'latitude'=>$address->getLatitude(), 'longitude'=>$address->getLongitude()));
+                    }
+                    $res=$tspManager->solve();
+                    $arrBasketOrder=[];
+
+                    for($i=0; $i<count($res["path"]); $i++) {
+                        if(count($arrBasketAddressIds[$res["path"][$i][0]])==2){
+                            $arrBasketOrder[]=$arrBasketAddressIds[$res["path"][$i][0]][0];
+                        }
+                    }
+                    echo json_encode($arrBasketOrder);
+                }
+            }
         }
 
 

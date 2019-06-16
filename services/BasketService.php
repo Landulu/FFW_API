@@ -250,6 +250,26 @@ class BasketService {
         return NULL;
     }
 
+    public function updateOrder($bid,$order) {
+        $manager = DatabaseManager::getManager();
+        $affectedRows = $manager->exec(
+            'UPDATE
+        basket 
+        SET
+        basket.order = ?
+        WHERE b_id= ?
+        ', [
+            $order,
+            $bid
+        ]);
+
+        if ($affectedRows > 0) {
+            return $order;
+        }
+        return $order;
+    }
+
+
     // public function update(Product $product): ?Product {
     //     $manager = DatabaseManager::getManager();
     //     $affectedRows = $manager->exec('

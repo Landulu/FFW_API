@@ -14,6 +14,7 @@ class CompleteCompany extends Model implements JsonSerializable {
     private $name;
     private $tel;
     private $userId;
+    private $addressId;
     private $address;
 
     public function __construct(array $fields) {
@@ -24,12 +25,13 @@ class CompleteCompany extends Model implements JsonSerializable {
         $this->tel = isset($fields['tel']) ? $fields['tel'] : NULL;
         $this->userId = isset($fields['userId']) ? $fields['userId'] : NULL;
         $this->address = isset($fields['address']) ? $fields['address'] : NULL;
+        $this->addressId = isset($fields['addressId']) ? $fields['addressId'] : NULL;
     }
 
     /**
      * @return mixed|null
      */
-    public function getCoid(): ?mixed
+    public function getCoid()
     {
         return $this->coid;
     }
@@ -37,7 +39,7 @@ class CompleteCompany extends Model implements JsonSerializable {
     /**
      * @param mixed|null $coid
      */
-    public function setCoid(?mixed $coid): void
+    public function setCoid($coid): void
     {
         $this->coid = $coid;
     }
@@ -45,7 +47,7 @@ class CompleteCompany extends Model implements JsonSerializable {
     /**
      * @return mixed|null
      */
-    public function getSiret(): ?mixed
+    public function getSiret()
     {
         return $this->siret;
     }
@@ -53,7 +55,7 @@ class CompleteCompany extends Model implements JsonSerializable {
     /**
      * @param mixed|null $siret
      */
-    public function setSiret(?mixed $siret): void
+    public function setSiret($siret): void
     {
         $this->siret = $siret;
     }
@@ -61,7 +63,7 @@ class CompleteCompany extends Model implements JsonSerializable {
     /**
      * @return mixed|null
      */
-    public function getStatus(): ?mixed
+    public function getStatus()
     {
         return $this->status;
     }
@@ -69,7 +71,7 @@ class CompleteCompany extends Model implements JsonSerializable {
     /**
      * @param mixed|null $status
      */
-    public function setStatus(?mixed $status): void
+    public function setStatus($status): void
     {
         $this->status = $status;
     }
@@ -77,7 +79,7 @@ class CompleteCompany extends Model implements JsonSerializable {
     /**
      * @return mixed|null
      */
-    public function getName(): ?mixed
+    public function getName()
     {
         return $this->name;
     }
@@ -85,7 +87,7 @@ class CompleteCompany extends Model implements JsonSerializable {
     /**
      * @param mixed|null $name
      */
-    public function setName(?mixed $name): void
+    public function setName($name): void
     {
         $this->name = $name;
     }
@@ -93,7 +95,7 @@ class CompleteCompany extends Model implements JsonSerializable {
     /**
      * @return mixed|null
      */
-    public function getTel(): ?mixed
+    public function getTel()
     {
         return $this->tel;
     }
@@ -101,7 +103,7 @@ class CompleteCompany extends Model implements JsonSerializable {
     /**
      * @param mixed|null $tel
      */
-    public function setTel(?mixed $tel): void
+    public function setTel($tel): void
     {
         $this->tel = $tel;
     }
@@ -109,7 +111,7 @@ class CompleteCompany extends Model implements JsonSerializable {
     /**
      * @return mixed|null
      */
-    public function getUserId(): ?mixed
+    public function getUserId()
     {
         return $this->userId;
     }
@@ -117,7 +119,7 @@ class CompleteCompany extends Model implements JsonSerializable {
     /**
      * @param mixed|null $userId
      */
-    public function setUserId(?mixed $userId): void
+    public function setUserId($userId): void
     {
         $this->userId = $userId;
     }
@@ -125,7 +127,23 @@ class CompleteCompany extends Model implements JsonSerializable {
     /**
      * @return mixed|null
      */
-    public function getAddress(): ?mixed
+    public function getAddressId()
+    {
+        return $this->addressId;
+    }
+
+    /**
+     * @param mixed|null $addressId
+     */
+    public function setAddressId($addressId): void
+    {
+        $this->addressId = $addressId;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getAddress()
     {
         return $this->address;
     }
@@ -133,7 +151,7 @@ class CompleteCompany extends Model implements JsonSerializable {
     /**
      * @param mixed|null $address
      */
-    public function setAddress(?mixed $address): void
+    public function setAddress($address): void
     {
         $this->address = $address;
     }

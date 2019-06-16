@@ -39,9 +39,22 @@ class ExternalsController extends Controller{
 
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
+            $params=[];
 
-            $externals = ExternalsService::getInstance()->getAll($offset, $limit);
-            return $externals;
+            foreach($_GET as $key=>$value){
+                if($key!="offset"&&$key!="limit"){
+                    $params[$key]=$value;
+                }
+            }
+            if (count($params)) {
+                $externals = ExternalService::getInstance()->getAllFiltered($offset, $limit, $params);
+            } else {
+                $externals = ExternalService::getInstance()->getAll($offset, $limit);
+            }
+
+            $methodsArr=["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]
+            ];
+            return parent::decorateModel($externals,$methodsArr);
         }
 
 

@@ -34,8 +34,26 @@ class CompaniesController extends Controller  {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-            $company = CompanyService::getInstance()->getAll($offset, $limit);
-            return $company;
+            $params = [];
+
+            foreach($_GET as $key=>$value){
+                if($key!="offset"&&$key!="limit"){
+                    $params[$key]=$value;
+                }
+            }
+            if (count($params)) {
+                $companies = CompanyService::getInstance()->getAllFiltered($offset, $limit, $params);
+
+
+            } else {
+                $companies = CompanyService::getInstance()->getAll($offset, $limit);
+            }
+
+
+
+            $methodsArr=["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]
+            ];
+            return parent::decorateModel($companies,$methodsArr);
         }
 
 

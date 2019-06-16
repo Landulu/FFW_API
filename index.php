@@ -9,13 +9,13 @@ header('Content-Type: application/json');
 
 include_once 'controllers/AppController.php';
 include_once 'utils/curl/CurlManager.php';
-include_once 'utils/pathfinding/TspBranchBound.php';
 
 $appController = AppController::getController();
 echo json_encode($appController->processQuery($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']));
 
-//
-//
+
+
+
 //try
 //{
 //    $tsp = TspBranchBound::getInstance();
@@ -32,3 +32,4 @@ echo json_encode($appController->processQuery($_SERVER['REQUEST_URI'], $_SERVER[
 //    exit;
 //}
 
+//var_dump($ans);

@@ -50,7 +50,6 @@ class ProductsController extends Controller {
             return self::decorateModel($products,$methodsArr);
         }
 
-
         /*
         POST: '/'
         */
@@ -86,8 +85,16 @@ class ProductsController extends Controller {
                     
                 }
 
-                if($article != null) {   
-                    $newProduct = ProductService::getInstance()->create(new Product($obj));
+                if($article != null) {
+                    if(isset($_GET["nbProducts"])){
+                        $newProduct=[];
+                        for($i=0;$i<$_GET["nbProducts"];$i++){
+                            $newProduct[]= ProductService::getInstance()->create(new Product($obj));
+                        }
+                    }
+                    else{
+                        $newProduct = ProductService::getInstance()->create(new Product($obj));
+                    }
                     if($newProduct) {
                         http_response_code(201);
                         return $newProduct;
@@ -132,8 +139,13 @@ class ProductsController extends Controller {
             $json = file_get_contents('php://input'); 
             $obj = json_decode($json, true);
 
+            if(isset($_GET['roomId'])){
+                $product=ProductService::getInstance()->changeProductRoom($obj,$_GET["roomId"]);
+            }
+            else{
+                $product = ProductService::getInstance()->update(new Product($obj));
+            }
 
-            $product = ProductService::getInstance()->update(new Product($obj));
             if($product) {
                 http_response_code(200);
                 return $product;

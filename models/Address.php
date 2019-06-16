@@ -16,7 +16,7 @@ class Address extends Model implements JsonSerializable {
             throw new Exception('Address data missing',400);
         }
         foreach($fields as $key=>$value){
-            if(empty($fields[$key])&& $key!="latitude" && $key !="longitude" && $key != "complement" && $key!='adid'){
+            if(empty($fields[$key])&& $key!="latitude" && $key !="longitude" && $key != "complement" && $key != "houseNumber" && $key!='adid'){
                 throw new Exception('Address data missing',400);
             }
         }

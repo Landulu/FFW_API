@@ -5,6 +5,7 @@ include_once 'utils/routing/Request.php';
 include_once 'utils/routing/Router.php';
 
 include_once 'services/UserService.php';
+include_once 'services/CompanyService.php';
 include_once 'services/AddressService.php';
 include_once 'services/BasketService.php';
 include_once 'services/SkillService.php';

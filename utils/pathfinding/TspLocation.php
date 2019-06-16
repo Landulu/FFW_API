@@ -5,6 +5,7 @@
  * Date: 30/05/19
  * Time: 00:36
  */
+require_once 'utils/curl/CurlManager.php';
 
 class TspLocation
 {
@@ -53,7 +54,7 @@ class TspLocation
 //            return $miles;
 //    }
 
-    public function distance(
+    public static function distance(
         $lat1, $lon1, $lat2, $lon2
     ) {
         // api key for now
@@ -66,7 +67,12 @@ class TspLocation
 //        return CurlManager::getManager()->curlGet($url);
 //        return $response['status'];
         if ($response['status'] == 'OK') {
-            return $response['rows'][0]['elements'][0]['duration']['value'];
+            if(isset($response['rows'][0]['elements'][0]['duration'])){
+                return $response['rows'][0]['elements'][0]['duration']['value'];
+            }
+            else{
+                return -1;
+            }
         } else {
             return -1;
         }
