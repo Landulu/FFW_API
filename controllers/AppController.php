@@ -37,8 +37,8 @@ class AppController {
 
         $url = $this->formatRoute($url);
 
-
         $urlArray = explode('/', $url);
+        var_dump($urlArray);
 
         $lastElement = $urlArray[count($urlArray) - 1];
         if (strpos($lastElement, '?') !== false) {
