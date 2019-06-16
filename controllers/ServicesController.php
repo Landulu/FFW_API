@@ -44,7 +44,7 @@ class ServicesController extends Controller {
                 $methodsArr=[
                     "vehicle"=>["serviceMethod"=>"getOne"],
                     "skill"=>["serviceMethod"=>"getAllByService"],
-                    "affectation"=>["serviceMethod"=>"getAllByService"],
+                    "affectations"=>["serviceMethod"=>"getAllByService"],
                     "baskets"=>[
                         "serviceMethod"=>"getAllByService",
                         "completeMethods"=>[
