@@ -18,10 +18,10 @@ class LocalService {
 
     public function create(Local $local): ?Local {
         $manager = DatabaseManager::getManager();
-        $affectedRows = $manager->exec('
-        INSERT INTO
+        $affectedRows = $manager->exec(
+        "INSERT INTO
         local (name, address_ad_id)
-        VALUES (?, ?)', [
+        VALUES (?, ?)", [
         $local->getName(),
         $local->getAdId()
         ]);
@@ -31,17 +31,108 @@ class LocalService {
         }
         return NULL;
     }
-
-    public function getAll() {
+    public function update(Local $local): ?Local {
         $manager = DatabaseManager::getManager();
-        $rows = $manager->getAll('
-        SELECT * from
-        local'
+        $affectedRows = $manager->exec(
+            "UPDATE 
+        local 
+        SET name = ? , address_ad_id = ? 
+        WHERE lo_id= ?", [
+            $local->getName(),
+            $local->getAdId(),
+            $local->getLoId()
+        ]);
+        if($affectedRows > 0) {
+            return $local;
+        }
+        return NULL;
+    }
+
+    public function getAll($offset, $limit) {
+        $manager = DatabaseManager::getManager();
+        $rows = $manager->getAll(
+            "SELECT 
+            lo_id as loid,
+            name, 
+            address_ad_id as adid 
+            FROM local
+            LIMIT $offset, $limit"
         );
-        if (sizeof($rows)  > 0) {
-            return $rows;
+        $locals = [];
+
+        foreach ($rows as $row) {
+            $locals[] = new Local($row);
+        }
+
+        return $locals;
+    }
+
+    public function getAllFiltered($offset, $limit, $filters) {
+        $cityName = isset($filters['cityName']) ? $filters['cityName'] : '';
+        $name = isset($filters['name']) ? $filters['name'] : '';
+        if ($cityName) {
+            $cityNameSQL = " JOIN (SELECT address.ad_id FROM address WHERE address.city_name LIKE '%{$cityName}%') AS addr
+            ON addr.ad_id = local.address_ad_id ";
+        }
+        $cityNameSQL=isset($cityNameSQL) ? $cityNameSQL :'';
+
+        $manager = DatabaseManager::getManager();
+        $rows = $manager->getAll(
+            "SELECT
+            lo_id as loid, 
+            name, 
+            address_ad_id as adid
+            FROM local
+            " .$cityNameSQL. "
+            WHERE name LIKE '%{$name}%'
+            LIMIT $offset, $limit"
+        );
+        $locals = [];
+
+        foreach ($rows as $row) {
+            $locals[] = new Local($row);
+        }
+        return $locals;
+    }
+
+
+    public function getOne($loid) {
+        $manager = DatabaseManager::getManager();
+        $local = $manager->getOne(
+            "SELECT 
+            lo_id as loid,
+            name, 
+            address_ad_id as adid 
+            FROM local
+            WHERE lo_id = ?", [$loid]
+        );
+        if ($local) {
+            return new Local($local);
         }
     }
+
+    public function getOneByBasket($basketId) {
+        $manager = DatabaseManager::getManager();
+        $local = $manager->getOne(
+            "SELECT 
+            local.lo_id as loid, 
+            local.name, 
+            local.address_ad_id as adid 
+            FROM local JOIN(
+              SELECT 
+              room.local_lo_id FROM room JOIN(
+                SELECT product.room_r_id 
+                FROM product WHERE product.basket_b_id=? LIMIT 1) 
+              AS subRoomId ON room.r_id=subRoomId.room_r_id)
+            AS subLocalId  ON subLocalId.local_lo_id=local.lo_id",
+            [$basketId]
+        );
+        if ($local) {
+            return new Local($local);
+        }
+    }
+
+
 
 }
 

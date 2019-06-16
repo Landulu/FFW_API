@@ -19,10 +19,10 @@ class ScannerService {
 
     public function create(Scanner $scanner): ?Scanner {
         $manager = DatabaseManager::getManager();
-        $affectedRows = $manager->exec('
-        INSERT INTO
+        $affectedRows = $manager->exec(
+        "INSERT INTO
         scanner (version, build_date, emit_date, state)
-        VALUES (?, ?, ?, ?)', [
+        VALUES (?, ?, ?, ?)", [
             $scanner->getVersion(),
             $scanner->getBuildDate(),
             $scanner->getEmitDate(),
@@ -35,15 +35,25 @@ class ScannerService {
         return NULL;
     }
 
-    public function getAll() {
+    public function getAll($offset, $limit) {
         $manager = DatabaseManager::getManager();
-        $rows = $manager->getAll('
-        SELECT * from
-        scanner'
+        $rows = $manager->getAll(
+        "SELECT 
+        sc_id as scid,
+        version, 
+        build_date as buildDate, 
+        emit_date as emitDate,
+        state
+        FROM scanner
+        LIMIT $offset, $limit"
         );
-        if (sizeof($rows)  > 0) {
-            return $rows;
+        $scanners = [];
+
+        foreach ($rows as $row) {
+            $scanners[] = new Scanner($row);
         }
+        return $scanners;
+
     }
 
 }

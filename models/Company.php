@@ -1,6 +1,7 @@
 <?php
+require_once ("Model.php");
 
-class Company implements JsonSerializable {
+class Company extends Model implements JsonSerializable {
     private $coid;
     private $siret;
     private $status;
@@ -11,25 +12,133 @@ class Company implements JsonSerializable {
 
     public function __construct(array $fields) {
         $this->coid = isset($fields['coid']) ? $fields['coid'] : NULL;
-        $this->siret = $fields['siret'];
-        $this->status = $fields['status'];
-        $this->name = $fields['name'];
-        $this->name = $fields['tel'];
-        $this->addressId = $fields['addressId'];
-        $this->userId = $fields['userId'];
+        $this->siret = isset($fields['siret']) ? $fields['siret']: NULL;
+        $this->status = isset($fields['status']) ? $fields['status'] : NULL;
+        $this->name = isset($fields['name']) ? $fields['name'] : NULL;
+        $this->tel = isset($fields['tel']) ? $fields['tel'] : NULL;
+        $this->addressId = isset($fields['addressId'] ) ? $fields['addressId'] : NULL;
+        $this->userId = isset($fields['userId']) ? $fields['userId'] : NULL;
     }
 
-    public function getCoId(): ?int {return $this->coid;}
-    public function getSiret(): string {return $this->siret;}
-    public function getStatus(): string {return $this->status;}
-    public function getName(): string {return $this->name;}
-    public function getTel(): string {return $this->tel;}
-    public function getAddressId(): string {return $this->addressId;}
-    public function getUserId(): string {return $this->userId;}
+    /**
+     * @return mixed|null
+     */
+    public function getCoid()
+    {
+        return $this->coid;
+    }
 
-    public function setCoId(int $coid) {
+    /**
+     * @param mixed|null $coid
+     */
+    public function setCoid($coid): void
+    {
         $this->coid = $coid;
     }
+
+    /**
+     * @return mixed|null
+     */
+    public function getSiret()
+    {
+        return $this->siret;
+    }
+
+    /**
+     * @param mixed|null $siret
+     */
+    public function setSiret($siret): void
+    {
+        $this->siret = $siret;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed|null $status
+     */
+    public function setStatus($status): void
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed|null $name
+     */
+    public function setName($name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getTel()
+    {
+        return $this->tel;
+    }
+
+    /**
+     * @param mixed|null $tel
+     */
+    public function setTel($tel): void
+    {
+        $this->tel = $tel;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getAddressId()
+    {
+        return $this->addressId;
+    }
+
+    /**
+     * @param mixed|null $addressId
+     */
+    public function setAddressId($addressId): void
+    {
+        $this->addressId = $addressId;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param mixed|null $userId
+     */
+    public function setUserId($userId): void
+    {
+        $this->userId = $userId;
+    }
+
+
+
+    public function getMainId()
+    {
+        return $this->getCoId();
+    }
+
 
     public function JsonSerialize() {
         return get_object_vars($this);
