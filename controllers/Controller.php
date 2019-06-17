@@ -20,13 +20,7 @@ class  Controller
 
         foreach($lightObjs as $objKey=>$lightObj){
 
-            $className=get_class($lightObj);
-            $completeClassName=strpos($className,"Complete")!==false?$className:"Complete".$className;
-            include_once ("models/".$className.".php");
-            include_once ("models/".$completeClassName.".php");
-            $lightObj=json_decode(json_encode($lightObj),true);
-
-            $lightObj = new $completeClassName($lightObj);
+            $lightObj=Model::convertModelType("Complete",$lightObj);
 
 //            var_dump($lightObj);
             foreach($methodsArr as   $methodKey=>$method){
@@ -65,7 +59,9 @@ class  Controller
 
                         if ($manager  && method_exists($serviceClass,$method["serviceMethod"]) && $requestId) {
                             if (strpos($method["serviceMethod"], "getOne")!==false) {
-                                $lightObj->{"set" . ucfirst($methodKey)}($manager->{$method["serviceMethod"]}($requestId));
+                                $childObj=$manager->{$method["serviceMethod"]}($requestId);
+                                $childObj=isset($method["objectType"])?Model::convertModelType($method["objectType"],$childObj):$childObj;
+                                $lightObj->{"set" . ucfirst($methodKey)}($childObj);
                             } else if (strstr($method["serviceMethod"], "getAll")) {
 
                                 $items = [];
@@ -84,6 +80,10 @@ class  Controller
                                     $offset += $limit;
 
                                 } while (sizeof($items) % $limit == 0 && sizeof($items) > 0);
+
+                                foreach($items as $itemKey=>$item){
+                                    $items[$itemKey]=isset($method["objectType"])?Model::convertModelType($method["objectType"],$item):$item;
+                                }
                                 $lightObj->{"set" . ucfirst($methodKey)}($items);
                             }
                         }

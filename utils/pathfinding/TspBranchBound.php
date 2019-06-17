@@ -95,7 +95,7 @@ class TspBranchBound
         $n_locations = count($this->locations);
         for ($i = 0; $i < $n_locations; $i++)
         {
-            echo $i+1 . ". " . $this->locations[$i]->id . "\n";
+//            echo $i+1 . ". " . $this->locations[$i]->id . "\n";
             for ($j = 0; $j < $n_locations; $j++)
             {
                 $distance = INF;
@@ -242,11 +242,10 @@ class TspBranchBound
 
     public function printPath($list)
     {
-        echo "\nPath: \n";
         for ($i = 0; $i < count($list); $i++) {
             $start = $list[$i][0] + 1;
             $end = $list[$i][1] + 1;
-            echo $start . " -> " . $end . "\n";
+//            echo $start . " -> " . $end . "\n";
         }
     }
 

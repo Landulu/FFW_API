@@ -28,8 +28,8 @@ class CourseService {
         $manager = DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             "INSERT INTO
-        service(name, description, create_time, type, capacity, is_public, service_time, route_state, vehicle_v_id, status, is_premium)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
+        service(name, description, create_time, type, capacity, is_public, service_time, route_state, vehicle_v_id, status, is_premium,local_lo_id)
+        VALUES (?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?,?)", [
             $service->getName(),
             $service->getDescription(),
             $service->getCreateTime(),
@@ -40,11 +40,12 @@ class CourseService {
             $service->getRouteState(),
             $service->getVehicleId(),
             $service->getStatus(),
-            $service->getisPremium()
+            $service->getisPremium(),
+                $service
         ]);
         if ($affectedRows > 0) {
             $service->setSerid($manager->lastInsertId());
-            return $service;
+            return new Service($service);
         }
         return NULL;
     }
@@ -65,7 +66,8 @@ class CourseService {
         route_state as routeState,
         vehicle_v_id as vehicleId,
         status,
-        is_premium as isPremium
+        is_premium as isPremium,
+        local_lo_id as localId
         from
         service WHERE service.type = 'course'
         LIMIT $offset, $limit
@@ -113,7 +115,8 @@ class CourseService {
         service.route_state as routeState,
         service.vehicle_v_id as vehicleId,
         service.status,
-        service.is_premium as isPremium
+        service.is_premium as isPremium,
+        service.local_lo_id as localId
         FROM service 
         WHERE service.type='course' AND  $finalSql
         LIMIT $offset,$limit");
@@ -144,7 +147,8 @@ class CourseService {
         service.route_state as routeState,
         service.vehicle_v_id as vehicleId,
         service.status,
-        service.is_premium as isPremium
+        service.is_premium as isPremium,
+        service.local_lo_id as localId
         FROM service 
         JOIN affectation on service.ser_id=affection.service_ser_id AND affectation.user_u_id= ? AND service.type = 'course'
         LIMIT $offset, $limit"
@@ -176,7 +180,8 @@ class CourseService {
         route_state as routeState,
         vehicle_v_id as vehicleId,
         status,
-        is_premium as isPremium
+        is_premium as isPremium,
+        service.local_lo_id as localId
         from
         service
         WHERE ser_id = ? AND type = 'course'"
@@ -203,7 +208,8 @@ class CourseService {
         route_state  = ?,
         vehicle_v_id  = ?,
         status = ?,
-        is_premium = ?
+        is_premium = ?,
+        local_lo_id= ?
         WHERE ser_id= ? ", [
             $service->getName(),
             $service->getDescription(),
@@ -216,6 +222,7 @@ class CourseService {
             $service->getVehicleId(),
             $service->getStatus(),
             $service->getisPremium(),
+            $service->getLocalId(),
             $serid
         ]);
         if ($affectedRows > 0) {

@@ -1,6 +1,9 @@
 <?php
 include_once __DIR__ . '/../services/ServiceService.php';
 include_once __DIR__ . '/../services/CourseService.php';
+include_once __DIR__ . '/../services/AddressService.php';
+include_once __DIR__ . '/../services/BasketService.php';
+include_once __DIR__ . '/../utils/pathfinding/TspBranchBound.php';
 require_once("Controller.php");
 
 
@@ -40,18 +43,18 @@ class CoursesController extends Controller{
             "vehicle"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getVehicleId"],
                 "skill"=>["serviceMethod"=>"getAllByService"],
                 "affectations"=>["serviceMethod"=>"getAllByService","completeMethods"=>[
-                    "user"=>["serviceMethod"=>"getOneByAffectation"]
+                    "user"=>["objectType"=>"complete","serviceMethod"=>"getOneByAffectation"]
                 ]],
                 "baskets"=>[
                     "serviceMethod"=>"getAllByService",
                     "completeMethods"=>[
-                        "company"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getCompanyId",
+                        "company"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getCompanyId",
                             "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAdid"]]],
-                        "user"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getUserId",
+                        "user"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getUserId",
                             "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
-                        "external"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getExternalId",
+                        "external"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getExternalId",
                             "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
-                        "local"=>["serviceMethod"=>"getOneByBasket",
+                        "local"=>["objectType"=>"complete","serviceMethod"=>"getOneByBasket",
                             "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAdid"]]]
                     ]
                 ]
@@ -66,7 +69,40 @@ class CoursesController extends Controller{
                 return $courses;
 
             }
+        }
 
+
+        if ( count($urlArray) == 2 && $method == 'GET') {
+
+            if(isset($urlArray[1])){
+                if($urlArray[1]=="pathFinding"&&$_GET["basketAddressIds"]){
+
+                    $tspManager=TspBranchBound::getInstance();
+                    $addressManager=AddressService::getInstance();
+
+                    $arrBasketAddressIds=explode(",",$_GET["basketAddressIds"]);
+
+                    foreach($arrBasketAddressIds as $key=>$basketAddressId){
+
+                        $arrBasketAddressIds[$key]=explode("||",$basketAddressId);
+
+                        $addressId=count($arrBasketAddressIds[$key])==2?$arrBasketAddressIds[$key][1]:$arrBasketAddressIds[$key][0];
+
+                        $address=$addressManager->getOne($addressId);
+
+                        $tspManager->addLocation(array('id'=>$basketAddressId[0], 'latitude'=>$address->getLatitude(), 'longitude'=>$address->getLongitude()));
+                    }
+                    $res=$tspManager->solve();
+                    $arrBasketOrder=[];
+
+                    for($i=0; $i<count($res["path"]); $i++) {
+                        if(count($arrBasketAddressIds[$res["path"][$i][0]])==2){
+                            $arrBasketOrder[]=$arrBasketAddressIds[$res["path"][$i][0]][0];
+                        }
+                    }
+                    return $arrBasketOrder;
+                }
+            }
         }
 
 

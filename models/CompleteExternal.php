@@ -6,7 +6,7 @@ class CompleteExternal extends Model implements JsonSerializable {
     private $exid;
     private $name;
     private $tel;
-    private $mail;
+    private $email;
     private $addressId;
     private $address;
 
@@ -19,7 +19,7 @@ class CompleteExternal extends Model implements JsonSerializable {
         $this->exid = isset($fields['exid'])? $fields['exid'] : null;
         $this->name = isset($fields['name'])? $fields['name'] : null;
         $this->tel = isset($fields['tel'])? $fields['tel'] : null;
-        $this->mail = isset($fields['mail'])? $fields['mail'] : null;
+        $this->email = isset($fields['email'])? $fields['email'] : null;
         $this->addressId = isset($fields["addressId"]) ? $fields['addressId']: null;
         $this->address = isset($fields['address']) ? $fields["address"] : null;
     }
@@ -92,17 +92,17 @@ class CompleteExternal extends Model implements JsonSerializable {
     /**
      * @return mixed
      */
-    public function getMail()
+    public function getEmail()
     {
-        return $this->mail;
+        return $this->email;
     }
 
     /**
-     * @param mixed $mail
+     * @param mixed $email
      */
-    public function setMail($mail)
+    public function setEmail($email)
     {
-        $this->mail = $mail;
+        $this->email = $email;
     }
 
     /**

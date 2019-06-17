@@ -21,11 +21,11 @@ class ExternalService {
         $affectedRows = $manager->exec(
         "INSERT INTO
         external 
-        (name, tel, mail, address_ad_id)
+        (name, tel, email, address_ad_id)
         VALUES (?, ?, ?, ?)", [
             $external->getName(),
             $external->getTel(),
-            $external->getMail(),
+            $external->getEmail(),
             $external->getAddressId()
         ]);
         if($affectedRows > 0) {
@@ -42,7 +42,7 @@ class ExternalService {
             ex_id as exid,
             name, 
             tel,
-            mail,
+            email,
             address_ad_id as addressId
             FROM external
             LIMIT $offset, $limit"
@@ -50,11 +50,46 @@ class ExternalService {
         $externals = [];
 
         foreach ($rows as $row) {
-            $externals[] = new Local($row);
+            $externals[] = new External($row);
         }
 
         return $externals;
     }
+
+    public function getAllFiltered($offset, $limit, $filters) {
+        $email = isset($filters['email']) ? $filters['email'] : '';
+        $name = isset($filters['name']) ? $filters['name'] : '';
+        $cityName = isset($filters['cityName']) ? $filters['cityName'] : '';
+
+        $cityNameSQL = '';
+        if ($cityName) {
+                $cityNameSQL = " JOIN (SELECT address.ad_id FROM address WHERE  address.city_name LIKE '%{$cityName}%') AS addr
+            ON addr.ad_id = external.address_ad_id ";
+        }
+        $manager = DatabaseManager::getManager();
+
+        $rows = $manager->getAll(
+            "SELECT
+        ex_id as exid,
+            name, 
+            tel,
+            email,
+            address_ad_id as addressId
+            FROM external
+        " .$cityNameSQL. "
+        WHERE IFNULL(email,'') LIKE '%{$email}%'
+        and name LIKE '%{$name}%'
+        LIMIT $offset, $limit"
+        );
+        $externals = [];
+
+        foreach ($rows as $row) {
+            $externals[] = new External($row);
+        }
+
+        return $externals;
+    }
+
 
     public function getOne($exid) {
         $manager = DatabaseManager::getManager();
@@ -63,7 +98,7 @@ class ExternalService {
             ex_id as exid,
             name, 
             tel,
-            mail,
+            email,
             address_ad_id as addressId
             FROM external
             WHERE ex_id = ?", [$exid]

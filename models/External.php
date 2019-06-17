@@ -6,7 +6,7 @@ class External extends Model  implements JsonSerializable {
     private $exid;
     private $name;
     private $tel;
-    private $mail;
+    private $email;
     private $addressId;
 
     /**
@@ -18,7 +18,7 @@ class External extends Model  implements JsonSerializable {
         $this->exid = isset($fields['exid'])? $fields['exid'] : null;
         $this->name = isset($fields['name'])? $fields['name'] : null;
         $this->tel = isset($fields['tel'])? $fields['tel'] : null;
-        $this->mail = isset($fields['mail'])? $fields['mail'] : null;
+        $this->email = isset($fields['email'])? $fields['email'] : null;
         $this->addressId = $fields['addressId'];
     }
 
@@ -76,15 +76,15 @@ class External extends Model  implements JsonSerializable {
      */
     public function getMail()
     {
-        return $this->mail;
+        return $this->email;
     }
 
     /**
-     * @param mixed $mail
+     * @param mixed $email
      */
-    public function setMail($mail)
+    public function setMail($email)
     {
-        $this->mail = $mail;
+        $this->email = $email;
     }
 
     /**

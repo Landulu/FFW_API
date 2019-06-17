@@ -20,6 +20,7 @@ class CompleteService extends Model implements JsonSerializable{
     private $serviceTime;
     private $routeState;
     private $vehicleId;
+    private $localId;
     private $skills;
     private $affectations;
     private $comments;
@@ -40,6 +41,7 @@ class CompleteService extends Model implements JsonSerializable{
         $this->serviceTime = isset($fields['serviceTime']) ? $fields['serviceTime'] : null;
         $this->routeState = isset($fields['routeState']) ? $fields['routeState']: null;
         $this->vehicleId = isset($fields['vehicleId']) ? $fields['vehicleId'] : null;
+        $this->localId = isset($fields['localId']) ? $fields['localId'] : null;
         $this->skills = isset($fields["skills"]) ? $fields["skills"] : null ;
         $this->affectations = isset($fields["affectations"]) ? $fields["affectations"] : null ;
         $this->comments = isset($fields["comments"]) ? $fields["comments"] : null ;
@@ -237,6 +239,22 @@ class CompleteService extends Model implements JsonSerializable{
     public function setVehicleId($vehicleId): void
     {
         $this->vehicleId = $vehicleId;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getLocalId()
+    {
+        return $this->localId;
+    }
+
+    /**
+     * @param mixed|null $localId
+     */
+    public function setLocalId($localId): void
+    {
+        $this->localId = $localId;
     }
 
     /**

@@ -20,25 +20,119 @@ class Company extends Model implements JsonSerializable {
         $this->userId = isset($fields['userId']) ? $fields['userId'] : NULL;
     }
 
-    public function getCoId(): ?int {return $this->coid;}
-    public function getSiret(): string {return $this->siret;}
-    public function getStatus(): string {return $this->status;}
-    public function getName(): string {return $this->name;}
-    public function getTel():? string {return $this->tel;}
-    public function getAddressId(): string {return $this->addressId;}
-    public function getUserId(): string {return $this->userId;}
+    /**
+     * @return mixed|null
+     */
+    public function getCoid()
+    {
+        return $this->coid;
+    }
 
-    public function setCoId(int $coid) {
+    /**
+     * @param mixed|null $coid
+     */
+    public function setCoid($coid): void
+    {
         $this->coid = $coid;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getSiret()
+    {
+        return $this->siret;
+    }
+
+    /**
+     * @param mixed|null $siret
+     */
+    public function setSiret($siret): void
+    {
+        $this->siret = $siret;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed|null $status
+     */
+    public function setStatus($status): void
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed|null $name
+     */
+    public function setName($name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getTel()
+    {
+        return $this->tel;
+    }
+
+    /**
+     * @param mixed|null $tel
+     */
+    public function setTel($tel): void
+    {
+        $this->tel = $tel;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getAddressId()
+    {
+        return $this->addressId;
     }
 
     /**
      * @param mixed|null $addressId
      */
-    public function setAddressId(?mixed $addressId): void
+    public function setAddressId($addressId): void
     {
         $this->addressId = $addressId;
     }
+
+    /**
+     * @return mixed|null
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param mixed|null $userId
+     */
+    public function setUserId($userId): void
+    {
+        $this->userId = $userId;
+    }
+
+
 
     public function getMainId()
     {

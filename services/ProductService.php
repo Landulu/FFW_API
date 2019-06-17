@@ -160,18 +160,18 @@ class ProductService {
         }
     }
 
-    public function transferRoomForProducts($productIds, $roomId) {
+    public function changeProductRoom($productIds, $roomId) {
         $manager = DatabaseManager::getManager();
         $affectedRows = 0;
-        foreach ($productIds as $key => $value) {
+        $roomId=$roomId?$roomId:"NULL";
+        foreach ($productIds as $key => $id) {
             
             $affectedRows += $manager->exec(
                 "UPDATE product
-                SET room_r_id = ?
+                SET room_r_id = $roomId
                 WHERE pr_id = ?",
                 [
-                    $roomId,
-                    $value
+                    $id
                 ]);
         }
         if ($affectedRows > 0) {
@@ -180,18 +180,18 @@ class ProductService {
         return NULL;
     }
     
-    public function remove($product_ids){
-        $manager = DatabaseManager::getManager();
-        $affectedRows = 0;
-        foreach($product_ids as $key => $value){
-            $affectedRows += $manager->exec(
-            "DELETE FROM product WHERE pr_id=?
-            ", [$value]);
-        }
-        if($affectedRows>0){
-            return $affectedRows;
-        }
-    }
+//    public function remove($product_ids){
+//        $manager = DatabaseManager::getManager();
+//        $affectedRows = 0;
+//        foreach($product_ids as $key => $value){
+//            $affectedRows += $manager->exec(
+//            "DELETE FROM product WHERE pr_id=?
+//            ", [$value]);
+//        }
+//        if($affectedRows>0){
+//            return $affectedRows;
+//        }
+//    }
 }
 
 
