@@ -25,11 +25,13 @@ class CourseService {
     }
 
     public function create(Service $service): ?Service{
+
+        var_dump($service);
         $manager = DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             "INSERT INTO
         service(name, description, create_time, type, capacity, is_public, service_time, route_state, vehicle_v_id, status, is_premium,local_lo_id)
-        VALUES (?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?,?)", [
+        VALUES (?, ?, now(), ?, ?, ?, ?, ?, ?, ?, ?,?)", [
             $service->getName(),
             $service->getDescription(),
             $service->getCreateTime(),
@@ -41,7 +43,7 @@ class CourseService {
             $service->getVehicleId(),
             $service->getStatus(),
             $service->getisPremium(),
-                $service
+            $service->getLocalId()
         ]);
         if ($affectedRows > 0) {
             $service->setSerid($manager->lastInsertId());
