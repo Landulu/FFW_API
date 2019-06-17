@@ -1,4 +1,4 @@
-<?php
+ <?php
 /**
  * Created by PhpStorm.
  * User: landulu
@@ -20,6 +20,7 @@ class Service extends Model implements JsonSerializable{
     private $serviceTime;
     private $routeState;
     private $vehicleId;
+    private $localId;
 
 
     public function __construct(array $fields) {
@@ -35,6 +36,7 @@ class Service extends Model implements JsonSerializable{
         $this->serviceTime = isset($fields['serviceTime']) ? $fields['serviceTime'] : null;
         $this->routeState = isset($fields['routeState']) ? $fields['routeState']: null;
         $this->vehicleId = isset($fields['vehicleId']) ? $fields['vehicleId'] : null;
+        $this->localId = isset($fields['localId']) ? $fields['localId'] : null;
     }
 
     /**
@@ -228,6 +230,24 @@ class Service extends Model implements JsonSerializable{
     {
         $this->vehicleId = $vehicleId;
     }
+
+    /**
+     * @return mixed|null
+     */
+    public function getLocalId()
+    {
+        return $this->localId;
+    }
+
+    /**
+     * @param mixed|null $localId
+     */
+    public function setLocalId($localId): void
+    {
+        $this->localId = $localId;
+    }
+
+
 
     public function getMainId()
     {

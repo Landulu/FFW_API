@@ -22,8 +22,8 @@ class ServiceService {
         $manager = DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             "INSERT INTO
-        service(name, description, create_time, type, capacity, is_public, service_time, route_state, vehicle_v_id, status, is_premium)
-        VALUES (?, ?, Now(), ?, ?, ?, ?, ?, ?, ?, ?)", [
+        service(name, description, create_time, type, capacity, is_public, service_time, route_state, vehicle_v_id, status, is_premium, local_lo_id)
+        VALUES (?, ?, Now(), ?, ?, ?, ?, ?, ?, ?, ?,?)", [
             $service->getName(),
             $service->getDescription(),
             $service->getType(),
@@ -33,7 +33,8 @@ class ServiceService {
             $service->getRouteState(),
             $service->getVehicleId(),
             $service->getStatus(),
-            $service->getisPremium()
+            $service->getisPremium(),
+            $service->getLocalId()
         ]);
         if ($affectedRows > 0) {
             $service->setSerid($manager->lastInsertId());
@@ -58,7 +59,8 @@ class ServiceService {
         route_state as routeState,
         vehicle_v_id as vehicleId,
         status,
-        is_premium as isPremium
+        is_premium as isPremium,
+        local_lo_id as localId
         from
         ffw.service",[]
         );
@@ -88,7 +90,8 @@ class ServiceService {
         service.route_state as routeState,
         service.vehicle_v_id as vehicleId,
         service.status,
-        service.is_premium as isPremium
+        service.is_premium as isPremium,
+        service.local_lo_id as localId  
         FROM service 
         JOIN affectation on service.ser_id=affection.service_ser_id AND affectation.user_u_id= ?
         LIMIT $offset, $limit"
@@ -120,7 +123,8 @@ class ServiceService {
         route_state as routeState,
         vehicle_v_id as vehicleId,
         status,
-        is_premium as isPremium
+        is_premium as isPremium,
+        service.local_lo_id as localId
         from
         service
         WHERE ser_id = ?"
@@ -147,7 +151,8 @@ class ServiceService {
         route_state  = ?,
         vehicle_v_id  = ?,
         status = ?,
-        is_premium = ?
+        is_premium = ?,
+        local_lo_id = ?
         WHERE ser_id= ? ", [
             $service->getName(),
             $service->getDescription(),
@@ -160,6 +165,7 @@ class ServiceService {
             $service->getVehicleId(),
             $service->getStatus(),
             $service->getisPremium(),
+            $service->getLocalId(),
             $serid
         ]);
         if ($affectedRows > 0) {
@@ -184,7 +190,8 @@ class ServiceService {
         service.route_state as routeState,
         service.vehicle_v_id as vehicleId,
         service.status,
-        service.is_premium as isPremium
+        service.is_premium as isPremium,
+        service.local_lo_id as localId
         FROM service 
         WHERE service.type = ?
         LIMIT $offset, $limit"

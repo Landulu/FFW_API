@@ -156,7 +156,7 @@ class CompanyService {
 
     }
 
-    public function getOne($companyId):?array {
+    public function getOne($companyId):Company {
 
         $manager = DatabaseManager::getManager();
         $company = $manager->getOne(
@@ -172,7 +172,7 @@ class CompanyService {
             [$companyId]
         );
 
-        return $company;
+        return new Company($company);
     }
 
 }

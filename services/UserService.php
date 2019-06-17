@@ -165,7 +165,7 @@ class UserService {
         WHERE u_id = ?"
         , [$uid]);
         if ($user) {
-            return new CompleteUser($user);
+            return new User($user);
         }
     }
 
