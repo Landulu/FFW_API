@@ -20,11 +20,13 @@ class CompleteService extends Model implements JsonSerializable{
     private $serviceTime;
     private $routeState;
     private $vehicleId;
+    private $localId;
     private $skills;
     private $affectations;
     private $comments;
     private $baskets;
     private $vehicle;
+    private $local;
 
 
     public function __construct(array $fields) {
@@ -40,11 +42,13 @@ class CompleteService extends Model implements JsonSerializable{
         $this->serviceTime = isset($fields['serviceTime']) ? $fields['serviceTime'] : null;
         $this->routeState = isset($fields['routeState']) ? $fields['routeState']: null;
         $this->vehicleId = isset($fields['vehicleId']) ? $fields['vehicleId'] : null;
+        $this->localId = isset($fields["localId"]) ? $fields["localId"] : null ;
         $this->skills = isset($fields["skills"]) ? $fields["skills"] : null ;
         $this->affectations = isset($fields["affectations"]) ? $fields["affectations"] : null ;
         $this->comments = isset($fields["comments"]) ? $fields["comments"] : null ;
         $this->baskets = isset($fields["baskets"]) ? $fields["baskets"] : null ;
         $this->vehicle = isset($fields["vehicle"]) ? $fields["vehicle"] : null ;
+        $this->local = isset($fields["local"]) ? $fields["local"] : null ;
     }
 
     /**
@@ -242,6 +246,23 @@ class CompleteService extends Model implements JsonSerializable{
     /**
      * @return mixed|null
      */
+    public function getLocalId()
+    {
+        return $this->localId;
+    }
+
+    /**
+     * @param mixed|null $localId
+     */
+    public function setLocalId($localId): void
+    {
+        $this->localId = $localId;
+    }
+
+
+    /**
+     * @return mixed|null
+     */
     public function getSkills()
     {
         return $this->skills;
@@ -318,6 +339,23 @@ class CompleteService extends Model implements JsonSerializable{
     {
         $this->vehicle = $vehicle;
     }
+
+    /**
+     * @return mixed|null
+     */
+    public function getLocal()
+    {
+        return $this->local;
+    }
+
+    /**
+     * @param mixed|null $local
+     */
+    public function setLocal($local): void
+    {
+        $this->local = $local;
+    }
+
 
 
 
