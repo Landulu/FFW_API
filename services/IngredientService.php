@@ -83,4 +83,24 @@ class IngredientService {
         return NULL;
     }
 
+    public function getAllByRecipe($reid) {
+        $manager = DatabaseManager::getManager();
+        $rows = $manager->getAll(
+            "SELECT 
+        in_id as inid,
+        name
+        from
+        ingredient
+        JOIN recipe_requires_ingredient on recipe_requires_ingredient.ingredient_in_id = ingredient.in_id
+        JOIN recipe on recipe.re_id = recipe_requires_ingredient.recipe_re_id and recipe.re_id = ?", [$reid]
+        );
+        $ingredients = [];
+
+        foreach ($rows as $row) {
+            $ingredients[] = new Ingredient($row);
+        }
+
+        return $ingredients;
+    }
+
 }
