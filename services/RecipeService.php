@@ -37,8 +37,8 @@ class RecipeService
         $manager = DatabaseManager::getManager();
         $recipe = $manager->getOne(
             "SELECT 
-        recipe.re_id,
-        recipe.title
+        recipe.re_id as reid,
+        recipe.title,
         recipe.content
         FROM
         recipe

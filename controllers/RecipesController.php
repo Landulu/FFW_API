@@ -86,6 +86,22 @@ class RecipesController extends Controller{
             }
         }
 
+
+        /*
+       GET: 'recipes/{int}'
+       */
+        // get One by Id
+        if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
+
+            $recipe = RecipeService::getInstance()->getOne($urlArray[1]);
+            if($recipe) {
+                http_response_code(200);
+                return $recipe;
+            } else {
+                http_response_code(400);
+            }
+        }
+
         /*
         GET: 'recipes/{int}/ingredients'
         */
