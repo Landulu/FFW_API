@@ -3,8 +3,9 @@
 require_once __DIR__.'/../models/Basket.php';
 require_once __DIR__ . '/../models/CompleteBasket.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
+require_once "Service.php";
 
-class BasketService {
+class BasketService extends Service{
     
     private static $instance;
 
@@ -167,20 +168,13 @@ class BasketService {
     public function getAllFiltered($params, $offset, $limit) {
 
         $manager = DatabaseManager::getManager();
+        $finalSql=null;
 
+        if(isset($params['serviceId'])){ $sqlArr["serviceSql"] = " service_ser_id IS NULL";}
+        if(isset($params['name'])){ $sqlArr["roleSql"] = " role LIKE '%{$params["name"]}%'"; }
+        if(isset($params['routeState'])){ $sqlArr["statusSql"] = " status = '{$params["routeState"]}'"; }
 
-        $roleSql=isset($params['role'])?" role = '{$params["role"]}'":null;
-        $statusSql=isset($params['status'])?" status = '{$params["status"]}'":null;
-
-        if(isset($params['role'])&&isset($params['status'])){
-            $finalSql=$roleSql." AND ".$statusSql;
-        }
-        else if(isset($params['role'])&&!isset($params['status'])){
-            $finalSql=$roleSql;
-        }
-        else{
-            $finalSql=$statusSql;
-        }
+        $finalSql=parent::getAndSql($sqlArr);
 
         $rows = $manager->getAll(
             "SELECT 

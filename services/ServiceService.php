@@ -3,9 +3,9 @@
 
 require_once __DIR__.'/../models/Service.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
+require_once "Service.php";
 
-
-class ServiceService {
+class ServiceService extends Service {
 
     private static $instance;
 
@@ -22,7 +22,7 @@ class ServiceService {
         $manager = DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             "INSERT INTO
-        service(name, description, create_time, type, capacity, is_public, service_time, route_state, vehicle_v_id, status, is_premium,local_lo_id)
+        service(name, description, create_time, type, capacity, is_public, service_time, route_state, vehicle_v_id, status, is_premium, local_lo_id)
         VALUES (?, ?, Now(), ?, ?, ?, ?, ?, ?, ?, ?,?)", [
             $service->getName(),
             $service->getDescription(),
@@ -91,7 +91,7 @@ class ServiceService {
         service.vehicle_v_id as vehicleId,
         service.status,
         service.is_premium as isPremium,
-        local_lo_id as localId
+        service.local_lo_id as localId  
         FROM service 
         JOIN affectation on service.ser_id=affection.service_ser_id AND affectation.user_u_id= ?
         LIMIT $offset, $limit"
@@ -124,7 +124,7 @@ class ServiceService {
         vehicle_v_id as vehicleId,
         status,
         is_premium as isPremium,
-        local_lo_id as localId
+        service.local_lo_id as localId
         from
         service
         WHERE ser_id = ?"
@@ -152,7 +152,7 @@ class ServiceService {
         vehicle_v_id  = ?,
         status = ?,
         is_premium = ?,
-        local_lo_id=?
+        local_lo_id = ?
         WHERE ser_id= ? ", [
             $service->getName(),
             $service->getDescription(),

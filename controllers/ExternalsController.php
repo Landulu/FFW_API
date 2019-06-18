@@ -83,6 +83,12 @@ class ExternalsController extends Controller{
         && $method == 'GET') {
 
             $external = ExternalService::getInstance()->getOne($urlArray[1]);
+            if(isset($_GET["completeData"])){
+                $methodsArr=[
+                    "address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]
+                ];
+                $external=parent::decorateModel($external,$methodsArr);
+            }
             if($external) {
                 http_response_code(200);
                 return $external;

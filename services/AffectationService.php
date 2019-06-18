@@ -2,9 +2,10 @@
 
 require_once __DIR__.'/../models/Affectation.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
+require_once "Service.php";
 
 
-class AffectationService {
+class AffectationService extends Service{
 
     private static $instance;
 

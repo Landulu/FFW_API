@@ -6,6 +6,7 @@ include_once 'utils/routing/Router.php';
 
 include_once 'services/LocalService.php';
 include_once 'services/RoomService.php';
+include_once 'services/RecipeService.php';
 
 include_once 'models/CompleteLocal.php';
 include_once 'RoomsController.php';
@@ -43,7 +44,6 @@ class LocalsController extends Controller {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-            $locals = LocalService::getInstance()->getAll($offset, $limit);
 
             $params = [];
 
@@ -143,7 +143,27 @@ class LocalsController extends Controller {
                 http_response_code(400);
             }
 
-        } 
+        }
+
+
+        // get room by local Id
+        // locals/{loid}/recipes
+
+        if ( count($urlArray) == 3
+            && ctype_digit($urlArray[1])
+            && $urlArray[2] == 'recipes'
+            && $method == 'GET') {
+
+
+            $recipes = RecipeService::getInstance()->getAllCookableByLocal($urlArray[1]);
+            if($recipes) {
+                http_response_code(200);
+                return $recipes;
+            } else {
+                http_response_code(400);
+            }
+
+        }
     }
 
 //    public static function decorateLocal( $locals){

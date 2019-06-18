@@ -2,9 +2,10 @@
 
 require_once __DIR__.'/../models/Company.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
+require_once "Service.php";
 
 
-class CompanyService {
+class CompanyService extends Service{
     private static $instance;
 
     private function __construct(){}
@@ -156,7 +157,7 @@ class CompanyService {
 
     }
 
-    public function getOne($companyId):?array {
+    public function getOne($companyId):Company {
 
         $manager = DatabaseManager::getManager();
         $company = $manager->getOne(
@@ -172,7 +173,7 @@ class CompanyService {
             [$companyId]
         );
 
-        return $company;
+        return new Company($company);
     }
 
 }

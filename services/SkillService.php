@@ -3,9 +3,10 @@
 require_once __DIR__.'/../models/Skill.php';
 require_once __DIR__.'/../models/CompleteSkill.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
+require_once "Service.php";
 
 
-class SkillService {
+class SkillService extends Service {
     private static $instance;
 
     private function __construct(){}

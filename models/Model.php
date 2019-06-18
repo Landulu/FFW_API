@@ -24,4 +24,25 @@ abstract class Model
         }
     }
 
+    public static function convertModelType($type,$object){
+
+        if(!is_object($object)){
+            return null;
+        }
+        $className=get_class($object);
+
+        include_once ($className.".php");
+
+        $typedClassName=strpos($className,ucfirst($type))!==false?$className:ucfirst($type).$className;
+
+        include_once ($typedClassName.".php");
+
+        $object=json_decode(json_encode($object),true);
+
+        $typeObject= new $typedClassName($object);
+
+        return $typeObject;
+
+    }
+
 }

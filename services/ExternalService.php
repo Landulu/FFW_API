@@ -2,8 +2,9 @@
 
 require_once __DIR__.'/../models/External.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
+require_once "Service.php";
 
-class ExternalService {
+class ExternalService extends Service {
 
     private static $instance;
 

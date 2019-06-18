@@ -58,11 +58,11 @@ class BasketsController extends Controller {
                     return $baskets;
                 } else {
                     $methodsArr=[
-                        "company"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getCompanyId",
-                            "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAdid"]]],
-                        "user"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getUserId",
+                        "company"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getCompanyId",
                             "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
-                        "external"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getExternalId",
+                        "user"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getUserId",
+                            "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
+                        "external"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getExternalId",
                             "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
                         "products"=>["serviceMethod"=>"getAllByBasket",
                             "completeMethods"=>["article"=>

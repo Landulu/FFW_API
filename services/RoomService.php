@@ -2,8 +2,9 @@
 
 require_once __DIR__.'/../models/Room.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
+require_once "Service.php";
 
-class RoomService {
+class RoomService extends Service {
 
     private static $instance;
 

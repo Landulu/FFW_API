@@ -43,18 +43,18 @@ class CoursesController extends Controller{
             "vehicle"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getVehicleId"],
                 "skill"=>["serviceMethod"=>"getAllByService"],
                 "affectations"=>["serviceMethod"=>"getAllByService","completeMethods"=>[
-                    "user"=>["serviceMethod"=>"getOneByAffectation"]
+                    "user"=>["objectType"=>"complete","serviceMethod"=>"getOneByAffectation"]
                 ]],
                 "baskets"=>[
                     "serviceMethod"=>"getAllByService",
                     "completeMethods"=>[
-                        "company"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getCompanyId",
+                        "company"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getCompanyId",
                             "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAdid"]]],
-                        "user"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getUserId",
+                        "user"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getUserId",
                             "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
-                        "external"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getExternalId",
+                        "external"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getExternalId",
                             "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
-                        "local"=>["serviceMethod"=>"getOneByBasket",
+                        "local"=>["objectType"=>"complete","serviceMethod"=>"getOneByBasket",
                             "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAdid"]]]
                     ]
                 ]
@@ -69,21 +69,16 @@ class CoursesController extends Controller{
                 return $courses;
 
             }
-
         }
 
+
         if ( count($urlArray) == 2 && $method == 'GET') {
-            $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
-            $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
-
-
 
             if(isset($urlArray[1])){
                 if($urlArray[1]=="pathFinding"&&$_GET["basketAddressIds"]){
 
                     $tspManager=TspBranchBound::getInstance();
                     $addressManager=AddressService::getInstance();
-                    $basketManager=BasketService::getInstance();
 
                     $arrBasketAddressIds=explode(",",$_GET["basketAddressIds"]);
 
@@ -105,7 +100,7 @@ class CoursesController extends Controller{
                             $arrBasketOrder[]=$arrBasketAddressIds[$res["path"][$i][0]][0];
                         }
                     }
-                    echo json_encode($arrBasketOrder);
+                    return $arrBasketOrder;
                 }
             }
         }

@@ -9,9 +9,10 @@
 
 require_once __DIR__.'/../models/Service.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
+require_once "Service.php";
 
 
-class CourseService {
+class CourseService extends Service {
 
     private static $instance;
 
@@ -25,14 +26,14 @@ class CourseService {
     }
 
     public function create(Service $service): ?Service{
+
         $manager = DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             "INSERT INTO
-        service(name, description, create_time, type, capacity, is_public, service_time, route_state, vehicle_v_id, status, is_premium)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [
+        service(name, description, create_time, type, capacity, is_public, service_time, route_state, vehicle_v_id, status, is_premium,local_lo_id)
+        VALUES (?, ?, now(), ?, ?, ?, ?, ?, ?, ?, ?,?)", [
             $service->getName(),
             $service->getDescription(),
-            $service->getCreateTime(),
             $service->getType(),
             $service->getCapacity(),
             $service->getisPublic(),
@@ -40,7 +41,8 @@ class CourseService {
             $service->getRouteState(),
             $service->getVehicleId(),
             $service->getStatus(),
-            $service->getisPremium()
+            $service->getisPremium(),
+            $service->getLocalId()
         ]);
         if ($affectedRows > 0) {
             $service->setSerid($manager->lastInsertId());
@@ -65,7 +67,8 @@ class CourseService {
         route_state as routeState,
         vehicle_v_id as vehicleId,
         status,
-        is_premium as isPremium
+        is_premium as isPremium,
+        local_lo_id as localId
         from
         service WHERE service.type = 'course'
         LIMIT $offset, $limit
@@ -84,7 +87,6 @@ class CourseService {
 
         $manager = DatabaseManager::getManager();
         $sqlArr=[];
-        $i=0;
         $finalSql=null;
 
         if(isset($params['name'])){ $sqlArr["nameSql"] = " name  LIKE '%{$params["name"]}%'"; }
@@ -93,13 +95,15 @@ class CourseService {
         if(isset($params['createTime'])){ $sqlArr["createTimeSql"] = " create_time = '{$params["createTime"]}'"; }
         if(isset($params['serviceTime'])){ $sqlArr["serviceTimeSql"] = " service_time = '{$params["serviceTime"]}'"; }
 
-        foreach($sqlArr as $sql){
-            $finalSql=$finalSql.$sql;
-            if($i<count($sqlArr)-1){
-                $finalSql=$finalSql." AND ";
-            }
-            $i++;
-        }
+        $finalSql=parent::getAndSql($sqlArr);
+//
+//        foreach($sqlArr as $sql){
+//            $finalSql=$finalSql.$sql;
+//            if($i<count($sqlArr)-1){
+//                $finalSql=$finalSql." AND ";
+//            }
+//            $i++;
+//        }
         $rows = $manager->getAll(
             "SELECT 
         service.ser_id as serid,
@@ -113,7 +117,8 @@ class CourseService {
         service.route_state as routeState,
         service.vehicle_v_id as vehicleId,
         service.status,
-        service.is_premium as isPremium
+        service.is_premium as isPremium,
+        service.local_lo_id as localId
         FROM service 
         WHERE service.type='course' AND  $finalSql
         LIMIT $offset,$limit");
@@ -144,7 +149,8 @@ class CourseService {
         service.route_state as routeState,
         service.vehicle_v_id as vehicleId,
         service.status,
-        service.is_premium as isPremium
+        service.is_premium as isPremium,
+        service.local_lo_id as localId
         FROM service 
         JOIN affectation on service.ser_id=affection.service_ser_id AND affectation.user_u_id= ? AND service.type = 'course'
         LIMIT $offset, $limit"
@@ -176,7 +182,8 @@ class CourseService {
         route_state as routeState,
         vehicle_v_id as vehicleId,
         status,
-        is_premium as isPremium
+        is_premium as isPremium,
+        service.local_lo_id as localId
         from
         service
         WHERE ser_id = ? AND type = 'course'"
@@ -203,7 +210,8 @@ class CourseService {
         route_state  = ?,
         vehicle_v_id  = ?,
         status = ?,
-        is_premium = ?
+        is_premium = ?,
+        local_lo_id= ?
         WHERE ser_id= ? ", [
             $service->getName(),
             $service->getDescription(),
@@ -216,6 +224,7 @@ class CourseService {
             $service->getVehicleId(),
             $service->getStatus(),
             $service->getisPremium(),
+            $service->getLocalId(),
             $serid
         ]);
         if ($affectedRows > 0) {

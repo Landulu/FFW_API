@@ -82,6 +82,13 @@ class CompaniesController extends Controller  {
         if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
 
             $company = CompanyService::getInstance()->getOne($urlArray[1]);
+
+            if(isset($_GET["completeData"])){
+                $methodsArr=[
+                    "address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]
+                ];
+                $company=parent::decorateModel($company,$methodsArr);
+            }
             if($company) {
                 http_response_code(200);
                 return $company;

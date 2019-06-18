@@ -42,7 +42,7 @@ class CompleteService extends Model implements JsonSerializable{
         $this->serviceTime = isset($fields['serviceTime']) ? $fields['serviceTime'] : null;
         $this->routeState = isset($fields['routeState']) ? $fields['routeState']: null;
         $this->vehicleId = isset($fields['vehicleId']) ? $fields['vehicleId'] : null;
-        $this->localId = isset($fields["localId"]) ? $fields["localId"] : null ;
+        $this->localId = isset($fields['localId']) ? $fields['localId'] : null;
         $this->skills = isset($fields["skills"]) ? $fields["skills"] : null ;
         $this->affectations = isset($fields["affectations"]) ? $fields["affectations"] : null ;
         $this->comments = isset($fields["comments"]) ? $fields["comments"] : null ;
@@ -258,7 +258,6 @@ class CompleteService extends Model implements JsonSerializable{
     {
         $this->localId = $localId;
     }
-
 
     /**
      * @return mixed|null
