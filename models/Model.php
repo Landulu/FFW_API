@@ -16,7 +16,7 @@ abstract class Model
         foreach($controlArgNameArr as $controlArgName){
             if($controlArgName==$argName){
                 if(is_array($arg)){
-                    $arg=$arg[array_key_first($arg)];
+                    $arg=$arg[array_keys($arg)[0]];
                 }
                 $this->{'set'.$argName}($arg,true);
                 return null;
