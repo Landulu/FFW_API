@@ -9,9 +9,10 @@
 
 require_once __DIR__.'/../models/Service.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
+require_once "Service.php";
 
 
-class CourseService {
+class CourseService extends Service {
 
     private static $instance;
 
@@ -26,7 +27,6 @@ class CourseService {
 
     public function create(Service $service): ?Service{
 
-        var_dump($service);
         $manager = DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             "INSERT INTO
@@ -34,7 +34,6 @@ class CourseService {
         VALUES (?, ?, now(), ?, ?, ?, ?, ?, ?, ?, ?,?)", [
             $service->getName(),
             $service->getDescription(),
-            $service->getCreateTime(),
             $service->getType(),
             $service->getCapacity(),
             $service->getisPublic(),
@@ -47,7 +46,7 @@ class CourseService {
         ]);
         if ($affectedRows > 0) {
             $service->setSerid($manager->lastInsertId());
-            return new Service($service);
+            return $service;
         }
         return NULL;
     }
@@ -88,7 +87,6 @@ class CourseService {
 
         $manager = DatabaseManager::getManager();
         $sqlArr=[];
-        $i=0;
         $finalSql=null;
 
         if(isset($params['name'])){ $sqlArr["nameSql"] = " name  LIKE '%{$params["name"]}%'"; }
@@ -97,13 +95,15 @@ class CourseService {
         if(isset($params['createTime'])){ $sqlArr["createTimeSql"] = " create_time = '{$params["createTime"]}'"; }
         if(isset($params['serviceTime'])){ $sqlArr["serviceTimeSql"] = " service_time = '{$params["serviceTime"]}'"; }
 
-        foreach($sqlArr as $sql){
-            $finalSql=$finalSql.$sql;
-            if($i<count($sqlArr)-1){
-                $finalSql=$finalSql." AND ";
-            }
-            $i++;
-        }
+        $finalSql=parent::getAndSql($sqlArr);
+//
+//        foreach($sqlArr as $sql){
+//            $finalSql=$finalSql.$sql;
+//            if($i<count($sqlArr)-1){
+//                $finalSql=$finalSql." AND ";
+//            }
+//            $i++;
+//        }
         $rows = $manager->getAll(
             "SELECT 
         service.ser_id as serid,

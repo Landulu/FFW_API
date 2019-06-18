@@ -2,9 +2,10 @@
 
 require_once __DIR__.'/../models/Address.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
+require_once "Service.php";
 
 
-class AddressService {
+class AddressService extends Service {
     private static $instance;
 
     private function __construct(){}

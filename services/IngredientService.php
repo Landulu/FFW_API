@@ -2,9 +2,10 @@
 
 require_once __DIR__.'/../models/Ingredient.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
+require_once "Service.php";
 
 
-class IngredientService {
+class IngredientService extends Service {
 
     private static $instance;
 
