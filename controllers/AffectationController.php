@@ -49,7 +49,7 @@ class AffectationController extends Controller{
             return $affectations;
         }
 
-        //create address
+        //create
         if ( count($urlArray) == 1 && $method == 'POST') {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
