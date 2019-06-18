@@ -35,7 +35,7 @@ class SkillsController extends Controller {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-            $skills = SkillService::getInstance()->getAll($offset, $limit);
+            $skills = services\SkillService::getInstance()->getAll($offset, $limit);
 
             if($skills) {
                 http_response_code(200);
@@ -51,7 +51,7 @@ class SkillsController extends Controller {
             $json = file_get_contents('php://input'); 
             $obj = json_decode($json, true);
             
-            $newSkill = SkillService::getInstance()->create(new Skill($obj));
+            $newSkill = services\SkillService::getInstance()->create(new Skill($obj));
             if($newSkill) {
                 http_response_code(201);
                 return $newSkill;
@@ -63,7 +63,7 @@ class SkillsController extends Controller {
         // get One by Id
         if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
 
-            $skill = SkillService::getInstance()->getOne($urlArray[1]);
+            $skill = services\SkillService::getInstance()->getOne($urlArray[1]);
             if($skill) {
                 http_response_code(200);
                 return $skill;
@@ -77,7 +77,7 @@ class SkillsController extends Controller {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-            $skill = SkillService::getInstance()->update(new Skill($obj),$urlArray[1]);
+            $skill = services\SkillService::getInstance()->update(new Skill($obj),$urlArray[1]);
 
             if($skill) {
                 http_response_code(201);
@@ -100,7 +100,7 @@ class SkillsController extends Controller {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-            $users = UserService::getInstance()->getAllBySkill($urlArray[1], $offset, $limit);
+            $users = services\UserService::getInstance()->getAllBySkill($urlArray[1], $offset, $limit);
             if($users) {
                 http_response_code(200);
                 return $users;
@@ -124,11 +124,11 @@ class SkillsController extends Controller {
             $end = new Date($_GET['end']);
 
 
-            $users = UserService::getInstance()->getAllBySkill($urlArray[1], $offset, $limit);
+            $users = services\UserService::getInstance()->getAllBySkill($urlArray[1], $offset, $limit);
             if($users) {
                 $availableUsers = [];
                 foreach ($users as $key => $user) {
-                    $affectations = AffectationService::getInstance()->getAllByUserBetweenDates($urlArray[1],$start, $end);
+                    $affectations = services\AffectationService::getInstance()->getAllByUserBetweenDates($urlArray[1],$start, $end);
                     if (count($affectations) == 0) {
                         array_push($availableUsers, $user);
                     }

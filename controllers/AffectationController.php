@@ -36,7 +36,7 @@ class AffectationController extends Controller{
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-            $affectations = AffectationService::getInstance()->getAll($offset, $limit);
+            $affectations = services\AffectationService::getInstance()->getAll($offset, $limit);
 
             if(isset($_GET['completeData'])){
 
@@ -54,7 +54,7 @@ class AffectationController extends Controller{
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-            $affectation = AffectationService::getInstance()->create(new Affectation($obj));
+            $affectation = services\AffectationService::getInstance()->create(new Affectation($obj));
             if($affectation) {
                 http_response_code(201);
                 return $affectation;
@@ -72,7 +72,7 @@ class AffectationController extends Controller{
 //            $json = file_get_contents('php://input');
 //            $obj = json_decode($json, true);x
 //
-//            $affectation = AffectationService::getInstance()->update(new Affectation($obj),$urlArray[1]);
+//            $affectation = services\AffectationService::getInstance()->update(new Affectation($obj),$urlArray[1]);
 //
 //            if($affectation) {
 //                http_response_code(201);
@@ -85,7 +85,7 @@ class AffectationController extends Controller{
         // get One by Id
         if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
 
-            $affectation = AffectationService::getInstance()->getOne($urlArray[1]);
+            $affectation = services\AffectationService::getInstance()->getOne($urlArray[1]);
             if($affectation) {
                 http_response_code(200);
                 return $affectation;
@@ -97,7 +97,7 @@ class AffectationController extends Controller{
 
     public static function decorateAffectation( $affectations){
 
-        $serviceManager= ServiceService::getInstance();
+        $serviceManager= services\ServiceService::getInstance();
         $affectations=json_decode(json_encode($affectations),true);
 
         foreach($affectations as $key=>$affectation){

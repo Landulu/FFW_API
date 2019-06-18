@@ -5,9 +5,10 @@
  * Date: 11/06/2019
  * Time: 18:00
  */
+
 require_once ("Model.php");
 
-abstract class Model
+abstract class Model implements JsonSerializable
 {
     public abstract function getMainId();
 
@@ -30,7 +31,9 @@ abstract class Model
         if(!is_object($object)){
             return null;
         }
-        $className=get_class($object);
+
+        $reflect = new ReflectionClass($object);
+        $className=$reflect->getShortName();
 
         include_once ($className.".php");
 

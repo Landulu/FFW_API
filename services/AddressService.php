@@ -1,5 +1,6 @@
 <?php
 
+namespace services;
 require_once __DIR__.'/../models/Address.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
 require_once "Service.php";
@@ -17,8 +18,8 @@ class AddressService extends Service {
         return self::$instance;
     }
 
-    public function create(Address $address): ?Address {
-        $manager = DatabaseManager::getManager();
+    public function create(\Address $address): ?\Address {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "INSERT INTO
         address (house_number,street_address,complement, city_name, city_code, country, latitude, longitude)
@@ -40,7 +41,7 @@ class AddressService extends Service {
     }
 
     public function getAll($offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll( 
         "SELECT 
         ad_id as adid,
@@ -59,7 +60,7 @@ class AddressService extends Service {
         $addresses = [];
 
         foreach ($rows as $row) {
-            $addresses[] = new Address($row);
+            $addresses[] = new \Address($row);
         }
 
         return $addresses;
@@ -67,7 +68,7 @@ class AddressService extends Service {
 
     //Modifié le 22/05 Sacha BAILLEUL
     public function getOne( $addressId) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $address = $manager->getOne(
             "SELECT 
         ad_id as adid,
@@ -86,13 +87,13 @@ class AddressService extends Service {
         [$addressId]);
 
         if($address){
-            return  new Address($address);
+            return  new \Address($address);
         }
     }
     //Fin modification
 
-    public function update(Address $address): ?Address {
-        $manager = DatabaseManager::getManager();
+    public function update(\Address $address): ?\Address {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "UPDATE address
         SET house_number = ?,
@@ -121,7 +122,7 @@ class AddressService extends Service {
     }
 
     public function getOneByUserId( $uid) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $address = $manager->getOne(
             "SELECT 
         ad_id as adid,

@@ -31,16 +31,11 @@ class ServicesController extends Controller {
         if ( count($urlArray) == 1 && $method == 'GET') {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
-            if($_GET['type']){
+            if(isset($_GET['type'])){
                 $serviceType = $_GET['type'];
-                $services = ServiceService::getInstance()->getAllByType($serviceType, $offset, $limit);
-                if ($services){
-                    http_response_code(200);
-                } else {
-                    http_response_code(400);
-                }
+                $services = services\ServiceService::getInstance()->getAllByType($serviceType, $offset, $limit);
             } else {
-                $services = ServiceService::getInstance()->getAll($offset, $limit);
+                $services = services\ServiceService::getInstance()->getAll($offset, $limit);
                 $methodsArr=[
                     "vehicle"=>["serviceMethod"=>"getOne"],
                     "skill"=>["serviceMethod"=>"getAllByService"],
@@ -48,9 +43,16 @@ class ServicesController extends Controller {
                     "baskets"=>[
                         "serviceMethod"=>"getAllByService",
                         "completeMethods"=>[
-                            "user"=>["serviceMethod"=>"getOne"]]
+                            "user"=>["objectType"=>"complete","serviceMethod"=>"getOne"]]
                         ]];
-                return parent::decorateModel($services,$methodsArr);
+            }
+            if(isset($_GET["completeData"])){
+                if ($services){
+                    http_response_code(200);
+                    return parent::decorateModel($services,$methodsArr);
+                } else {
+                    http_response_code(400);
+                }
             }
             return $services;
         }
@@ -61,7 +63,7 @@ class ServicesController extends Controller {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-            $newService = ServiceService::getInstance()->create(new Service($obj));
+            $newService = services\ServiceService::getInstance()->create(new Service($obj));
             if($newService) {
                 http_response_code(201);
                 return $newService;
@@ -74,7 +76,7 @@ class ServicesController extends Controller {
         // get One by Id
         if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
 
-            $service = ServiceService::getInstance()->getOne($urlArray[1]);
+            $service = services\ServiceService::getInstance()->getOne($urlArray[1]);
             if($service) {
                 return $service;
 
@@ -92,7 +94,7 @@ class ServicesController extends Controller {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-            $newService = ServiceService::getInstance()->update(new Service($obj),$urlArray[1]);
+            $newService = services\ServiceService::getInstance()->update(new Service($obj),$urlArray[1]);
             if($newService) {
                 http_response_code(201);
                 return $newService;

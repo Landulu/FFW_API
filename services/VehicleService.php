@@ -1,5 +1,6 @@
 <?php
 
+namespace services;
 require_once __DIR__.'/../models/Vehicle.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
 require_once "Service.php";
@@ -18,8 +19,8 @@ class VehicleService extends Service {
     }
 
 
-    public function create(Vehicle $vehicle): ?Vehicle {
-        $manager = DatabaseManager::getManager();
+    public function create(\Vehicle $vehicle): ?\Vehicle {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "INSERT INTO
         vehicle (volume, insurance_date, last_revision, description)
@@ -37,7 +38,7 @@ class VehicleService extends Service {
     }
 
     public function getAll($offset,$limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
         "SELECT 
         v_id as vid, 
@@ -51,14 +52,14 @@ class VehicleService extends Service {
         $vehicles = [];
 
         foreach ($rows as $row) {
-            $vehicles[] = new Vehicle($row);
+            $vehicles[] = new \Vehicle($row);
         }
 
         return $vehicles;
     }
 
     public function getOne($vid) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $vehicle = $manager->getOne(
             "SELECT 
         v_id as vid, 
@@ -71,7 +72,7 @@ class VehicleService extends Service {
         );
 
         if($vehicle){
-            return new Vehicle($vehicle);
+            return new \Vehicle($vehicle);
         }
         return null;
     }

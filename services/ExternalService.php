@@ -1,5 +1,5 @@
 <?php
-
+namespace services;
 require_once __DIR__.'/../models/External.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
 require_once "Service.php";
@@ -17,8 +17,8 @@ class ExternalService extends Service {
         return self::$instance;
     }
 
-    public function create(External $external): ?External {
-        $manager = DatabaseManager::getManager();
+    public function create(\External $external): ?\External {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "INSERT INTO
         external 
@@ -37,7 +37,7 @@ class ExternalService extends Service {
     }
 
     public function getAll($offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
             "SELECT 
             ex_id as exid,
@@ -51,7 +51,7 @@ class ExternalService extends Service {
         $externals = [];
 
         foreach ($rows as $row) {
-            $externals[] = new External($row);
+            $externals[] = new \External($row);
         }
 
         return $externals;
@@ -67,7 +67,7 @@ class ExternalService extends Service {
                 $cityNameSQL = " JOIN (SELECT address.ad_id FROM address WHERE  address.city_name LIKE '%{$cityName}%') AS addr
             ON addr.ad_id = external.address_ad_id ";
         }
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
 
         $rows = $manager->getAll(
             "SELECT
@@ -85,7 +85,7 @@ class ExternalService extends Service {
         $externals = [];
 
         foreach ($rows as $row) {
-            $externals[] = new External($row);
+            $externals[] = new \External($row);
         }
 
         return $externals;
@@ -93,7 +93,7 @@ class ExternalService extends Service {
 
 
     public function getOne($exid) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $external = $manager->getOne(
             "SELECT 
             ex_id as exid,
@@ -105,7 +105,7 @@ class ExternalService extends Service {
             WHERE ex_id = ?", [$exid]
         );
         if ($external) {
-            return new External($external);
+            return new \External($external);
         }
     }
 

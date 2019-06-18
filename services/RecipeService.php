@@ -1,5 +1,5 @@
 <?php
-
+namespace services;
 require_once __DIR__.'/../models/Recipe.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
 require_once "Service.php";
@@ -19,7 +19,7 @@ class RecipeService extends Service
         return self::$instance;
     }
 
-    public function create(Recipe $recipe){
+    public function create(\Recipe $recipe){
         $manager = DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             "INSERT INTO
@@ -35,7 +35,7 @@ class RecipeService extends Service
         return NULL;
     }
 
-    public function getOne($id):?Recipe {
+    public function getOne($id):?\Recipe {
         $manager = DatabaseManager::getManager();
         $recipe = $manager->getOne(
             "SELECT 
@@ -48,7 +48,7 @@ class RecipeService extends Service
             [$id]
         );
         if ($recipe) {
-            $recipeObj = new Recipe($recipe);
+            $recipeObj = new \Recipe($recipe);
             return $recipeObj;
         }
         return NULL;
@@ -67,7 +67,7 @@ class RecipeService extends Service
         $recipes = [];
 
         foreach ($rows as $row) {
-            $recipes[] = new Recipe($row);
+            $recipes[] = new \Recipe($row);
         }
         return $recipes;
     }
@@ -97,7 +97,7 @@ class RecipeService extends Service
         $recipes = [];
 
         foreach ($rows as $row) {
-            $recipes[] = new Recipe($row);
+            $recipes[] = new \Recipe($row);
         }
         return $recipes;
     }

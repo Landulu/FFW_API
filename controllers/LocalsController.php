@@ -54,9 +54,9 @@ class LocalsController extends Controller {
             }
 
             if (count($params)) {
-                $locals = LocalService::getInstance()->getAllFiltered($offset, $limit, $params);
+                $locals = services\LocalService::getInstance()->getAllFiltered($offset, $limit, $params);
             } else {
-                $locals = LocalService::getInstance()->getAll($offset, $limit);
+                $locals = services\LocalService::getInstance()->getAll($offset, $limit);
             }
 
             if(isset($_GET["completeData"])){
@@ -90,7 +90,7 @@ class LocalsController extends Controller {
         if ( count($urlArray) == 1 && $method == 'POST') {
             $json = file_get_contents('php://input'); 
             $obj = json_decode($json, true);
-            $newLocal = LocalService::getInstance()->create(new Local($obj));
+            $newLocal = services\LocalService::getInstance()->create(new Local($obj));
             if($newLocal) {
                 http_response_code(201);
                 return $newLocal;
@@ -101,7 +101,7 @@ class LocalsController extends Controller {
         if ( count($urlArray) == 1 && $method == 'PUT') {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
-            $newLocal = LocalService::getInstance()->update(new Local($obj));
+            $newLocal = services\LocalService::getInstance()->update(new Local($obj));
             if($newLocal) {
                 http_response_code(201);
                 return $newLocal;
@@ -118,7 +118,7 @@ class LocalsController extends Controller {
         && ctype_digit($urlArray[1]) 
         && $method == 'GET') {
 
-            $local = LocalService::getInstance()->getOne($urlArray[1]);
+            $local = services\LocalService::getInstance()->getOne($urlArray[1]);
             if($local) {
                 http_response_code(200);
             } else {
@@ -135,7 +135,7 @@ class LocalsController extends Controller {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
             
-            $rooms = RoomService::getInstance()->getAllByLocal($urlArray[1], $offset, $limit);
+            $rooms = services\RoomService::getInstance()->getAllByLocal($urlArray[1], $offset, $limit);
             if($rooms) {
                 http_response_code(200);
                 return $rooms;
@@ -155,7 +155,7 @@ class LocalsController extends Controller {
             && $method == 'GET') {
 
 
-            $recipes = RecipeService::getInstance()->getAllCookableByLocal($urlArray[1]);
+            $recipes = services\RecipeService::getInstance()->getAllCookableByLocal($urlArray[1]);
             if($recipes) {
                 http_response_code(200);
                 return $recipes;
@@ -168,8 +168,8 @@ class LocalsController extends Controller {
 
 //    public static function decorateLocal( $locals){
 //
-//        $addressManager= AddressService::getInstance();
-//        $roomManager= RoomService::getInstance();
+//        $addressManager= services\AddressService::getInstance();
+//        $roomManager= services\RoomService::getInstance();
 //
 //        $locals=json_decode(json_encode($locals),true);
 //

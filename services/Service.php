@@ -5,11 +5,10 @@
  * Date: 18/06/2019
  * Time: 08:06
  */
+namespace services;
 
 Class Service
 {
-
-
 
     protected  function getAndSql($arraySqlClauses){
 

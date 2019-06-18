@@ -42,11 +42,11 @@ class CompaniesController extends Controller  {
                 }
             }
             if (count($params)) {
-                $companies = CompanyService::getInstance()->getAllFiltered($offset, $limit, $params);
+                $companies = services\CompanyService::getInstance()->getAllFiltered($offset, $limit, $params);
 
 
             } else {
-                $companies = CompanyService::getInstance()->getAll($offset, $limit);
+                $companies = services\CompanyService::getInstance()->getAll($offset, $limit);
             }
 
 
@@ -65,7 +65,7 @@ class CompaniesController extends Controller  {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-            $company = CompanyService::getInstance()->create(new Company($obj));
+            $company = services\CompanyService::getInstance()->create(new Company($obj));
             if($company) {
                 http_response_code(201);
                 return $company;
@@ -81,7 +81,7 @@ class CompaniesController extends Controller  {
         // get One by Id
         if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
 
-            $company = CompanyService::getInstance()->getOne($urlArray[1]);
+            $company = services\CompanyService::getInstance()->getOne($urlArray[1]);
 
             if(isset($_GET["completeData"])){
                 $methodsArr=[
@@ -109,7 +109,7 @@ class CompaniesController extends Controller  {
 
             $company = new Company($obj);
 
-            $company = CompanyService::getInstance()->update($company,$company->getCoId());
+            $company = services\CompanyService::getInstance()->update($company,$company->getCoId());
             if($company) {
                 http_response_code(200);
                 return $company;
@@ -123,7 +123,7 @@ class CompaniesController extends Controller  {
 //    public static function decorateCompany($companies,$optionsArr=["address"=>true]){
 //
 //
-//        $addressManager= AddressService::getInstance();
+//        $addressManager= services\AddressService::getInstance();
 //
 //        $companies=json_decode(json_encode($companies),true);
 //
