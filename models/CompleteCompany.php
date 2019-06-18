@@ -5,6 +5,7 @@
  * Date: 26/05/19
  * Time: 22:48
  */
+
 require_once ("Model.php");
 
 class CompleteCompany extends Model implements JsonSerializable {

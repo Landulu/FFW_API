@@ -1,7 +1,7 @@
 <?php
-
+namespace services;
 require_once __DIR__.'/../models/Ingredient.php';
-require_once __DIR__.'/../utils/database/DatabaseManager.php';
+require_once __DIR__.'/../utils/database/\DatabaseManager.php';
 require_once "Service.php";
 
 
@@ -18,8 +18,8 @@ class IngredientService extends Service {
         return self::$instance;
     }
 
-    public function create(Ingredient $ingredient): ?Ingredient{
-        $manager = DatabaseManager::getManager();
+    public function create(\Ingredient $ingredient): ?\Ingredient{
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             "INSERT INTO
         ingredient(name)
@@ -35,7 +35,7 @@ class IngredientService extends Service {
 
 
     public function getAll($offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
             "SELECT 
         in_id as inid,
@@ -47,14 +47,14 @@ class IngredientService extends Service {
         $ingredients = [];
 
         foreach ($rows as $row) {
-            $ingredients[] = new Ingredient($row);
+            $ingredients[] = new \Ingredient($row);
         }
 
         return $ingredients;
     }
 
     public function getOne( $inid) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $ingredient = $manager->getOne(
             "SELECT 
         in_id as inid,
@@ -64,13 +64,13 @@ class IngredientService extends Service {
         WHERE  in_id= ?",
             [$inid]);
         if($ingredient){
-            return new Ingredient($ingredient);
+            return new \Ingredient($ingredient);
         }
     }
     //Fin modification
 
-    public function update(Ingredient $ingredient): ?Ingredient {
-        $manager = DatabaseManager::getManager();
+    public function update(\Ingredient $ingredient): ?\Ingredient {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             "UPDATE ingredient
         SET  name= ?,
@@ -85,7 +85,7 @@ class IngredientService extends Service {
     }
 
     public function getAllByRecipe($reid) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
             "SELECT 
         in_id as inid,
@@ -98,7 +98,7 @@ class IngredientService extends Service {
         $ingredients = [];
 
         foreach ($rows as $row) {
-            $ingredients[] = new Ingredient($row);
+            $ingredients[] = new \Ingredient($row);
         }
 
         return $ingredients;

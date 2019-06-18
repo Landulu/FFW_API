@@ -62,7 +62,7 @@ class ProductsController extends Controller {
 
             if ($product) {
                 
-                $article = ArticleService::getInstance()->getOne($product->getArticleId());
+                $article = services\ArticleService::getInstance()->getOne($product->getArticleId());
 
                 if ($article == null) {
                     
@@ -78,7 +78,7 @@ class ProductsController extends Controller {
                             "name" => $curlArticle['product']['product_name'] . ' ' . $curlArticle['product']['generic_name']
                         ));
     
-                        $article = ArticleService::getInstance()->create($newArticle);
+                        $article = services\ArticleService::getInstance()->create($newArticle);
                     } else {
                         http_response_code(404);
                     }
@@ -89,11 +89,11 @@ class ProductsController extends Controller {
                     if(isset($_GET["nbProducts"])){
                         $newProduct=[];
                         for($i=0;$i<$_GET["nbProducts"];$i++){
-                            $newProduct[]= ProductService::getInstance()->create(new Product($obj));
+                            $newProduct[]= services\ProductService::getInstance()->create(new Product($obj));
                         }
                     }
                     else{
-                        $newProduct = ProductService::getInstance()->create(new Product($obj));
+                        $newProduct = services\ProductService::getInstance()->create(new Product($obj));
                     }
                     if($newProduct) {
                         http_response_code(201);
@@ -114,7 +114,7 @@ class ProductsController extends Controller {
         */
         // get One by Id
         if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
-            $product = ProductService::getInstance()->getOne($urlArray[1]);
+            $product = services\ProductService::getInstance()->getOne($urlArray[1]);
             if($product) {
                 http_response_code(200);
                 $methodsArr=
@@ -140,10 +140,10 @@ class ProductsController extends Controller {
             $obj = json_decode($json, true);
 
             if(isset($_GET['roomId'])){
-                $product=ProductService::getInstance()->changeProductRoom($obj,$_GET["roomId"]);
+                $product=services\ProductService::getInstance()->changeProductRoom($obj,$_GET["roomId"]);
             }
             else{
-                $product = ProductService::getInstance()->update(new Product($obj));
+                $product = services\ProductService::getInstance()->update(new Product($obj));
             }
 
             if($product) {
@@ -167,7 +167,7 @@ class ProductsController extends Controller {
         //     $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
         //     $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
             
-        //     $products = ProductService::getInstance()->getAllByRoom($urlArray[1], $offset, $limit);
+        //     $products = services\ProductService::getInstance()->getAllByRoom($urlArray[1], $offset, $limit);
         //     if($products) {
         //         http_response_code(233);
         //         return $products;

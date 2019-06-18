@@ -1,4 +1,5 @@
 <?php
+
 require_once ("Model.php");
 
 class Article extends Model implements JsonSerializable {

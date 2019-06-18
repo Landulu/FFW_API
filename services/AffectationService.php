@@ -1,5 +1,6 @@
 <?php
 
+namespace services;
 require_once __DIR__.'/../models/Affectation.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
 require_once "Service.php";
@@ -18,8 +19,8 @@ class AffectationService extends Service{
         return self::$instance;
     }
 
-    public function create(Affectation $affectation): ?Affectation{
-        $manager = DatabaseManager::getManager();
+    public function create(\Affectation $affectation): ?\Affectation{
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             "INSERT INTO
         service(aff_id, role, start, end,  skill_sk_id, user_u_id, service_ser_id)
@@ -41,7 +42,7 @@ class AffectationService extends Service{
 
 
     public function getAll($offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
             "SELECT 
         aff_id as affid,
@@ -58,14 +59,14 @@ class AffectationService extends Service{
         $affectations = [];
 
         foreach ($rows as $row) {
-            $affectations[] = new Affectation($row);
+            $affectations[] = new \Affectation($row);
         }
 
         return $affectations;
     }
 
     public function getAllByUser($uid, $offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
             "SELECT
         aff_id as affid,
@@ -83,14 +84,14 @@ class AffectationService extends Service{
         $affectations = [];
 
         foreach ($rows as $row) {
-            $affectations[] = new Affectation($row);
+            $affectations[] = new \Affectation($row);
         }
 
         return $affectations;
     }
 
     public function getAllByService($serviceId, $offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
             "SELECT
         aff_id as affid,
@@ -108,7 +109,7 @@ class AffectationService extends Service{
         $affectations = [];
 
         foreach ($rows as $row) {
-            $affectations[] = new Affectation($row);
+            $affectations[] = new \Affectation($row);
         }
 
         return $affectations;
@@ -118,7 +119,7 @@ class AffectationService extends Service{
 
 
     public function getAllByUserBetweenDates($uid, $start, $end) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
             "SELECT
         aff_id as affid,
@@ -137,14 +138,14 @@ class AffectationService extends Service{
         $affectations = [];
 
         foreach ($rows as $row) {
-            $affectations[] = new Affectation($row);
+            $affectations[] = new \Affectation($row);
         }
 
         return $affectations;
     }
 
     public function getOne( $affectationId) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $affectation = $manager->getOne(
             "SELECT 
         aff_id as affid,
@@ -158,14 +159,14 @@ class AffectationService extends Service{
         WHERE  aff_id= ?",
             [$affectationId]);
         if($affectation){
-            return new Affectation($affectation);
+            return new \Affectation($affectation);
         }
     }
 
     //Fin modification
 
-    public function update(Affectation $affectation, $affid): ?Affectation {
-        $manager = DatabaseManager::getManager();
+    public function update(\Affectation $affectation, $affid): ?\Affectation {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             "UPDATE service
         SET role = ?,

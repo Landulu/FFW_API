@@ -1,5 +1,6 @@
 <?php
 
+namespace services;
 require_once __DIR__.'/../models/Basket.php';
 require_once __DIR__ . '/../models/CompleteBasket.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
@@ -19,8 +20,8 @@ class BasketService extends Service{
     }
     
 
-    public function create(Basket $basket): ?Basket {
-        $manager = DatabaseManager::getManager();
+    public function create(\Basket $basket): ?\Basket {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         'INSERT INTO
         basket 
@@ -49,7 +50,7 @@ class BasketService extends Service{
     }
 
     public function getAll($offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
         "SELECT 
         b_id as bid,
@@ -67,14 +68,14 @@ class BasketService extends Service{
         $baskets = [];
 
         foreach ($rows as $row) {
-            $baskets[] = new Basket($row);
+            $baskets[] = new \Basket($row);
         }
 
         return $baskets;
     }
     
     public function getOne($bid) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $basket = $manager->getOne(
         "SELECT * 
         FROM basket
@@ -86,7 +87,7 @@ class BasketService extends Service{
     }
 
     public function getAllByUser($userId, $offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
         "SELECT 
         b_id as bid,
@@ -105,7 +106,7 @@ class BasketService extends Service{
         $baskets = [];
 
         foreach ($rows as $row) {
-            $baskets[] = new Basket($row);
+            $baskets[] = new \Basket($row);
         }
 
         return $baskets;
@@ -113,7 +114,7 @@ class BasketService extends Service{
 
 
     public function getAllByStatus($status, $offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
             "SELECT 
         b_id as bid,
@@ -132,14 +133,14 @@ class BasketService extends Service{
         $baskets = [];
 
         foreach ($rows as $row) {
-            $baskets[] = new Basket($row);
+            $baskets[] = new \Basket($row);
         }
 
         return $baskets;
     }
 
     public function getAllByService($serId, $offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
             "SELECT 
         b_id as bid,
@@ -158,7 +159,7 @@ class BasketService extends Service{
         $baskets = [];
 
         foreach ($rows as $row) {
-            $baskets[] = new Basket($row);
+            $baskets[] = new \Basket($row);
         }
 
         return $baskets;
@@ -167,7 +168,7 @@ class BasketService extends Service{
 
     public function getAllFiltered($params, $offset, $limit) {
 
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $finalSql=null;
 
         if(isset($params['serviceId'])){ $sqlArr["serviceSql"] = " service_ser_id IS NULL";}
@@ -193,7 +194,7 @@ class BasketService extends Service{
         $baskets = [];
 
         foreach ($rows as $row) {
-            $baskets[] = new Basket($row);
+            $baskets[] = new \Basket($row);
         }
 
         return $baskets;
@@ -201,7 +202,7 @@ class BasketService extends Service{
 
 
     public function affectProductToBasket($prid, $bid) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         'INSERT INTO
         basket_has_article (basket_b_id, product_pr_id)
@@ -213,8 +214,8 @@ class BasketService extends Service{
         }
         return 0;
     }
-    public function update(Basket $basket): ?Basket {
-        $manager = DatabaseManager::getManager();
+    public function update(\Basket $basket): ?\Basket {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             'UPDATE
         basket 
@@ -245,7 +246,7 @@ class BasketService extends Service{
     }
 
     public function updateOrder($bid,$order) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             'UPDATE
         basket 
@@ -265,7 +266,7 @@ class BasketService extends Service{
 
 
     // public function update(Product $product): ?Product {
-    //     $manager = DatabaseManager::getManager();
+    //     $manager = \DatabaseManager::getManager();
     //     $affectedRows = $manager->exec('
     //     UPDATE products
     //     set limit_date = ?, 
@@ -288,7 +289,7 @@ class BasketService extends Service{
 
 
     // public function transferRoomForProducts($productIds, $roomId) {
-    //     $manager = DatabaseManager::getManager();
+    //     $manager = \DatabaseManager::getManager();
     //     $affectedRows = 0;
     //     foreach ($productIds as $key => $value) {
             

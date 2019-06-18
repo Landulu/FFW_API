@@ -1,7 +1,7 @@
 <?php
 
 
-
+namespace services;
 require_once __DIR__.'/../models/User.php';
 require_once __DIR__.'/../models/CompleteUser.php';
 require_once __DIR__.'/../models/CompleteUser.php';
@@ -23,8 +23,8 @@ class UserService extends Service {
     }
 
 
-    public function create(User $user): ?User {
-        $manager = DatabaseManager::getManager();
+    public function create(\User $user): ?\User {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "INSERT INTO
         user (email, 
@@ -61,7 +61,7 @@ class UserService extends Service {
     }
 
     public function getAll($offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
         "SELECT
         u_id as uid, 
@@ -111,7 +111,7 @@ class UserService extends Service {
             $cityNameSQL = " JOIN (SELECT address.ad_id FROM address WHERE  address.city_name LIKE '%{$cityName}%') AS addr
         ON addr.ad_id = user.address_ad_id ";
         }
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
 
         $rows = $manager->getAll(
             "SELECT
@@ -146,7 +146,7 @@ class UserService extends Service {
 
 
     public function getOne(int $uid) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $user = $manager->getOne(
         "SELECT
         u_id as uid, 
@@ -166,12 +166,12 @@ class UserService extends Service {
         WHERE u_id = ?"
         , [$uid]);
         if ($user) {
-            return new User($user);
+            return new \User($user);
         }
     }
 
     public function getOneByAffectation(int $affectationId) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $user = $manager->getOne(
             "SELECT
         u_id as uid, 
@@ -191,12 +191,12 @@ class UserService extends Service {
         WHERE u_id = (SELECT user_u_id FROM affectation WHERE aff_id= ?) LIMIT 1"
             , [$affectationId]);
         if ($user) {
-            return new User($user);
+            return new \User($user);
         }
     }
 
     public function getOneByEmail(string $email) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $user = $manager->getOne(
             "SELECT
         u_id as uid, 
@@ -220,8 +220,8 @@ class UserService extends Service {
         }
     }
 
-    public function update(User $user): ?User {
-        $manager = DatabaseManager::getManager();
+    public function update(\User $user): ?\User {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "UPDATE user
         SET email = ?, 

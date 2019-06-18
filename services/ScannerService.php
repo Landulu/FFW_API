@@ -1,5 +1,5 @@
 <?php
-
+namespace services;
 require_once __DIR__.'/../models/Scanner.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
 require_once "Service.php";
@@ -18,8 +18,8 @@ class ScannerService extends Service {
     }
 
 
-    public function create(Scanner $scanner): ?Scanner {
-        $manager = DatabaseManager::getManager();
+    public function create(\Scanner $scanner): ?\Scanner {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "INSERT INTO
         scanner (version, build_date, emit_date, state)
@@ -37,7 +37,7 @@ class ScannerService extends Service {
     }
 
     public function getAll($offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
         "SELECT 
         sc_id as scid,
@@ -51,7 +51,7 @@ class ScannerService extends Service {
         $scanners = [];
 
         foreach ($rows as $row) {
-            $scanners[] = new Scanner($row);
+            $scanners[] = new \Scanner($row);
         }
         return $scanners;
 

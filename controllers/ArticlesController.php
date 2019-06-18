@@ -34,7 +34,7 @@ class ArticlesController extends Controller {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-            $articles = ArticleService::getInstance()->getAll($offset, $limit);
+            $articles = services\ArticleService::getInstance()->getAll($offset, $limit);
             return $articles;
         }
 
@@ -44,7 +44,7 @@ class ArticlesController extends Controller {
             $json = file_get_contents('php://input'); 
             $obj = json_decode($json, true);
             
-            $newArticle = ArticleService::getInstance()->create(new Article($obj));
+            $newArticle = services\ArticleService::getInstance()->create(new Article($obj));
             if($newArticle) {
                 http_response_code(201);
                 return $newArticle;
@@ -56,7 +56,7 @@ class ArticlesController extends Controller {
         // get One by Id
         if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
 
-            $article = ArticleService::getInstance()->getOne($urlArray[1]);
+            $article = services\ArticleService::getInstance()->getOne($urlArray[1]);
             if($article) {
                 http_response_code(200);
                 return $article;

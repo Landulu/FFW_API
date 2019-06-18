@@ -1,5 +1,6 @@
 <?php
 
+namespace services;
 require_once __DIR__.'/../models/Skill.php';
 require_once __DIR__.'/../models/CompleteSkill.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
@@ -19,8 +20,8 @@ class SkillService extends Service {
     }
 
 
-    public function create(Skill $skill): ?Skill {
-        $manager = DatabaseManager::getManager();
+    public function create(\Skill $skill): ?\Skill {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "INSERT INTO
         skill (name,status)
@@ -36,7 +37,7 @@ class SkillService extends Service {
     }
 
     public function getAll($offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
         "SELECT 
         sk_id as skid,
@@ -48,15 +49,15 @@ class SkillService extends Service {
         $skills = [];
 
         foreach ($rows as $row) {
-            $skills[] = new Skill($row);
+            $skills[] = new \Skill($row);
         }
 
         return $skills;
     }
 
 
-    public function update(Skill $skill, $skid): ?Skill {
-        $manager = DatabaseManager::getManager();
+    public function update(\Skill $skill, $skid): ?\Skill {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "UPDATE skill
         SET 
@@ -74,7 +75,7 @@ class SkillService extends Service {
     }
 
     public function getOne(string $skid) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $skill = $manager->getOne('
         select  
         sk_id, name, skill.status as skStatus
@@ -87,7 +88,7 @@ class SkillService extends Service {
     }
 
     public function getAllByUser($uid,$offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
         "SELECT 
         sk.sk_id as skid,
@@ -113,7 +114,7 @@ class SkillService extends Service {
     public function affectSkillToUser(string $uid, $skid, $status)
     {
 
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             "INSERT INTO user_has_skill 
         VALUES(?,?,?)",
@@ -129,7 +130,7 @@ class SkillService extends Service {
     public function updateSkillByUser(string $uid, $skid, $status)
     {
 
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             "UPDATE user_has_skill 
         SET user_has_skill.status=? 

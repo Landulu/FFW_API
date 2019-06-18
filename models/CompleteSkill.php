@@ -1,4 +1,5 @@
 <?php
+
 require_once ("Model.php");
 
 class CompleteSkill extends Model implements JsonSerializable {
