@@ -49,7 +49,7 @@ class CompleteService extends Model implements JsonSerializable{
         $this->comments = isset($fields["comments"]) ? $fields["comments"] : null ;
         $this->baskets = isset($fields["baskets"]) ? $fields["baskets"] : null ;
         $this->vehicle = isset($fields["vehicle"]) ? $fields["vehicle"] : null ;
-        $this->local = isset($fields["local"]) ? $fields["local"] : null ;
+        $this->local=isset($fields["local"]) ? $fields["local"] : null ;
     }
 
     /**
@@ -355,6 +355,7 @@ class CompleteService extends Model implements JsonSerializable{
     {
         $this->local = $local;
     }
+
 
 
 

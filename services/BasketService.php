@@ -172,8 +172,8 @@ class BasketService extends Service{
         $finalSql=null;
 
         if(isset($params['serviceId'])){ $sqlArr["serviceSql"] = " service_ser_id IS NULL";}
-        if(isset($params['name'])){ $sqlArr["roleSql"] = " role LIKE '%{$params["name"]}%'"; }
-        if(isset($params['routeState'])){ $sqlArr["statusSql"] = " status = '{$params["routeState"]}'"; }
+        if(isset($params['role'])){ $sqlArr["roleSql"] = " role = '{$params["role"]}'"; }
+        if(isset($params['status'])){ $sqlArr["statusSql"] = " status = '{$params["status"]}'"; }
 
         $finalSql=parent::getAndSql($sqlArr);
 
@@ -227,7 +227,7 @@ class BasketService extends Service{
         company_co_id  = ?,
         external_ex_id  = ?,
         user_u_id= ? 
-        WHERE basket_b_id= ? )
+        WHERE b_id= ?
         ', [
             $basket->getCreateTime(),
             $basket->getStatus(),
