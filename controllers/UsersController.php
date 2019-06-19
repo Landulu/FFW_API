@@ -55,7 +55,7 @@ class UsersController extends Controller {
             }
 
             if (count($params)) {
-                $users = Userservice::getInstance()->getAllFiltered($offset, $limit, $params);
+                $users = services\UserService::getInstance()->getAllFiltered($offset, $limit, $params);
                 foreach ($users as $key=>$user) {
                     if (isset($params['rights']) && !$this->isRightSet($user->getRights(), $params['rights'])) {
                         unset($users[$key]);
@@ -63,7 +63,7 @@ class UsersController extends Controller {
                 }
                 $users=array_values($users);
             } else {
-                $users = Userservice::getInstance()->getAll($offset, $limit);
+                $users = services\UserService::getInstance()->getAll($offset, $limit);
             }
             if(sizeof($users)>0){
                 http_response_code(200);
