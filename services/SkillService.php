@@ -105,7 +105,7 @@ class SkillService extends Service {
         $skills = [];
 
         foreach ($rows as $row) {
-            $skills[] = new CompleteSkill($row);
+            $skills[] = new \CompleteSkill($row);
         }
 
         return $skills;

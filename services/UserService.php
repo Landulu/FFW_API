@@ -4,7 +4,6 @@
 namespace services;
 require_once __DIR__.'/../models/User.php';
 require_once __DIR__.'/../models/CompleteUser.php';
-require_once __DIR__.'/../models/CompleteUser.php';
 require_once __DIR__.'/../utils/DateUtil.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
 require_once "Service.php";
@@ -83,7 +82,7 @@ class UserService extends Service {
         $users = [];
 
         foreach ($rows as $row) {
-            $users[] = new CompleteUser($row);
+            $users[] = new \CompleteUser($row);
         }
 
         return $users;
@@ -138,7 +137,7 @@ class UserService extends Service {
         $users = [];
 
         foreach ($rows as $row) {
-            $users[] = new CompleteUser($row);
+            $users[] = new \CompleteUser($row);
         }
 
         return $users;

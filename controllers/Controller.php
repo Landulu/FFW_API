@@ -10,7 +10,6 @@ class  Controller
 {
     public static function decorateModel( $lightObjs, $methodsArr){
 
-
         if(!$lightObjs){
             return null;
         }
