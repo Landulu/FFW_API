@@ -36,6 +36,17 @@ class Favorite extends Model implements JsonSerializable{
         $this->status = $status;
     }
 
+
+    public function getMainId()
+    {
+        return $this->getServiceId();
+    }
+
+
+    public function JsonSerialize() {
+        return get_object_vars($this);
+    }
+
 }
 
 
