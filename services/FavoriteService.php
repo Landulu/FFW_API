@@ -28,10 +28,6 @@ class FavoriteService extends Service {
             $favorite->getServiceId(),
             $favorite->getStatus()
         ]);
-        if ($affectedRows > 0) {
-            $favorite->setSerid($manager->lastInsertId());
-            return $favorite;
-        }
         return NULL;
     }
 
