@@ -43,7 +43,7 @@ class CommentsController extends Controller {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-            $newComments = services\CommentService::getInstance()->create(new Comments($obj));
+            $newComments = services\CommentService::getInstance()->create(new Comment($obj));
             if($newComments) {
                 http_response_code(201);
                 return $newComments;
@@ -74,7 +74,7 @@ class CommentsController extends Controller {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-            $newComments = services\CommentService::getInstance()->update(new Comments($obj),$urlArray[1]);
+            $newComments = services\CommentsService::getInstance()->update(new Comments($obj),$urlArray[1]);
             if($newComments) {
                 http_response_code(201);
                 return $newComments;
