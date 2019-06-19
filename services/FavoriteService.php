@@ -28,6 +28,9 @@ class FavoriteService extends Service {
             $favorite->getServiceId(),
             $favorite->getStatus()
         ]);
+        if($affectedRows > 0){
+            return $favorite;
+        }
         return NULL;
     }
 
