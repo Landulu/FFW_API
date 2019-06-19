@@ -41,23 +41,25 @@ class CoursesController extends Controller{
 
             $arrMethods=[
             "vehicle"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getVehicleId"],
-                "skill"=>["serviceMethod"=>"getAllByService"],
-                "affectations"=>["serviceMethod"=>"getAllByService","completeMethods"=>[
-                    "user"=>["objectType"=>"complete","serviceMethod"=>"getOneByAffectation"]
-                ]],
-                "baskets"=>[
-                    "serviceMethod"=>"getAllByService",
-                    "completeMethods"=>[
-                        "company"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getCompanyId",
-                            "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAdid"]]],
-                        "user"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getUserId",
-                            "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
-                        "external"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getExternalId",
-                            "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
-                        "local"=>["objectType"=>"complete","serviceMethod"=>"getOneByBasket",
-                            "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAdid"]]]
-                    ]
+            "local"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getLocalId",
+                "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
+            "skill"=>["serviceMethod"=>"getAllByService"],
+            "affectations"=>["serviceMethod"=>"getAllByService","completeMethods"=>[
+                "user"=>["objectType"=>"complete","serviceMethod"=>"getOneByAffectation"]
+            ]],
+            "baskets"=>[
+                "serviceMethod"=>"getAllByService",
+                "completeMethods"=>[
+                    "company"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getCompanyId",
+                        "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
+                    "user"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getUserId",
+                        "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
+                    "external"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getExternalId",
+                        "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
+                    "local"=>["objectType"=>"complete","serviceMethod"=>"getOneByBasket",
+                        "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAdid"]]]
                 ]
+            ]
             ];
 
             if(isset($_GET["completeData"])){
@@ -106,7 +108,6 @@ class CoursesController extends Controller{
                 }
             }
         }
-
 
         //create course
         if ( count($urlArray) == 1 && $method == 'POST') {

@@ -59,7 +59,7 @@ class CompleteBasket  extends Model implements JsonSerializable {
         }
         else if($this->role==="export"){
             $this->dstAddress=$address;
-            $this->dstAddress=$this->getLocal() instanceof CompleteLocal ?$this->getLocal()->getAddress():null;
+            $this->srcAddress=$this->getLocal() instanceof CompleteLocal ?$this->getLocal()->getAddress():null;
 
         }
     }

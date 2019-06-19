@@ -55,7 +55,7 @@ class UsersController extends Controller {
             }
 
             if (count($params)) {
-                $users = Userservice::getInstance()->getAllFiltered($offset, $limit, $params);
+                $users = services\UserService::getInstance()->getAllFiltered($offset, $limit, $params);
                 foreach ($users as $key=>$user) {
                     if (isset($params['rights']) && !$this->isRightSet($user->getRights(), $params['rights'])) {
                         unset($users[$key]);
@@ -63,7 +63,7 @@ class UsersController extends Controller {
                 }
                 $users=array_values($users);
             } else {
-                $users = Userservice::getInstance()->getAll($offset, $limit);
+                $users = services\UserService::getInstance()->getAll($offset, $limit);
             }
             if(sizeof($users)>0){
                 http_response_code(200);
@@ -85,7 +85,7 @@ class UsersController extends Controller {
             $json = file_get_contents('php://input'); 
             $obj = json_decode($json, true);
             
-            $newUser = services\UserService::getInstance()->create(new User($obj));
+            $newUser = services\UserService::getInstance()->create(new \User($obj));
             if($newUser) {
                 http_response_code(201);
                 return $newUser;
@@ -120,7 +120,7 @@ class UsersController extends Controller {
             $json = file_get_contents('php://input'); 
             $obj = json_decode($json, true);
             
-            $newUser = services\UserService::getInstance()->update(new User($obj));
+            $newUser = services\UserService::getInstance()->update(new \User($obj));
             if($newUser) {
                 http_response_code(201);
                 return $newUser;

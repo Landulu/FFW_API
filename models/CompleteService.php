@@ -27,6 +27,7 @@ class CompleteService extends Model implements JsonSerializable{
     private $comments;
     private $baskets;
     private $vehicle;
+    private $local;
 
 
     public function __construct(array $fields) {
@@ -48,6 +49,7 @@ class CompleteService extends Model implements JsonSerializable{
         $this->comments = isset($fields["comments"]) ? $fields["comments"] : null ;
         $this->baskets = isset($fields["baskets"]) ? $fields["baskets"] : null ;
         $this->vehicle = isset($fields["vehicle"]) ? $fields["vehicle"] : null ;
+        $this->local=isset($fields["local"]) ? $fields["local"] : null ;
     }
 
     /**
@@ -337,6 +339,24 @@ class CompleteService extends Model implements JsonSerializable{
     {
         $this->vehicle = $vehicle;
     }
+
+    /**
+     * @return mixed|null
+     */
+    public function getLocal()
+    {
+        return $this->local;
+    }
+
+    /**
+     * @param mixed|null $local
+     */
+    public function setLocal($local): void
+    {
+        $this->local = $local;
+    }
+
+
 
 
 

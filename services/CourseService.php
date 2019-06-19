@@ -89,20 +89,13 @@ class CourseService extends Service {
         $finalSql=null;
 
         if(isset($params['name'])){ $sqlArr["nameSql"] = " name  LIKE '%{$params["name"]}%'"; }
-        if(isset($params['routeState'])){ $sqlArr["routeStateSql"] = " route_state = '{$params["routeState"]}'"; }
+        if(isset($params['routeState'])){ $sqlArr["routeStateSql"] = " status = '{$params["routeState"]}'"; }
         if(isset($params['vehicleId'])){ $sqlArr["vehicleIdSql"] = " vehicle_v_id = ".$params["vehicleId"]; }
         if(isset($params['createTime'])){ $sqlArr["createTimeSql"] = " create_time = '{$params["createTime"]}'"; }
         if(isset($params['serviceTime'])){ $sqlArr["serviceTimeSql"] = " service_time = '{$params["serviceTime"]}'"; }
 
-        $finalSql=services\parent::getAndSql($sqlArr);
-//
-//        foreach($sqlArr as $sql){
-//            $finalSql=$finalSql.$sql;
-//            if($i<count($sqlArr)-1){
-//                $finalSql=$finalSql." AND ";
-//            }
-//            $i++;
-//        }
+        $finalSql=parent::getAndSql($sqlArr);
+
         $rows = $manager->getAll(
             "SELECT 
         service.ser_id as serid,
