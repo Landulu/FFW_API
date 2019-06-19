@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__ . '/../services/CommentsService.php';
+include_once __DIR__ . '/../services/CommentService.php';
 require_once("Controller.php");
 
 class CommentsController extends Controller {
@@ -8,9 +8,9 @@ class CommentsController extends Controller {
     private function __construct(){}
 
 
-    public static function getController(): ServicesController {
+    public static function getController(): CommentsController {
         if(!isset(self::$controller)) {
-            self::$controller = new ServicesController();
+            self::$controller = new CommentsController();
         }
         return self::$controller;
     }
