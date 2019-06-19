@@ -53,6 +53,21 @@ class Comment extends Model implements JsonSerializable{
         $this->status = $status;
     }
 
+    public function getMainId()
+    {
+        return $this->getCid();
+    }
+
+
+    public function JsonSerialize() {
+        return get_object_vars($this);
+    }
+
+    public function __toString(){
+        return $this->content.' '.$this->serviceId.' '.$this->userId.' '.$this->status;
+    }
+
+
 }
 
 
