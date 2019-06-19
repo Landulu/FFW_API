@@ -14,9 +14,9 @@ class ServicesController extends Controller {
     private function __construct(){}
 
 
-    public static function getController(): ServicesController {
+    public static function getController(): self {
         if(!isset(self::$controller)) {
-            self::$controller = new ServicesController();
+            self::$controller = new self();
         }
         return self::$controller;
     }

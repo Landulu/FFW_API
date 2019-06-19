@@ -85,7 +85,7 @@ class UsersController extends Controller {
             $json = file_get_contents('php://input'); 
             $obj = json_decode($json, true);
             
-            $newUser = services\UserService::getInstance()->create(new User($obj));
+            $newUser = services\UserService::getInstance()->create(new \User($obj));
             if($newUser) {
                 http_response_code(201);
                 return $newUser;
@@ -120,7 +120,7 @@ class UsersController extends Controller {
             $json = file_get_contents('php://input'); 
             $obj = json_decode($json, true);
             
-            $newUser = services\UserService::getInstance()->update(new User($obj));
+            $newUser = services\UserService::getInstance()->update(new \User($obj));
             if($newUser) {
                 http_response_code(201);
                 return $newUser;
