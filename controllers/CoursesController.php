@@ -103,9 +103,10 @@ class CoursesController extends Controller{
 
                     for($i=0; $i<count($res["path"]); $i++) {
                         if(count($arrBasketAddressIds[$res["path"][$i][0]])==2){
-                            $arrBasketOrder[]=$arrBasketAddressIds[$res["path"][$i][0]][0];
+                            $arrBasketOrder[$i]=$arrBasketAddressIds[$res["path"][$i][0]][0];
                         }
                     }
+                    $arrBasketOrder['cost'] = $res['cost'];
                     return $arrBasketOrder;
                 }
             }
