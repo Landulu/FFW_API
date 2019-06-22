@@ -33,19 +33,37 @@ class VehiclesController extends Controller {
         /*
             locals/ (GET)
         */
-        if ( count($urlArray) == 1 && $method == 'GET') {
 
+        if ( count($urlArray) == 1 && $method == 'GET') {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-            $vehicles = VehicleService::getInstance()->getAll($offset, $limit);
+            $params = [];
 
-            if($vehicles) {
+            foreach($_GET as $key=>$value){
+                if($key!="offset"&&$key!="limit"&& $key!="completeData"){
+                    $params[$key]=$value;
+                }
+            }
+
+            if (count($params)) {
+                $vehicles = services\VehicleService::getInstance()->getAllFiltered($offset, $limit, $params);
+            } else {
+                $vehicles = services\VehicleService::getInstance()->getAll($offset, $limit);
+            }
+
+            if(sizeof($vehicles)>0){
+                if(isset($_GET["completeData"])){
+                    $methodsArr=["services"=>["serviceMethod"=>"getAllByVehicle"]];
+                    $vehicles=parent::decorateModel($vehicles,$methodsArr);
+                }
                 http_response_code(200);
                 return $vehicles;
-            } else {
+            }
+            else{
                 http_response_code(400);
             }
+            return null;
         }
 
 
@@ -56,7 +74,7 @@ class VehiclesController extends Controller {
         if ( count($urlArray) == 1 && $method == 'POST') {
             $json = file_get_contents('php://input'); 
             $obj = json_decode($json, true);
-            $newVehicle = VehicleService::getInstance()->create(new Vehicle($obj));
+            $newVehicle = services\VehicleService::getInstance()->create(new Vehicle($obj));
             if($newVehicle) {
                 http_response_code(201);
                 return $newVehicle;
@@ -67,7 +85,7 @@ class VehiclesController extends Controller {
         if ( count($urlArray) == 1 && $method == 'PUT') {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
-            $newVehicle = VehicleService::getInstance()->update(new Vehicle($obj));
+            $newVehicle = services\VehicleService::getInstance()->update(new Vehicle($obj));
             if($newVehicle) {
                 http_response_code(201);
                 return $newVehicle;
@@ -84,7 +102,7 @@ class VehiclesController extends Controller {
         && ctype_digit($urlArray[1]) 
         && $method == 'GET') {
 
-            $local = VehicleService::getInstance()->getOne($urlArray[1]);
+            $local = services\VehicleService::getInstance()->getOne($urlArray[1]);
             if($local) {
                 http_response_code(200);
             } else {
@@ -101,7 +119,7 @@ class VehiclesController extends Controller {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
             
-            $rooms = RoomService::getInstance()->getAllByVehicle($urlArray[1], $offset, $limit);
+            $rooms = services\RoomService::getInstance()->getAllByVehicle($urlArray[1], $offset, $limit);
             if($rooms) {
                 http_response_code(200);
                 return $rooms;
@@ -114,8 +132,8 @@ class VehiclesController extends Controller {
 
 //    public static function decorateVehicle( $vehicles){
 //
-//        $addressManager= AddressService::getInstance();
-//        $roomManager= RoomService::getInstance();
+//        $addressManager= services\AddressService::getInstance();
+//        $roomManager= services\RoomService::getInstance();
 //
 //        $vehicles=json_decode(json_encode($vehicles),true);
 //

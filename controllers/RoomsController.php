@@ -41,7 +41,7 @@ class RoomsController extends Controller {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-            $rooms = RoomService::getInstance()->getAll($offset, $limit);
+            $rooms = services\RoomService::getInstance()->getAll($offset, $limit);
             return $rooms;
         }
 
@@ -54,7 +54,7 @@ class RoomsController extends Controller {
             $json = file_get_contents('php://input'); 
             $obj = json_decode($json, true);
             
-            $newRoom = RoomService::getInstance()->create(new Room($obj));
+            $newRoom = services\RoomService::getInstance()->create(new Room($obj));
             if($newRoom) {
                 http_response_code(201);
                 return $newRoom;
@@ -67,7 +67,7 @@ class RoomsController extends Controller {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-            $room = RoomService::getInstance()->update(new Room($obj));
+            $room = services\RoomService::getInstance()->update(new Room($obj));
 
             if($room) {
                 http_response_code(201);
@@ -86,7 +86,7 @@ class RoomsController extends Controller {
         // get One by Id
         if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
 
-            $room = RoomService::getInstance()->getOne($urlArray[1]);
+            $room = services\RoomService::getInstance()->getOne($urlArray[1]);
             if($room) {
                 http_response_code(200);
                 return $room;
@@ -108,7 +108,7 @@ class RoomsController extends Controller {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
             
-            $products = ProductService::getInstance()->getAllByRoom($urlArray[1], $offset, $limit);
+            $products = services\ProductService::getInstance()->getAllByRoom($urlArray[1], $offset, $limit);
 
             $methodsArr=
                 ["article"=>[
@@ -130,7 +130,7 @@ class RoomsController extends Controller {
 //    public static function decorateRoom( $rooms)
 //    {
 //
-//        $productManager = ProductService::getInstance();
+//        $productManager = services\ProductService::getInstance();
 //
 //        $rooms = json_decode(json_encode($rooms), true);
 //

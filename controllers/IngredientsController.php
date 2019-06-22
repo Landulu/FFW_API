@@ -35,7 +35,7 @@ class IngredientsController extends Controller{
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-            $ingredients = IngredientService::getInstance()->getAll($offset, $limit);
+            $ingredients = services\IngredientService::getInstance()->getAll($offset, $limit);
 
             return $ingredients;
         }
@@ -45,7 +45,7 @@ class IngredientsController extends Controller{
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-            $ingredient = IngredientService::getInstance()->create(new Ingredient($obj));
+            $ingredient = services\IngredientService::getInstance()->create(new Ingredient($obj));
             if($ingredient) {
                 http_response_code(201);
                 return $ingredient;
@@ -58,7 +58,7 @@ class IngredientsController extends Controller{
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-            $ingredient = IngredientService::getInstance()->update(new Ingredient($obj));
+            $ingredient = services\IngredientService::getInstance()->update(new Ingredient($obj));
             if($ingredient) {
                 http_response_code(201);
                 return $ingredient;
@@ -70,7 +70,7 @@ class IngredientsController extends Controller{
         // get One by Id
         if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
 
-            $ingredient = IngredientService::getInstance()->getOne($urlArray[1]);
+            $ingredient = services\IngredientService::getInstance()->getOne($urlArray[1]);
             if($ingredient) {
                 http_response_code(200);
                 return $ingredient;
@@ -82,7 +82,7 @@ class IngredientsController extends Controller{
 
     public static function decorateIngredient( $ingredients){
 
-        $serviceManager= ServiceService::getInstance();
+        $serviceManager= services\ServiceService::getInstance();
         $ingredients=json_decode(json_encode($ingredients),true);
 
         foreach($ingredients as $key=>$ingredient){

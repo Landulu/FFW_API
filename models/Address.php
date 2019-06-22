@@ -1,5 +1,7 @@
 <?php
+
 require_once ("Model.php");
+
 class Address extends Model implements JsonSerializable {
     private $adid;
     private $houseNumber;

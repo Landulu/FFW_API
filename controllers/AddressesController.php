@@ -34,7 +34,7 @@ class AddressesController extends Controller {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-            $addresses = AddressService::getInstance()->getAll($offset, $limit);
+            $addresses = services\AddressService::getInstance()->getAll($offset, $limit);
             return $addresses;
         }
 
@@ -54,7 +54,7 @@ class AddressesController extends Controller {
 
             $address = $this->gMapGeolocate($address);
 
-            $address = AddressService::getInstance()->create($address);
+            $address = services\AddressService::getInstance()->create($address);
 
             if($address) {
                 http_response_code(201);
@@ -83,7 +83,7 @@ class AddressesController extends Controller {
 
             $address = $this->gMapGeolocate($address);
 
-            $address = AddressService::getInstance()->update($address);
+            $address = services\AddressService::getInstance()->update($address);
 
             if($address) {
                 http_response_code(201);
@@ -96,7 +96,7 @@ class AddressesController extends Controller {
         // get One by Id
         if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
 
-            $address = AddressService::getInstance()->getOne($urlArray[1]);
+            $address = services\AddressService::getInstance()->getOne($urlArray[1]);
             if($address) {
                 http_response_code(200);
                 return $address;

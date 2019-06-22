@@ -1,10 +1,6 @@
- <?php
-/**
- * Created by PhpStorm.
- * User: landulu
- * Date: 27/05/19
- * Time: 17:24
- */
+<?php
+
+
 require_once ("Model.php");
 
 class Service extends Model implements JsonSerializable{
@@ -256,7 +252,7 @@ class Service extends Model implements JsonSerializable{
 
     /**
      * Specify data which should be serialized to JSON
-     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @link https://php.net/manual/en/\JsonSerializable.jsonserialize.php
      * @return mixed data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.
      * @since 5.4.0

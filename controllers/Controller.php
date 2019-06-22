@@ -10,7 +10,6 @@ class  Controller
 {
     public static function decorateModel( $lightObjs, $methodsArr){
 
-
         if(!$lightObjs){
             return null;
         }
@@ -50,6 +49,7 @@ class  Controller
                     $serviceClass=ucfirst($serviceClass)."Service";
 
                     include_once 'services/'.$serviceClass.'.php';
+                    $serviceClass="services\\".$serviceClass;
 
                     if(class_exists($serviceClass)) {
 

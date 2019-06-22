@@ -1,10 +1,12 @@
 <?php
 
+namespace services;
 require_once __DIR__.'/../models/Company.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
+require_once "Service.php";
 
 
-class CompanyService {
+class CompanyService extends Service{
     private static $instance;
 
     private function __construct(){}
@@ -17,8 +19,8 @@ class CompanyService {
     }
 
 
-    public function create(Company $company): ?Company {
-        $manager = DatabaseManager::getManager();
+    public function create(\Company $company): ?\Company {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "INSERT INTO
         company 
@@ -44,7 +46,7 @@ class CompanyService {
     }
 
     public function getAll($offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
         "SELECT 
         co_id as coid,
@@ -60,7 +62,7 @@ class CompanyService {
         $companies = [];
 
         foreach ($rows as $row) {
-            $companies[] = new Company($row);
+            $companies[] = new \Company($row);
         }
 
         return $companies;
@@ -78,7 +80,7 @@ class CompanyService {
             $cityNameSQL = " JOIN (SELECT address.ad_id FROM address WHERE  address.city_name LIKE '%{$cityName}%') AS addr
         ON addr.ad_id = company.address_ad_id ";
         }
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
 
         $rows = $manager->getAll(
             "SELECT
@@ -98,15 +100,15 @@ class CompanyService {
         $companies = [];
 
         foreach ($rows as $row) {
-            $companies[] = new Company($row);
+            $companies[] = new \Company($row);
         }
 
         return $companies;
     }
 
 
-    public function update(Company $company, $coid): ?Company {
-        $manager = DatabaseManager::getManager();
+    public function update(\Company $company, $coid): ?\Company {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "UPDATE company
         SET SIRET = ?, 
@@ -132,7 +134,7 @@ class CompanyService {
 
     public function getAllByUser($user_id, $offset, $limit):?array {
 
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
             "SELECT 
         co_id AS coid,
@@ -148,7 +150,7 @@ class CompanyService {
         );
         if(isset($rows)&&!empty($rows)){
             foreach ($rows as $row) {
-                $company[] = new Company($row);
+                $company[] = new \Company($row);
             }
             return $company;
         }
@@ -156,9 +158,9 @@ class CompanyService {
 
     }
 
-    public function getOne($companyId):Company {
+    public function getOne($companyId):\Company {
 
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $company = $manager->getOne(
             "SELECT 
         co_id AS coid,
@@ -172,7 +174,7 @@ class CompanyService {
             [$companyId]
         );
 
-        return new Company($company);
+        return new \Company($company);
     }
 
 }

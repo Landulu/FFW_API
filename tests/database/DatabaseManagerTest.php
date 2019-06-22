@@ -23,9 +23,9 @@ $db = DatabaseManager::getManager();
 
 // echo $affectedRows;
 
-// $res = VehicleService::getInstance()->getAll();
+// $res = services\VehicleService::getInstance()->getAll();
 
-// $res = ProductService::getInstance()->getAllByRoom(1);
+// $res = services\ProductService::getInstance()->getAllByRoom(1);
 // print_r($res);
 
 // $res = 

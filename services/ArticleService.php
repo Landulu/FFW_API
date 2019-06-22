@@ -1,10 +1,11 @@
 <?php
-
+namespace services;
 require_once __DIR__.'/../models/Article.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
+require_once "Service.php";
 
 
-class ArticleService {
+class ArticleService extends Service {
     private static $instance;
 
     private function __construct(){}
@@ -17,8 +18,8 @@ class ArticleService {
     }
 
 
-    public function create(Article $article): ?Article {
-        $manager = DatabaseManager::getManager();
+    public function create(\Article $article): ?\Article {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "INSERT INTO
         article (name, ingredient_in_id)
@@ -34,7 +35,7 @@ class ArticleService {
     }
 
     public function getAll($offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
         "SELECT 
         a_id as aid,
@@ -46,14 +47,14 @@ class ArticleService {
         $articles = [];
 
         foreach ($rows as $row) {
-            $articles[] = new Article($row);
+            $articles[] = new \Article($row);
         }
 
         return $articles;
     }
 
-    public function update(Article $article): ?Article {
-        $manager = DatabaseManager::getManager();
+    public function update(\Article $article): ?\Article {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "UPDATE article
         SET 
@@ -70,7 +71,7 @@ class ArticleService {
     }
 
     public function getOne(string $aid) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $article = $manager->getOne('
         select a_id as aid,
         name,
@@ -79,7 +80,7 @@ class ArticleService {
         WHERE a_id = ?'
         , [$aid]);
         if ($article) {
-            return new Article($article);
+            return new \Article($article);
         }
     }
 

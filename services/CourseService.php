@@ -5,13 +5,13 @@
  * Date: 27/05/19
  * Time: 17:08
  */
-
-
+namespace services;
 require_once __DIR__.'/../models/Service.php';
-require_once __DIR__.'/../utils/database/DatabaseManager.php';
+require_once __DIR__.'/../utils/database/\DatabaseManager.php';
+require_once "Service.php";
 
 
-class CourseService {
+class CourseService extends Service {
 
     private static $instance;
 
@@ -24,17 +24,15 @@ class CourseService {
         return self::$instance;
     }
 
-    public function create(Service $service): ?Service{
+    public function create(\Service $service): ?\Service{
 
-        var_dump($service);
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             "INSERT INTO
         service(name, description, create_time, type, capacity, is_public, service_time, route_state, vehicle_v_id, status, is_premium,local_lo_id)
         VALUES (?, ?, now(), ?, ?, ?, ?, ?, ?, ?, ?,?)", [
             $service->getName(),
             $service->getDescription(),
-            $service->getCreateTime(),
             $service->getType(),
             $service->getCapacity(),
             $service->getisPublic(),
@@ -47,14 +45,14 @@ class CourseService {
         ]);
         if ($affectedRows > 0) {
             $service->setSerid($manager->lastInsertId());
-            return new Service($service);
+            return $service;
         }
         return NULL;
     }
 
 
     public function getAll($offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
             "SELECT 
         ser_id as serid,
@@ -78,7 +76,7 @@ class CourseService {
         $services = [];
 
         foreach ($rows as $row) {
-            $services[] = new Service($row);
+            $services[] = new \Service($row);
         }
         return $services;
     }
@@ -86,24 +84,18 @@ class CourseService {
 
     public function getAllFiltered($params, $offset, $limit) {
 
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $sqlArr=[];
-        $i=0;
         $finalSql=null;
 
         if(isset($params['name'])){ $sqlArr["nameSql"] = " name  LIKE '%{$params["name"]}%'"; }
-        if(isset($params['routeState'])){ $sqlArr["routeStateSql"] = " route_state = '{$params["routeState"]}'"; }
+        if(isset($params['routeState'])){ $sqlArr["routeStateSql"] = " status = '{$params["routeState"]}'"; }
         if(isset($params['vehicleId'])){ $sqlArr["vehicleIdSql"] = " vehicle_v_id = ".$params["vehicleId"]; }
         if(isset($params['createTime'])){ $sqlArr["createTimeSql"] = " create_time = '{$params["createTime"]}'"; }
         if(isset($params['serviceTime'])){ $sqlArr["serviceTimeSql"] = " service_time = '{$params["serviceTime"]}'"; }
 
-        foreach($sqlArr as $sql){
-            $finalSql=$finalSql.$sql;
-            if($i<count($sqlArr)-1){
-                $finalSql=$finalSql." AND ";
-            }
-            $i++;
-        }
+        $finalSql=parent::getAndSql($sqlArr);
+
         $rows = $manager->getAll(
             "SELECT 
         service.ser_id as serid,
@@ -126,7 +118,7 @@ class CourseService {
         $services = [];
 
         foreach ($rows as $row) {
-            $services[] = new Service($row);
+            $services[] = new \Service($row);
         }
 
         return $services;
@@ -135,7 +127,7 @@ class CourseService {
 
 
     public function getAllByUser($uid, $offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
             "SELECT 
         service.ser_id as serid,
@@ -160,7 +152,7 @@ class CourseService {
         $courses = [];
 
         foreach ($rows as $row) {
-            $courses[] = new Service($row);
+            $courses[] = new \Service($row);
         }
 
         return $courses;
@@ -168,7 +160,7 @@ class CourseService {
 
 
     public function getOne( $serviceId) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $service = $manager->getOne(
             "SELECT 
         ser_id as serid,
@@ -196,8 +188,8 @@ class CourseService {
     }
     //Fin modification
 
-    public function update(Service $service, $serid): ?Service {
-        $manager = DatabaseManager::getManager();
+    public function update(\Service $service, $serid): ?\Service {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             "UPDATE service
         SET name = ?,
@@ -236,7 +228,7 @@ class CourseService {
 
 //
 //    public function getOneByUserId( $uid) {
-//        $manager = DatabaseManager::getManager();
+//        $manager = \DatabaseManager::getManager();
 //        $address = $manager->getOne(
 //            "SELECT
 //        ad_id as adid,

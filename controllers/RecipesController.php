@@ -43,7 +43,7 @@ class RecipesController extends Controller{
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-            $recipes = RecipeService::getInstance()->getAll($offset, $limit);
+            $recipes = services\RecipeService::getInstance()->getAll($offset, $limit);
 
             if (count($recipes) > 0) {
                 return ($recipes);
@@ -61,7 +61,7 @@ class RecipesController extends Controller{
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-            $newRecipe = RecipeService::getInstance()->create(new Recipe($obj));
+            $newRecipe = services\RecipeService::getInstance()->create(new Recipe($obj));
             if($newRecipe) {
                 http_response_code(201);
                 return $newRecipe;
@@ -74,7 +74,7 @@ class RecipesController extends Controller{
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-            $recipe = RecipeService::getInstance()->update(new Recipe($obj));
+            $recipe = services\RecipeService::getInstance()->update(new Recipe($obj));
 
             if($recipe) {
                 http_response_code(201);
@@ -93,7 +93,7 @@ class RecipesController extends Controller{
         // get One by Id
         if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
 
-            $recipe = RecipeService::getInstance()->getOne($urlArray[1]);
+            $recipe = services\RecipeService::getInstance()->getOne($urlArray[1]);
             if($recipe) {
                 http_response_code(200);
                 return $recipe;
@@ -112,7 +112,7 @@ class RecipesController extends Controller{
             && $method == 'GET') {
 
 
-            $ingredients = IngredientService::getInstance()->getAllByRecipe($urlArray[1]);
+            $ingredients = services\IngredientService::getInstance()->getAllByRecipe($urlArray[1]);
             if($ingredients) {
                 http_response_code(200);
                 return $ingredients;

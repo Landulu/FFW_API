@@ -1,11 +1,12 @@
 <?php
-
+namespace services;
 require_once __DIR__.'/../models/Article.php';
 require_once __DIR__ . '/../models/CompleteProduct.php';
 require_once __DIR__.'/../models/Product.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
+require_once "Service.php";
 
-class ProductService {
+class ProductService extends Service {
     
     private static $instance;
 
@@ -18,8 +19,8 @@ class ProductService {
         return self::$instance;
     }
 
-    public function create(Product $product): ?Product {
-        $manager = DatabaseManager::getManager();
+    public function create(\Product $product): ?\Product {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "INSERT INTO
         product (
@@ -47,7 +48,7 @@ class ProductService {
     }
 
     public function getAll($offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
         "SELECT product.pr_id as prid, 
                 product.limit_date as limitDate, 
@@ -63,7 +64,7 @@ class ProductService {
         $products = [];
 
         foreach ($rows as $row) {
-            $products[] = new Product($row);
+            $products[] = new \Product($row);
         }
         return $products;
     }
@@ -72,7 +73,7 @@ class ProductService {
 
 
     public function getAllByRoom($room_id, $offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
             "SELECT product.pr_id as prid, 
                 product.limit_date as limitDate, 
@@ -90,14 +91,14 @@ class ProductService {
         $products = [];
         if($rows) {   
             foreach ($rows as $row) {
-                $products[] = new Product($row);
+                $products[] = new \Product($row);
             }
             return $products;
         }
     }
 
     public function getAllByBasket($basket_b_id, $offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
             "SELECT product.pr_id as prid, 
                 product.limit_date as limitDate, 
@@ -115,14 +116,14 @@ class ProductService {
         $products = [];
         if($rows) {
             foreach ($rows as $row) {
-                $products[] = new Product($row);
+                $products[] = new \Product($row);
             }
             return $products;
         }
     }
 
-    public function update(Product $product): ?Product {
-        $manager = DatabaseManager::getManager();
+    public function update(\Product $product): ?\Product {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "UPDATE product
         set limit_date = ?, 
@@ -149,7 +150,7 @@ class ProductService {
     }
 
     public function getOne(int $prid) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $product = $manager->getOne('
         select * 
         FROM product
@@ -161,7 +162,7 @@ class ProductService {
     }
 
     public function changeProductRoom($productIds, $roomId) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $affectedRows = 0;
         $roomId=$roomId?$roomId:"NULL";
         foreach ($productIds as $key => $id) {
@@ -181,7 +182,7 @@ class ProductService {
     }
     
 //    public function remove($product_ids){
-//        $manager = DatabaseManager::getManager();
+//        $manager = \DatabaseManager::getManager();
 //        $affectedRows = 0;
 //        foreach($product_ids as $key => $value){
 //            $affectedRows += $manager->exec(

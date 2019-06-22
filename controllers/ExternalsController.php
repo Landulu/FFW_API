@@ -47,9 +47,9 @@ class ExternalsController extends Controller{
                 }
             }
             if (count($params)) {
-                $externals = ExternalService::getInstance()->getAllFiltered($offset, $limit, $params);
+                $externals = services\ExternalService::getInstance()->getAllFiltered($offset, $limit, $params);
             } else {
-                $externals = ExternalService::getInstance()->getAll($offset, $limit);
+                $externals = services\ExternalService::getInstance()->getAll($offset, $limit);
             }
 
             $methodsArr=["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]
@@ -65,7 +65,7 @@ class ExternalsController extends Controller{
         if ( count($urlArray) == 1 && $method == 'POST') {
             $json = file_get_contents('php://input'); 
             $obj = json_decode($json, true);
-            $newExternal = ExternalService::getInstance()->create(new External($obj));
+            $newExternal = services\ExternalService::getInstance()->create(new External($obj));
             if($newExternal) {
                 http_response_code(201);
                 return $newExternal;
@@ -82,7 +82,7 @@ class ExternalsController extends Controller{
         && ctype_digit($urlArray[1]) 
         && $method == 'GET') {
 
-            $external = ExternalService::getInstance()->getOne($urlArray[1]);
+            $external = services\ExternalService::getInstance()->getOne($urlArray[1]);
             if(isset($_GET["completeData"])){
                 $methodsArr=[
                     "address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]
@@ -106,7 +106,7 @@ class ExternalsController extends Controller{
         //     $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
         //     $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
             
-        //     $rooms = RoomService::getInstance()->getAllByLocal($urlArray[1], $offset, $limit);
+        //     $rooms = services\RoomService::getInstance()->getAllByLocal($urlArray[1], $offset, $limit);
         //     if($rooms) {
         //         http_response_code(200);
         //         return $rooms;
@@ -119,7 +119,7 @@ class ExternalsController extends Controller{
     public static function decorateExternal($externals,$optionsArr=["address"=>true]){
 
 
-        $addressManager= AddressService::getInstance();
+        $addressManager= services\AddressService::getInstance();
 
         $externals=json_decode(json_encode($externals),true);
 

@@ -1,12 +1,13 @@
 <?php
 require_once ("Model.php");
 
-class Vehicle extends Model implements JsonSerializable {
+class CompleteVehicle extends Model implements JsonSerializable {
     private $vid;
     private $volume;
     private $insuranceDate;
     private $lastRevision;
     private $description;
+    private $services;
 
     public function __construct(array $fields){
         $this->vid = isset($fields['vid']) ? $fields['vid'] : null;
@@ -14,6 +15,7 @@ class Vehicle extends Model implements JsonSerializable {
         $this->insuranceDate = isset($fields['insuranceDate'])?$fields['insuranceDate'] : NULL;
         $this->lastRevision = isset($fields['lastRevision'])?$fields['lastRevision'] : NULL;
         $this->description = isset($fields['description'])?$fields['description'] : NULL;
+        $this->services = isset($fields['services'])?$fields['services'] : NULL;
     }
 
     /**
@@ -95,6 +97,25 @@ class Vehicle extends Model implements JsonSerializable {
     {
         $this->description = $description;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getServices()
+    {
+        return $this->services;
+    }
+
+    /**
+     * @param mixed $services
+     */
+    public function setServices($services): void
+    {
+        $this->services = $services;
+    }
+
+
+
 
     public function getMainId()
     {

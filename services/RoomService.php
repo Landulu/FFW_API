@@ -1,9 +1,10 @@
 <?php
-
+namespace services;
 require_once __DIR__.'/../models/Room.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
+require_once "Service.php";
 
-class RoomService {
+class RoomService extends Service {
 
     private static $instance;
 
@@ -16,8 +17,8 @@ class RoomService {
         return self::$instance;
     }
 
-    public function create(Room $room): ?Room {
-        $manager = DatabaseManager::getManager();
+    public function create(\Room $room): ?\Room {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "INSERT INTO
         room (name, is_unavailable, is_stockroom, local_lo_id)
@@ -34,8 +35,8 @@ class RoomService {
         return NULL;
     }
 
-    public function getOne($id):?Room {
-        $manager = DatabaseManager::getManager();
+    public function getOne($id):?\Room {
+        $manager = \DatabaseManager::getManager();
         $room = $manager->getOne(
         "SELECT * FROM
         room
@@ -43,7 +44,7 @@ class RoomService {
         [$id]
         );
         if ($room) {
-            $roomObj = new Room($this->adaptRoomQueryToConstruct($room));
+            $roomObj = new \Room($this->adaptRoomQueryToConstruct($room));
             return $roomObj;
         }
         return NULL;
@@ -59,7 +60,7 @@ class RoomService {
     }
 
     public function getAll($offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
         "SELECT 
         r_id as rid,
@@ -73,7 +74,7 @@ class RoomService {
         $rooms = [];
 
         foreach ($rows as $row) {
-            $rooms[] = new Room($row);
+            $rooms[] = new \Room($row);
         }
         return $rooms;
     }
@@ -81,7 +82,7 @@ class RoomService {
 
 
     public function getAllByLocal($lo_id, $offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
             "SELECT 
                 room.r_id as rid,
@@ -96,14 +97,14 @@ class RoomService {
             );
         if($rows){
             foreach ($rows as $row) {
-                $rooms[] = new Room($row);
+                $rooms[] = new \Room($row);
             }
             return $rooms;
         }
     }
 
-    public function update(Room $room): ?Room {
-        $manager = DatabaseManager::getManager();
+    public function update(\Room $room): ?\Room {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "UPDATE room
         set name = ?, 

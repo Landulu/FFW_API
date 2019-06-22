@@ -55,7 +55,7 @@ class UsersController extends Controller {
             }
 
             if (count($params)) {
-                $users = Userservice::getInstance()->getAllFiltered($offset, $limit, $params);
+                $users = services\UserService::getInstance()->getAllFiltered($offset, $limit, $params);
                 foreach ($users as $key=>$user) {
                     if (isset($params['rights']) && !$this->isRightSet($user->getRights(), $params['rights'])) {
                         unset($users[$key]);
@@ -63,7 +63,7 @@ class UsersController extends Controller {
                 }
                 $users=array_values($users);
             } else {
-                $users = Userservice::getInstance()->getAll($offset, $limit);
+                $users = services\UserService::getInstance()->getAll($offset, $limit);
             }
             if(sizeof($users)>0){
                 http_response_code(200);
@@ -80,12 +80,14 @@ class UsersController extends Controller {
         }
 
 
+
+
         //create users
         if ( count($urlArray) == 1 && $method == 'POST') {
             $json = file_get_contents('php://input'); 
             $obj = json_decode($json, true);
             
-            $newUser = UserService::getInstance()->create(new User($obj));
+            $newUser = services\UserService::getInstance()->create(new \User($obj));
             if($newUser) {
                 http_response_code(201);
                 return $newUser;
@@ -98,7 +100,7 @@ class UsersController extends Controller {
         // get One by Id
         if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
 
-            $user = UserService::getInstance()->getOne($urlArray[1]);
+            $user = services\UserService::getInstance()->getOne($urlArray[1]);
             if($user) {
                 $methodsArr=["skills"=>["serviceMethod"=>"getAllByUser"],
                     "address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"],
@@ -120,7 +122,7 @@ class UsersController extends Controller {
             $json = file_get_contents('php://input'); 
             $obj = json_decode($json, true);
             
-            $newUser = UserService::getInstance()->update(new User($obj));
+            $newUser = services\UserService::getInstance()->update(new \User($obj));
             if($newUser) {
                 http_response_code(201);
                 return $newUser;
@@ -141,7 +143,7 @@ class UsersController extends Controller {
             if($_GET['email']) {
                 $userEmail = $_GET['email'];
 
-                $completeUser = UserService::getInstance()->getOneByEmail($userEmail);
+                $completeUser = services\UserService::getInstance()->getOneByEmail($userEmail);
                 if($completeUser) {
                     http_response_code(200);
                     return $completeUser;
@@ -164,7 +166,7 @@ class UsersController extends Controller {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
             
-            $baskets = BasketService::getInstance()->getAllByUser($urlArray[1], $offset, $limit);
+            $baskets = services\BasketService::getInstance()->getAllByUser($urlArray[1], $offset, $limit);
             if($baskets) {
                 http_response_code(200);
                 return $baskets;
@@ -183,7 +185,7 @@ class UsersController extends Controller {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
             
-            $baskets = BasketService::getInstance()->getAllByUser($urlArray[1], $offset, $limit);
+            $baskets = services\BasketService::getInstance()->getAllByUser($urlArray[1], $offset, $limit);
             if($baskets) {
                 http_response_code(200);
                 return $baskets;
@@ -205,7 +207,7 @@ class UsersController extends Controller {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-            $skills = SkillService::getInstance()->getAllByUser($urlArray[1],$offset,$limit);
+            $skills = services\SkillService::getInstance()->getAllByUser($urlArray[1],$offset,$limit);
 
 
             if($skills) {
@@ -229,7 +231,7 @@ class UsersController extends Controller {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-            $result = SkillService::getInstance()->affectSkillToUser($urlArray[1],$obj['skid'],$obj['status']);
+            $result = services\SkillService::getInstance()->affectSkillToUser($urlArray[1],$obj['skid'],$obj['status']);
 
             if($result) {
                 return $result;
@@ -251,7 +253,7 @@ class UsersController extends Controller {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-            $result = SkillService::getInstance()->updateSkillByUser($urlArray[1],$obj['skid'],$obj['status']);
+            $result = services\SkillService::getInstance()->updateSkillByUser($urlArray[1],$obj['skid'],$obj['status']);
 
             if($result) {
                 return $result;
@@ -273,7 +275,7 @@ class UsersController extends Controller {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-            $companies = CompanyService::getInstance()->getAllByUser($urlArray[1], $offset, $limit);
+            $companies = services\CompanyService::getInstance()->getAllByUser($urlArray[1], $offset, $limit);
             if($companies) {
                 http_response_code(200);
                 return $companies;
@@ -286,7 +288,7 @@ class UsersController extends Controller {
         /*
         GET: 'users/{int}/affectations'
         */
-        // get companies by userId
+        // get affectations by userId
         if ( count($urlArray) == 3
             && ctype_digit($urlArray[1])
             && $urlArray[2] == 'affectations'
@@ -295,10 +297,14 @@ class UsersController extends Controller {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-            $affectations = AffectationService::getInstance()->getAllByUser($urlArray[1], $offset, $limit);
+            $affectations = services\AffectationService::getInstance()->getAllByUser($urlArray[1], $offset, $limit);
 
             if(isset($_GET['completeData'])){
-                $affectations=AffectationController::decorateAffectation($affectations);
+
+                $methodsArr=[
+                    "service"=>["serviceMethod"=>"getOne", "relationIdMethod"=>"getSerid"]
+                ];
+                $affectations = parent::decorateModel($affectations,$methodsArr);
             }
 
             if($affectations) {
@@ -321,7 +327,7 @@ class UsersController extends Controller {
             $userEmail = urldecode($_GET['email']);
             $userPwd = urldecode($_GET['password']);
 
-            $completeUser = UserService::getInstance()->getOneByEmail($userEmail);
+            $completeUser = services\UserService::getInstance()->getOneByEmail($userEmail);
             if($completeUser) {
                 if (isset($userPwd) && isset($completeUser['password'])){
                     if( password_verify($userPwd, $completeUser['password'])){
@@ -366,7 +372,7 @@ class UsersController extends Controller {
                     foreach ($basket['products'] as $productGroup) {
 
 
-                        $article = ArticleService::getInstance()->getOne($productGroup['barcode']);
+                        $article = services\ArticleService::getInstance()->getOne($productGroup['barcode']);
 
                         if ($article == null) {
                             
@@ -381,7 +387,7 @@ class UsersController extends Controller {
                                     "name" => $curlArticle['product']['product_name'] . ' ' . $curlArticle['product']['generic_name']
                                 ));
             
-                                $article = ArticleService::getInstance()->create($newArticle);
+                                $article = services\ArticleService::getInstance()->create($newArticle);
                             } else {
                                 http_response_code(404);
                             }
@@ -399,10 +405,10 @@ class UsersController extends Controller {
                                     "articleId" => $article->getAid(),
                                 ));
 
-                                $product = ProductService::getInstance()->create($newProduct);
+                                $product = services\ProductService::getInstance()->create($newProduct);
 
                                 if( $product) {
-                                    $inserted = BasketService::getInstance()->affectProductToBasket($product->getPrid(), $createdBasket->getBId());
+                                    $inserted = services\BasketService::getInstance()->affectProductToBasket($product->getPrid(), $createdBasket->getBId());
                                     if ($inserted) {
                                         return $basket;
                                     } else {
@@ -445,7 +451,7 @@ class UsersController extends Controller {
 //
 //        if(isset($optionsArr["skill"])){
 //            do {
-//                $newSkills = SkillService::getInstance()->getAllByUser($completeUser->getUid(), $offset, $limit);
+//                $newSkills = services\SkillService::getInstance()->getAllByUser($completeUser->getUid(), $offset, $limit);
 //                $skills = array_merge($skills, $newSkills);
 //                $offset += 20;
 //            } while (count($newSkills) == 20 );
@@ -455,7 +461,7 @@ class UsersController extends Controller {
 //        }
 //
 //        if(isset($optionsArr["address"])){
-//            $address = AddressService::getInstance()->getOneByUserId($completeUser->getUid());
+//            $address = services\AddressService::getInstance()->getOneByUserId($completeUser->getUid());
 //            if($address) {
 //                $completeUser->setAddress($address);
 //            }
@@ -468,7 +474,7 @@ class UsersController extends Controller {
 //            $companies = [];
 //            $newCompanies = [];
 //            do {
-//                $newCompanies = CompanyService::getInstance()->getAllByUser($completeUser->getUid(), $offset, $limit);
+//                $newCompanies = services\CompanyService::getInstance()->getAllByUser($completeUser->getUid(), $offset, $limit);
 //
 //                if ($newCompanies) {
 //                    $companies = array_merge($companies, $newCompanies);

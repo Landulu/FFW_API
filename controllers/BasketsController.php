@@ -51,7 +51,7 @@ class BasketsController extends Controller {
 
             if ( isset($_GET['status']) || isset($_GET['role'])) {
 
-                $baskets = Basketservice::getInstance()->getAllFiltered($_GET, $offset, $limit);
+                $baskets = services\Basketservice::getInstance()->getAllFiltered($_GET, $offset, $limit);
 
                 if(count($baskets) == 0) {
                     http_response_code(400);
@@ -60,6 +60,8 @@ class BasketsController extends Controller {
                     $methodsArr=[
                         "company"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getCompanyId",
                             "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
+                        "local"=>["objectType"=>"complete","serviceMethod"=>"getOneByBasket",
+                            "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAdid"]]],
                         "user"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getUserId",
                             "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
                         "external"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getExternalId",
@@ -75,7 +77,7 @@ class BasketsController extends Controller {
 
 
             } else {
-                $baskets = Basketservice::getInstance()->getAll($offset, $limit);
+                $baskets = services\Basketservice::getInstance()->getAll($offset, $limit);
                 if($baskets){
                     http_response_code(200);
                     return $baskets;
@@ -93,7 +95,7 @@ class BasketsController extends Controller {
             $json = file_get_contents('php://input'); 
             $obj = json_decode($json, true);
 
-            $newBasket = Basketservice::getInstance()->create( new Basket($obj));
+            $newBasket = services\Basketservice::getInstance()->create( new Basket($obj));
             if($newBasket) {
                 http_response_code(201);
                 return $newBasket;
@@ -106,7 +108,7 @@ class BasketsController extends Controller {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-            $newBasket = Basketservice::getInstance()->update( new Basket($obj));
+            $newBasket = services\Basketservice::getInstance()->update( new Basket($obj));
             if($newBasket) {
                 http_response_code(201);
                 return $newBasket;
@@ -118,7 +120,7 @@ class BasketsController extends Controller {
         // get One by Id
         if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
 
-            $basket = Basketservice::getInstance()->getOne($urlArray[1]);
+            $basket = services\Basketservice::getInstance()->getOne($urlArray[1]);
             if($basket) {
                 http_response_code(200);
                 return $basket;
@@ -139,10 +141,10 @@ class BasketsController extends Controller {
 //
 //    public static function decorateBasket( $baskets, $optionsArr=["user"=>true,"company"=>true,"external"=>true,"products"=>true]){
 //
-//        $userManager= UserService::getInstance();
-//        $companyManager= CompanyService::getInstance();
-//        $externalManager= ExternalService::getInstance();
-//        $productManager= ProductService::getInstance();
+//        $userManager= services\UserService::getInstance();
+//        $companyManager= services\CompanyService::getInstance();
+//        $externalManager= services\ExternalService::getInstance();
+//        $productManager= services\ProductService::getInstance();
 //
 //        $baskets=json_decode(json_encode($baskets),true);
 //

@@ -1,11 +1,11 @@
 <?php
 
-
+namespace services;
 require_once __DIR__.'/../models/Service.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
+require_once "Service.php";
 
-
-class ServiceService {
+class ServiceService extends Service {
 
     private static $instance;
 
@@ -18,8 +18,8 @@ class ServiceService {
         return self::$instance;
     }
 
-    public function create(Service $service): ?Service{
-        $manager = DatabaseManager::getManager();
+    public function create(\Service $service): ?\Service{
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             "INSERT INTO
         service(name, description, create_time, type, capacity, is_public, service_time, route_state, vehicle_v_id, status, is_premium, local_lo_id)
@@ -45,7 +45,7 @@ class ServiceService {
 
 
     public function getAll($offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
             "SELECT 
         ser_id as serid,
@@ -67,7 +67,7 @@ class ServiceService {
         $services = [];
 
         foreach ($rows as $row) {
-            $services[] = new Service($row);
+            $services[] = new \Service($row);
         }
         return $services;
 //        return  array("toto"=>"camarche");
@@ -76,7 +76,7 @@ class ServiceService {
 
 
     public function getAllByUser($uid, $offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
             "SELECT 
         service.ser_id as serid,
@@ -101,7 +101,38 @@ class ServiceService {
         $services = [];
 
         foreach ($rows as $row) {
-            $services[] = new Service($row);
+            $services[] = new \Service($row);
+        }
+
+        return $services;
+    }
+
+    public function getAllByVehicle($vid, $offset, $limit) {
+        $manager = \DatabaseManager::getManager();
+        $rows = $manager->getAll(
+            "SELECT 
+        service.ser_id as serid,
+        service.name,
+        service.description,
+        service.create_time as createTime,
+        service.type,
+        service.capacity,
+        service.is_public as isPublic,
+        service.service_time as serviceTime,
+        service.route_state as routeState,
+        service.vehicle_v_id as vehicleId,
+        service.status,
+        service.is_premium as isPremium,
+        service.local_lo_id as localId  
+        FROM service WHERE service.vehicle_v_id = ?
+        LIMIT $offset, $limit"
+            ,
+            [$vid]
+        );
+        $services = [];
+
+        foreach ($rows as $row) {
+            $services[] = new \Service($row);
         }
 
         return $services;
@@ -109,7 +140,7 @@ class ServiceService {
 
 
     public function getOne( $serviceId) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $service = $manager->getOne(
             "SELECT 
         ser_id as serid,
@@ -137,8 +168,8 @@ class ServiceService {
     }
     //Fin modification
 
-    public function update(Service $service, $serid): ?Service {
-        $manager = DatabaseManager::getManager();
+    public function update(\Service $service, $serid): ?\Service {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             "UPDATE service
         SET name = ?,
@@ -176,7 +207,7 @@ class ServiceService {
 
 
     public function getAllByType($serviceType, $offset, $limit){
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
             "SELECT 
         service.ser_id as serid,
@@ -201,7 +232,7 @@ class ServiceService {
         $services = [];
 
         foreach ($rows as $row) {
-            $services[] = new Service($row);
+            $services[] = new \Service($row);
         }
 
         return $services;
@@ -209,7 +240,7 @@ class ServiceService {
 
 //
 //    public function getOneByUserId( $uid) {
-//        $manager = DatabaseManager::getManager();
+//        $manager = \DatabaseManager::getManager();
 //        $address = $manager->getOne(
 //            "SELECT
 //        ad_id as adid,

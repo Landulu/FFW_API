@@ -1,10 +1,12 @@
 <?php
 
+namespace services;
 require_once __DIR__.'/../models/Basket.php';
 require_once __DIR__ . '/../models/CompleteBasket.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
+require_once "Service.php";
 
-class BasketService {
+class BasketService extends Service{
     
     private static $instance;
 
@@ -18,8 +20,8 @@ class BasketService {
     }
     
 
-    public function create(Basket $basket): ?Basket {
-        $manager = DatabaseManager::getManager();
+    public function create(\Basket $basket): ?\Basket {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         'INSERT INTO
         basket 
@@ -48,7 +50,7 @@ class BasketService {
     }
 
     public function getAll($offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
         "SELECT 
         b_id as bid,
@@ -66,14 +68,14 @@ class BasketService {
         $baskets = [];
 
         foreach ($rows as $row) {
-            $baskets[] = new Basket($row);
+            $baskets[] = new \Basket($row);
         }
 
         return $baskets;
     }
     
     public function getOne($bid) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $basket = $manager->getOne(
         "SELECT * 
         FROM basket
@@ -85,7 +87,7 @@ class BasketService {
     }
 
     public function getAllByUser($userId, $offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
         "SELECT 
         b_id as bid,
@@ -104,7 +106,7 @@ class BasketService {
         $baskets = [];
 
         foreach ($rows as $row) {
-            $baskets[] = new Basket($row);
+            $baskets[] = new \Basket($row);
         }
 
         return $baskets;
@@ -112,7 +114,7 @@ class BasketService {
 
 
     public function getAllByStatus($status, $offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
             "SELECT 
         b_id as bid,
@@ -131,14 +133,14 @@ class BasketService {
         $baskets = [];
 
         foreach ($rows as $row) {
-            $baskets[] = new Basket($row);
+            $baskets[] = new \Basket($row);
         }
 
         return $baskets;
     }
 
     public function getAllByService($serId, $offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
             "SELECT 
         b_id as bid,
@@ -157,7 +159,7 @@ class BasketService {
         $baskets = [];
 
         foreach ($rows as $row) {
-            $baskets[] = new Basket($row);
+            $baskets[] = new \Basket($row);
         }
 
         return $baskets;
@@ -166,21 +168,14 @@ class BasketService {
 
     public function getAllFiltered($params, $offset, $limit) {
 
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
+        $finalSql=null;
 
+        if(isset($params['serviceId'])){ $sqlArr["serviceSql"] = " service_ser_id IS NULL";}
+        if(isset($params['role'])){ $sqlArr["roleSql"] = " role = '{$params["role"]}'"; }
+        if(isset($params['status'])){ $sqlArr["statusSql"] = " status = '{$params["status"]}'"; }
 
-        $roleSql=isset($params['role'])?" role = '{$params["role"]}'":null;
-        $statusSql=isset($params['status'])?" status = '{$params["status"]}'":null;
-
-        if(isset($params['role'])&&isset($params['status'])){
-            $finalSql=$roleSql." AND ".$statusSql;
-        }
-        else if(isset($params['role'])&&!isset($params['status'])){
-            $finalSql=$roleSql;
-        }
-        else{
-            $finalSql=$statusSql;
-        }
+        $finalSql=parent::getAndSql($sqlArr);
 
         $rows = $manager->getAll(
             "SELECT 
@@ -199,7 +194,7 @@ class BasketService {
         $baskets = [];
 
         foreach ($rows as $row) {
-            $baskets[] = new Basket($row);
+            $baskets[] = new \Basket($row);
         }
 
         return $baskets;
@@ -207,7 +202,7 @@ class BasketService {
 
 
     public function affectProductToBasket($prid, $bid) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         'INSERT INTO
         basket_has_article (basket_b_id, product_pr_id)
@@ -219,8 +214,8 @@ class BasketService {
         }
         return 0;
     }
-    public function update(Basket $basket): ?Basket {
-        $manager = DatabaseManager::getManager();
+    public function update(\Basket $basket): ?\Basket {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             'UPDATE
         basket 
@@ -232,7 +227,7 @@ class BasketService {
         company_co_id  = ?,
         external_ex_id  = ?,
         user_u_id= ? 
-        WHERE basket_b_id= ? )
+        WHERE b_id= ?
         ', [
             $basket->getCreateTime(),
             $basket->getStatus(),
@@ -251,7 +246,7 @@ class BasketService {
     }
 
     public function updateOrder($bid,$order) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             'UPDATE
         basket 
@@ -271,7 +266,7 @@ class BasketService {
 
 
     // public function update(Product $product): ?Product {
-    //     $manager = DatabaseManager::getManager();
+    //     $manager = \DatabaseManager::getManager();
     //     $affectedRows = $manager->exec('
     //     UPDATE products
     //     set limit_date = ?, 
@@ -294,7 +289,7 @@ class BasketService {
 
 
     // public function transferRoomForProducts($productIds, $roomId) {
-    //     $manager = DatabaseManager::getManager();
+    //     $manager = \DatabaseManager::getManager();
     //     $affectedRows = 0;
     //     foreach ($productIds as $key => $value) {
             

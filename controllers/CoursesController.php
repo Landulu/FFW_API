@@ -35,34 +35,38 @@ class CoursesController extends Controller{
 
 
             if(isset($_GET['name']) || isset($_GET['routeState']) || isset($_GET['vehicleId']) || isset($_GET['createTime']) || isset($_GET['serviceTime'])){
-                $courses = CourseService::getInstance()->getAllFiltered($_GET,$offset, $limit);
+                $courses = services\CourseService::getInstance()->getAllFiltered($_GET,$offset, $limit);
             }
             else{
-                $courses = CourseService::getInstance()->getAll($offset, $limit);
+                $courses = services\CourseService::getInstance()->getAll($offset, $limit);
             }
 
             $arrMethods=[
             "vehicle"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getVehicleId"],
-                "skill"=>["serviceMethod"=>"getAllByService"],
-                "affectations"=>["serviceMethod"=>"getAllByService","completeMethods"=>[
-                    "user"=>["objectType"=>"complete","serviceMethod"=>"getOneByAffectation"]
-                ]],
-                "baskets"=>[
-                    "serviceMethod"=>"getAllByService",
-                    "completeMethods"=>[
-                        "company"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getCompanyId",
-                            "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAdid"]]],
-                        "user"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getUserId",
-                            "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
-                        "external"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getExternalId",
-                            "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
-                        "local"=>["objectType"=>"complete","serviceMethod"=>"getOneByBasket",
-                            "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAdid"]]]
-                    ]
+            "local"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getLocalId",
+                "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAdid"]]],
+            "skill"=>["serviceMethod"=>"getAllByService"],
+            "affectations"=>["serviceMethod"=>"getAllByService","completeMethods"=>[
+                "user"=>["objectType"=>"complete","serviceMethod"=>"getOneByAffectation"]
+            ]],
+            "baskets"=>[
+                "serviceMethod"=>"getAllByService",
+                "completeMethods"=>[
+                    "company"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getCompanyId",
+                        "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
+                    "user"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getUserId",
+                        "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
+                    "external"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getExternalId",
+                        "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
+                    "local"=>["objectType"=>"complete","serviceMethod"=>"getOneByBasket",
+                        "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAdid"]]]
                 ]
+            ]
             ];
 
-            $courses=parent::decorateModel($courses,$arrMethods);
+            if(isset($_GET["completeData"])){
+                $courses=parent::decorateModel($courses,$arrMethods);
+            }
 
             if (count($courses) == 0) {
                 http_response_code(204);
@@ -80,7 +84,7 @@ class CoursesController extends Controller{
                 if($urlArray[1]=="pathFinding"&&$_GET["basketAddressIds"]){
 
                     $tspManager=TspBranchBound::getInstance();
-                    $addressManager=AddressService::getInstance();
+                    $addressManager=services\AddressService::getInstance();
 
                     $arrBasketAddressIds=explode(",",$_GET["basketAddressIds"]);
 
@@ -107,13 +111,12 @@ class CoursesController extends Controller{
             }
         }
 
-
         //create course
         if ( count($urlArray) == 1 && $method == 'POST') {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-            $newCourse = CourseService::getInstance()->create(new Service($obj));
+            $newCourse = services\CourseService::getInstance()->create(new Service($obj));
             if($newCourse) {
                 http_response_code(201);
                 return $newCourse;
@@ -126,7 +129,7 @@ class CoursesController extends Controller{
         // get One by Id
         if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
 
-            $course = CourseService::getInstance()->getOne($urlArray[1]);
+            $course = services\CourseService::getInstance()->getOne($urlArray[1]);
             if($course) {
                 return $course;
 
@@ -144,7 +147,7 @@ class CoursesController extends Controller{
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-            $newCourse = CourseService::getInstance()->update(new Service($obj),$urlArray[1]);
+            $newCourse = services\CourseService::getInstance()->update(new Service($obj),$urlArray[1]);
             if($newCourse) {
                 http_response_code(201);
                 return $newCourse;

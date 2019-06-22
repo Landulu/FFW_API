@@ -1,10 +1,12 @@
 <?php
 
+namespace services;
 require_once __DIR__.'/../models/Vehicle.php';
 require_once __DIR__.'/../utils/database/DatabaseManager.php';
+require_once "Service.php";
 
 
-class VehicleService {
+class VehicleService extends Service {
     private static $instance;
 
     private function __construct(){}
@@ -17,8 +19,8 @@ class VehicleService {
     }
 
 
-    public function create(Vehicle $vehicle): ?Vehicle {
-        $manager = DatabaseManager::getManager();
+    public function create(\Vehicle $vehicle): ?\Vehicle {
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
         "INSERT INTO
         vehicle (volume, insurance_date, last_revision, description)
@@ -36,7 +38,7 @@ class VehicleService {
     }
 
     public function getAll($offset,$limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
         "SELECT 
         v_id as vid, 
@@ -50,14 +52,48 @@ class VehicleService {
         $vehicles = [];
 
         foreach ($rows as $row) {
-            $vehicles[] = new Vehicle($row);
+            $vehicles[] = new \Vehicle($row);
+        }
+
+        return $vehicles;
+    }
+
+    public function getAllFiltered($offset,$limit,$params) {
+
+        $manager = \DatabaseManager::getManager();
+
+        $finalSql=null;
+
+        if(isset($params['description'])){ $sqlArr["descriptionSql"] = " description LIKE '%{$params["description"]}%'"; }
+        if(isset($params['volume'])){ $sqlArr["volumeSql"] = " volume = '{$params["volume"]}'"; }
+        if(isset($params['insuranceDate'])){ $sqlArr["insuranceDateSql"] = " insurance_date = '{$params["insuranceDate"]}'"; }
+        if(isset($params['lastRevision'])){ $sqlArr["lastRevisionSql"] = " last_revision = '{$params["lastRevision"]}'"; }
+
+        $finalSql=parent::getAndSql($sqlArr);
+
+        $rows = $manager->getAll(
+            "SELECT 
+        v_id as vid, 
+        volume, 
+        insurance_date as insuranceDate,
+        last_revision as lastRevision,
+        description 
+        FROM vehicle
+        WHERE $finalSql
+        LIMIT $offset, $limit"
+        );
+
+        $vehicles = [];
+
+        foreach ($rows as $row) {
+            $vehicles[] = new \Vehicle($row);
         }
 
         return $vehicles;
     }
 
     public function getOne($vid) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $vehicle = $manager->getOne(
             "SELECT 
         v_id as vid, 
@@ -70,7 +106,7 @@ class VehicleService {
         );
 
         if($vehicle){
-            return new Vehicle($vehicle);
+            return new \Vehicle($vehicle);
         }
         return null;
     }
