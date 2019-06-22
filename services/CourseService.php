@@ -188,7 +188,7 @@ class CourseService extends Service {
             [$serviceId]);
 
         if($service){
-            return new Service($service);
+            return new \Service($service);
         }
     }
     //Fin modification

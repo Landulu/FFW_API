@@ -160,11 +160,11 @@ class CoursesController extends Controller{
         // /courses/{id}/reporting
         if ( count($urlArray) == 3 && ctype_digit($urlArray[1]) && $urlArray[2] == "reporting" && $method == 'GET') {
 
-            $course = CourseService::getInstance()->getOne($urlArray[1]);
+            $course = services\CourseService::getInstance()->getOne($urlArray[1]);
             if($course) {
 
-                $affectations = AffectationService::getInstance()->getAllByService($urlArray[1],0, 20 );
-                $baskets = BasketService::getInstance()->getAllByService($urlArray[1], 0, 30);  // TODO: WE NEED FULL BASKETS
+                $affectations = services\AffectationService::getInstance()->getAllByService($urlArray[1],0, 20 );
+                $baskets = services\BasketService::getInstance()->getAllByService($urlArray[1], 0, 30);  // TODO: WE NEED FULL BASKETS
 
                 $methodsArr=[
                     "company"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getCompanyId",
@@ -184,7 +184,7 @@ class CoursesController extends Controller{
                     $workers = [];
 
                     for ($i = 0; $i < count($affectations); $i++) {
-                        array_push($workers, UserService::getInstance()->getOne($affectations[$i]->uid));
+                        array_push($workers, services\UserService::getInstance()->getOne($affectations[$i]->getUid()));
                     }
 
 
