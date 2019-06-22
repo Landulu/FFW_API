@@ -19,6 +19,7 @@ class CompleteService extends Model implements JsonSerializable{
     private $status;
     private $isPremium;
     private $serviceTime;
+    private $duration;
     private $serviceEnd;
     private $routeState;
     private $vehicleId;
@@ -42,6 +43,7 @@ class CompleteService extends Model implements JsonSerializable{
         $this->status = isset($fields['status']) ? $fields['status'] : null;
         $this->isPremium = isset($fields['isPremium']) ? $fields['isPremium'] : null;
         $this->serviceTime = isset($fields['serviceTime']) ? $fields['serviceTime'] : null;
+        $this->duration = isset($fields['duration']) ? $fields['duration'] : null;
         $this->serviceEnd = isset($fields['serviceEnd']) ? $fields['serviceEnd'] : null;
         $this->routeState = isset($fields['routeState']) ? $fields['routeState']: null;
         $this->vehicleId = isset($fields['vehicleId']) ? $fields['vehicleId'] : null;
@@ -213,6 +215,23 @@ class CompleteService extends Model implements JsonSerializable{
     {
         $this->serviceTime = $serviceTime;
     }
+
+    /**
+     * @return mixed|null
+     */
+    public function getDuration()
+    {
+        return $this->duration;
+    }
+
+    /**
+     * @param mixed|null $duration
+     */
+    public function setDuration($duration): void
+    {
+        $this->duration = $duration;
+    }
+
 
     /**
      * @return mixed|null
