@@ -163,6 +163,19 @@ class CoursesController extends Controller{
                 $affectations = AffectationService::getInstance()->getAllByService($urlArray[1],0, 20 );
                 $baskets = BasketService::getInstance()->getAllByService($urlArray[1], 0, 30);  // TODO: WE NEED FULL BASKETS
 
+                $methodsArr=[
+                    "company"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getCompanyId",
+                        "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
+                    "user"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getUserId",
+                        "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
+                    "external"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getExternalId",
+                        "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]]
+                ];
+
+                $completeBaskets =  parent::decorateModel($baskets,$methodsArr);
+
+
+
                 if ($affectations && $baskets) {
 
                     $workers = [];
