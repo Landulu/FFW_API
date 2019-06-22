@@ -161,11 +161,11 @@ class CoursesController extends Controller{
         // /courses/{id}/reporting
         if ( count($urlArray) == 3 && ctype_digit($urlArray[1]) && $urlArray[2] == "reporting" && $method == 'GET') {
 
-            $course = CourseService::getInstance()->getOne($urlArray[1]);
+            $course = services\CourseService::getInstance()->getOne($urlArray[1]);
             if($course) {
 
-                $affectations = AffectationService::getInstance()->getAllByService($urlArray[1],0, 20 );
-                $baskets = BasketService::getInstance()->getAllByService($urlArray[1], 0, 30);  // TODO: WE NEED FULL BASKETS
+                $affectations = services\AffectationService::getInstance()->getAllByService($urlArray[1],0, 20 );
+                $baskets = services\BasketService::getInstance()->getAllByService($urlArray[1], 0, 30);  // TODO: WE NEED FULL BASKETS
 
                 $methodsArr=[
                     "company"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getCompanyId",
@@ -180,12 +180,12 @@ class CoursesController extends Controller{
 
 
 
-                if ($affectations && $baskets) {
+                if ($affectations && $completeBaskets) {
 
                     $workers = [];
 
                     for ($i = 0; $i < count($affectations); $i++) {
-                        array_push($workers, UserService::getInstance()->getOne($affectations[$i]->uid));
+                        array_push($workers, services\UserService::getInstance()->getOne($affectations[$i]->getUid()));
                     }
 
 
@@ -198,7 +198,25 @@ class CoursesController extends Controller{
 
                     $workerTable .= '</table>';
 
-                    $addressTable = '<table><tr><th>Employé</th></tr>';
+                    $basketTable = '<table><tr><th>TRAJET</th></tr>';
+                    $basketTable .= '<tr>
+                        <th>Ordre</th>
+                        <th>N° de Panier></th>
+                        <th>Adresse</th>
+                        <th>Contact</th>
+                        <th>Tel</th>
+                        </tr>';
+                    foreach ($completeBaskets as $basket) {
+                        $basketRow = '<tr>
+                            <td>'. $basket->getOrder() . '</td>
+                            <td>'. $basket->getBid() .'</td>
+                            <td>'. $basket->getRole() == 'import' ? $basket->getSrcAddress() : $basket->getDstAddress()  .'</td> 
+                            <td>'. $this->getBasketContact($basket) .'</td>
+                            <td>'. $this->getBasketTelephone($basket) .'</td></tr>';
+                        $basketTable .= $basketRow;
+                    }
+
+                    $basketTable .= '</table>';
 
 
 
@@ -239,6 +257,8 @@ class CoursesController extends Controller{
                     $pdf->AddPage();
 
                     $html = '<h4>Descriptif de route</h4><br><p>'.$course->getName().'</p><p> ('.$course->getServiceTime().')</p>';
+                    $html .= $workerTable;
+                    $html .= $basketTable;
 
                     $pdf->writeHTML($html, true, false, true, false, '');
     // add a page
@@ -258,6 +278,29 @@ class CoursesController extends Controller{
                 http_response_code(400);
             }
         }
+    }
 
+    private function getBasketContact(CompleteBasket $basket) {
+        if ($basket->getCompanyId() != null) {
+            return $basket->getCompany()->getName();
+        } else if ($basket->getExternalId() != null) {
+            return $basket->getExternal()->getName();
+        } else if ($basket->getUserId() != null) {
+            return $basket->getUser()->getLastname();
+        } else {
+            return 'ERR';
+        }
+    }
+
+    private function getBasketTelephone(CompleteBasket $basket) {
+        if ($basket->getCompanyId() != null) {
+            return $basket->getCompany()->getTel();
+        } else if ($basket->getExternalId() != null) {
+            return $basket->getExternal()->getTel();
+        } else if ($basket->getUserId() != null) {
+            return $basket->getUser()->getTel();
+        } else {
+            return 'ERR';
+        }
     }
 }
