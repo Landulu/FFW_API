@@ -22,14 +22,15 @@ class ServiceService extends Service {
         $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             "INSERT INTO
-        service(name, description, create_time, type, capacity, is_public, service_time, service_end, route_state, vehicle_v_id, status, is_premium, local_lo_id)
-        VALUES (?, ?, Now(), ?, ?, ?, ?, ?, ?, ?, ?,?,?)", [
+        service(name, description, create_time, type, capacity, is_public, service_time,duration, service_end, route_state, vehicle_v_id, status, is_premium, local_lo_id)
+        VALUES (?, ?, Now(), ?, ?, ?, ?, ?, ?, ?, ?,?,?,?)", [
             $service->getName(),
             $service->getDescription(),
             $service->getType(),
             $service->getCapacity(),
             $service->getisPublic(),
             $service->getServiceTime(),
+            $service->getDuration(),
             $service->getServiceEnd(),
             $service->getRouteState(),
             $service->getVehicleId(),
@@ -57,6 +58,7 @@ class ServiceService extends Service {
         capacity,
         is_public as isPublic,
         service_time as serviceTime,
+        duration ,
         service_end as serviceEnd,
         route_state as routeState,
         vehicle_v_id as vehicleId,
@@ -89,6 +91,7 @@ class ServiceService extends Service {
         service.capacity,
         service.is_public as isPublic,
         service.service_time as serviceTime,
+        duration,
         service.service_end as serviceEnd,
         service.route_state as routeState,
         service.vehicle_v_id as vehicleId,
@@ -122,6 +125,7 @@ class ServiceService extends Service {
         service.capacity,
         service.is_public as isPublic,
         service.service_time as serviceTime,
+        duration,
         service.service_end as serviceEnd,
         service.route_state as routeState,
         service.vehicle_v_id as vehicleId,
@@ -155,6 +159,7 @@ class ServiceService extends Service {
         capacity,
         is_public as isPublic,
         service_time as serviceTime,
+        duration ,
         service_end as serviceEnd,
         route_state as routeState,
         vehicle_v_id as vehicleId,
@@ -184,6 +189,7 @@ class ServiceService extends Service {
         capacity = ?,
         is_public  = ?,
         service_time  = ?,
+        duration = ?,
         service_end= ?,
         route_state  = ?,
         vehicle_v_id  = ?,
@@ -198,6 +204,7 @@ class ServiceService extends Service {
             $service->getCapacity(),
             $service->getisPublic(),
             $service->getServiceTime(),
+            $service->getDuration(),
             $service->getServiceEnd(),
             $service->getRouteState(),
             $service->getVehicleId(),
@@ -225,6 +232,7 @@ class ServiceService extends Service {
         service.capacity,
         service.is_public as isPublic,
         service.service_time as serviceTime,
+        duration,
         service.service_end as serviceEnd,
         service.route_state as routeState,
         service.vehicle_v_id as vehicleId,
