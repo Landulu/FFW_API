@@ -351,9 +351,14 @@ class CompleteService extends Model implements JsonSerializable{
     /**
      * @param mixed|null $local
      */
-    public function setLocal($local): void
+    public function setLocal($local=null,$controlFlag=false): void
     {
-        $this->local = $local;
+        if(!$controlFlag){
+            $this->controlSetArr($local,"local",["local"]);
+        }
+        else {
+            $this->local = $local;
+        }
     }
 
 

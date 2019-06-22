@@ -107,6 +107,37 @@ class ServiceService extends Service {
         return $services;
     }
 
+    public function getAllByVehicle($vid, $offset, $limit) {
+        $manager = \DatabaseManager::getManager();
+        $rows = $manager->getAll(
+            "SELECT 
+        service.ser_id as serid,
+        service.name,
+        service.description,
+        service.create_time as createTime,
+        service.type,
+        service.capacity,
+        service.is_public as isPublic,
+        service.service_time as serviceTime,
+        service.route_state as routeState,
+        service.vehicle_v_id as vehicleId,
+        service.status,
+        service.is_premium as isPremium,
+        service.local_lo_id as localId  
+        FROM service WHERE service.vehicle_v_id = ?
+        LIMIT $offset, $limit"
+            ,
+            [$vid]
+        );
+        $services = [];
+
+        foreach ($rows as $row) {
+            $services[] = new \Service($row);
+        }
+
+        return $services;
+    }
+
 
     public function getOne( $serviceId) {
         $manager = \DatabaseManager::getManager();

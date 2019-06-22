@@ -42,7 +42,7 @@ class CoursesController extends Controller{
             $arrMethods=[
             "vehicle"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getVehicleId"],
             "local"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getLocalId",
-                "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
+                "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAdid"]]],
             "skill"=>["serviceMethod"=>"getAllByService"],
             "affectations"=>["serviceMethod"=>"getAllByService","completeMethods"=>[
                 "user"=>["objectType"=>"complete","serviceMethod"=>"getOneByAffectation"]

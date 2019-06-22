@@ -33,19 +33,37 @@ class VehiclesController extends Controller {
         /*
             locals/ (GET)
         */
-        if ( count($urlArray) == 1 && $method == 'GET') {
 
+        if ( count($urlArray) == 1 && $method == 'GET') {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
 
-            $vehicles = services\VehicleService::getInstance()->getAll($offset, $limit);
+            $params = [];
 
-            if($vehicles) {
+            foreach($_GET as $key=>$value){
+                if($key!="offset"&&$key!="limit"&& $key!="completeData"){
+                    $params[$key]=$value;
+                }
+            }
+
+            if (count($params)) {
+                $vehicles = services\VehicleService::getInstance()->getAllFiltered($offset, $limit, $params);
+            } else {
+                $vehicles = services\VehicleService::getInstance()->getAll($offset, $limit);
+            }
+
+            if(sizeof($vehicles)>0){
+                if(isset($_GET["completeData"])){
+                    $methodsArr=["services"=>["serviceMethod"=>"getAllByVehicle"]];
+                    $vehicles=parent::decorateModel($vehicles,$methodsArr);
+                }
                 http_response_code(200);
                 return $vehicles;
-            } else {
+            }
+            else{
                 http_response_code(400);
             }
+            return null;
         }
 
 
