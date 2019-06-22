@@ -106,6 +106,7 @@ class CoursesController extends Controller{
                             $arrBasketOrder[]=$arrBasketAddressIds[$res["path"][$i][0]][0];
                         }
                     }
+                    $arrBasketOrder["cost"]=$res["cost"];
                     return $arrBasketOrder;
                 }
             }
