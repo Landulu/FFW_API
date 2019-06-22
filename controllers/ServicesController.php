@@ -102,11 +102,17 @@ class ServicesController extends Controller {
         }
 
 
-        /*
-            /service/bytype?type=news/
-        */
+        // get One by Id
+        if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
 
-        
+            $service = ServiceService::getInstance()->getOne($urlArray[1]);
+            if($service) {
+                return $service;
+
+            } else {
+                http_response_code(400);
+            }
+        }
 
     }
 

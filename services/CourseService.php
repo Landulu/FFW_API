@@ -191,7 +191,7 @@ class CourseService {
             [$serviceId]);
 
         if($service){
-            return $service;
+            return new Service($service);
         }
     }
     //Fin modification
