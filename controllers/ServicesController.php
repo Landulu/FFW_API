@@ -14,9 +14,9 @@ class ServicesController extends Controller {
     private function __construct(){}
 
 
-    public static function getController(): ServicesController {
+    public static function getController(): self {
         if(!isset(self::$controller)) {
-            self::$controller = new ServicesController();
+            self::$controller = new self();
         }
         return self::$controller;
     }
@@ -104,11 +104,17 @@ class ServicesController extends Controller {
         }
 
 
-        /*
-            /service/bytype?type=news/
-        */
+        // get One by Id
+        if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
 
-        
+            $service = ServiceService::getInstance()->getOne($urlArray[1]);
+            if($service) {
+                return $service;
+
+            } else {
+                http_response_code(400);
+            }
+        }
 
     }
 

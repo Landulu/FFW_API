@@ -55,7 +55,7 @@ class UsersController extends Controller {
             }
 
             if (count($params)) {
-                $users = Userservice::getInstance()->getAllFiltered($offset, $limit, $params);
+                $users = services\UserService::getInstance()->getAllFiltered($offset, $limit, $params);
                 foreach ($users as $key=>$user) {
                     if (isset($params['rights']) && !$this->isRightSet($user->getRights(), $params['rights'])) {
                         unset($users[$key]);
@@ -63,7 +63,7 @@ class UsersController extends Controller {
                 }
                 $users=array_values($users);
             } else {
-                $users = Userservice::getInstance()->getAll($offset, $limit);
+                $users = services\UserService::getInstance()->getAll($offset, $limit);
             }
             if(sizeof($users)>0){
                 http_response_code(200);
@@ -80,12 +80,14 @@ class UsersController extends Controller {
         }
 
 
+
+
         //create users
         if ( count($urlArray) == 1 && $method == 'POST') {
             $json = file_get_contents('php://input'); 
             $obj = json_decode($json, true);
             
-            $newUser = services\UserService::getInstance()->create(new User($obj));
+            $newUser = services\UserService::getInstance()->create(new \User($obj));
             if($newUser) {
                 http_response_code(201);
                 return $newUser;
@@ -120,7 +122,7 @@ class UsersController extends Controller {
             $json = file_get_contents('php://input'); 
             $obj = json_decode($json, true);
             
-            $newUser = services\UserService::getInstance()->update(new User($obj));
+            $newUser = services\UserService::getInstance()->update(new \User($obj));
             if($newUser) {
                 http_response_code(201);
                 return $newUser;
@@ -286,7 +288,7 @@ class UsersController extends Controller {
         /*
         GET: 'users/{int}/affectations'
         */
-        // get companies by userId
+        // get affectations by userId
         if ( count($urlArray) == 3
             && ctype_digit($urlArray[1])
             && $urlArray[2] == 'affectations'
@@ -298,7 +300,11 @@ class UsersController extends Controller {
             $affectations = services\AffectationService::getInstance()->getAllByUser($urlArray[1], $offset, $limit);
 
             if(isset($_GET['completeData'])){
-                $affectations=AffectationController::decorateAffectation($affectations);
+
+                $methodsArr=[
+                    "service"=>["serviceMethod"=>"getOne", "relationIdMethod"=>"getSerid"]
+                ];
+                $affectations = parent::decorateModel($affectations,$methodsArr);
             }
 
             if($affectations) {

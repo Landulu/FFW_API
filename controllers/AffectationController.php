@@ -49,7 +49,7 @@ class AffectationController extends Controller{
             return $affectations;
         }
 
-        //create address
+        //create
         if ( count($urlArray) == 1 && $method == 'POST') {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
@@ -95,19 +95,19 @@ class AffectationController extends Controller{
         }
     }
 
-    public static function decorateAffectation( $affectations){
-
-        $serviceManager= services\ServiceService::getInstance();
-        $affectations=json_decode(json_encode($affectations),true);
-
-        foreach($affectations as $key=>$affectation){
-            $affectation = new CompleteAffectation($affectation);
-            $affectation->setService($serviceManager->getOne($affectation->getSerid()));
-            $affectations[$key]=$affectation;
-        }
-
-        return $affectations;
-    }
+//    public static function decorateAffectation( $affectations){
+//
+//        $serviceManager= services\ServiceService::getInstance();
+//        $affectations=json_decode(json_encode($affectations),true);
+//
+//        foreach($affectations as $key=>$affectation){
+//            $affectation = new CompleteAffectation($affectation);
+//            $affectation->setService($serviceManager->getOne($affectation->getSerid()));
+//            $affectations[$key]=$affectation;
+//        }
+//
+//        return $affectations;
+//    }
 
 
 }

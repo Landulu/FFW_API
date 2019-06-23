@@ -27,12 +27,12 @@ class CommentsController extends Controller {
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
             if(isset($_GET['user_id']) && ctype_digit($_GET['user_id'])){
                 $userId = $_GET['user_id'];
-                $comments = services\CommentsService::getInstance()->getAllByUser($userId, $offset, $limit);
+                $comments = services\CommentService::getInstance()->getAllByUser($userId, $offset, $limit);
             } else if (isset($_GET['service_id']) && ctype_digit($_GET['service_id'])){
                 $serviceId = $_GET['service_id'];
-                $comments = services\CommentsService::getInstance()->getAllByService($serviceId, $offset, $limit);
+                $comments = services\CommentService::getInstance()->getAllByService($serviceId, $offset, $limit);
             } else {
-                $comments = services\CommentsService::getInstance()->getAll($offset, $limit);
+                $comments = services\CommentService::getInstance()->getAll($offset, $limit);
             }
             return $comments;
         }
@@ -43,7 +43,7 @@ class CommentsController extends Controller {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-            $newComments = services\CommentsService::getInstance()->create(new Comments($obj));
+            $newComments = services\CommentService::getInstance()->create(new Comment($obj));
             if($newComments) {
                 http_response_code(201);
                 return $newComments;
@@ -56,7 +56,7 @@ class CommentsController extends Controller {
         // // get One by Id
         // if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
 
-        //     $comments = services\CommentsService::getInstance()->getOne($urlArray[1]);
+        //     $comments = services\CommentService::getInstance()->getOne($urlArray[1]);
         //     if($comments) {
         //         return $comments;
 
