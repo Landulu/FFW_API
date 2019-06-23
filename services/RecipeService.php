@@ -20,7 +20,7 @@ class RecipeService extends Service
     }
 
     public function create(\Recipe $recipe){
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             "INSERT INTO
         recipe (title, content)
@@ -36,7 +36,7 @@ class RecipeService extends Service
     }
 
     public function getOne($id):?\Recipe {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $recipe = $manager->getOne(
             "SELECT 
         recipe.re_id as reid,
@@ -55,7 +55,7 @@ class RecipeService extends Service
     }
 
     public function getAll($offset, $limit) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
             "SELECT 
         re_id as reid,
@@ -73,7 +73,7 @@ class RecipeService extends Service
     }
 
     public function getAllCookableByLocal($loid) {
-        $manager = DatabaseManager::getManager();
+        $manager = \DatabaseManager::getManager();
         $rows = $manager->getAll(
             "select recipe.re_id as reid,
         recipe.title,

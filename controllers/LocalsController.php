@@ -121,6 +121,7 @@ class LocalsController extends Controller {
             $local = services\LocalService::getInstance()->getOne($urlArray[1]);
             if($local) {
                 http_response_code(200);
+                return $local;
             } else {
                 http_response_code(400);
             }
