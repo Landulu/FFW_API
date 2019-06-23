@@ -95,7 +95,11 @@
         public function getOneByUidAndSid(\Favorite $favorite) {
             $manager = \DatabaseManager::getManager();
             $oldFavorite = $manager->getOne(
-                " SELECT *
+                " SELECT 
+                user_u_id as userId,
+                service_ser_id as serviceId,
+                f_id,
+                status
                 FROM favorite
                 WHERE user_u_id = ? AND service_ser_id = ?"
                 , [$favorite->getUserId(), $favorite->getServiceId()]);
