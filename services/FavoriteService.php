@@ -92,7 +92,7 @@
             return NULL;
         }
 
-        public function getOneByUidAndSid(\Favorite $favorite): ?\Favorite {
+        public function getOneByUidAndSid(\Favorite $favorite) {
             $manager = \DatabaseManager::getManager();
             $oldFavorite = $manager->getOne(
                 " SELECT *
@@ -103,8 +103,21 @@
             if($oldFavorite) {
                 return $oldFavorite;
             }
-            return NULL;     
+            return NULL;  
+        }   
 
+    public function update(\Favorite $favorite, $cid) {
+        $manager = \DatabaseManager::getManager();
+        $affectedRows = $manager->exec(
+            "UPDATE favorite
+        SET 
+        status = ?
+        WHERE c_id= ? ", [
+            $service->getStatus(),
+            $cid
+        ]);
+        if ($affectedRows > 0) {
+            return $service;
         }
     }
 
