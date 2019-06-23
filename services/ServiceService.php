@@ -22,14 +22,16 @@ class ServiceService extends Service {
         $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             "INSERT INTO
-        service(name, description, create_time, type, capacity, is_public, service_time, route_state, vehicle_v_id, status, is_premium, local_lo_id)
-        VALUES (?, ?, Now(), ?, ?, ?, ?, ?, ?, ?, ?,?)", [
+        service(name, description, create_time, type, capacity, is_public, service_time,duration, service_end, route_state, vehicle_v_id, status, is_premium, local_lo_id)
+        VALUES (?, ?, Now(), ?, ?, ?, ?, ?, ?, ?, ?,?,?,?)", [
             $service->getName(),
             $service->getDescription(),
             $service->getType(),
             $service->getCapacity(),
             $service->getisPublic(),
             $service->getServiceTime(),
+            $service->getDuration(),
+            $service->getServiceEnd(),
             $service->getRouteState(),
             $service->getVehicleId(),
             $service->getStatus(),
@@ -56,6 +58,8 @@ class ServiceService extends Service {
         capacity,
         is_public as isPublic,
         service_time as serviceTime,
+        duration ,
+        service_end as serviceEnd,
         route_state as routeState,
         vehicle_v_id as vehicleId,
         status,
@@ -87,6 +91,8 @@ class ServiceService extends Service {
         service.capacity,
         service.is_public as isPublic,
         service.service_time as serviceTime,
+        duration,
+        service.service_end as serviceEnd,
         service.route_state as routeState,
         service.vehicle_v_id as vehicleId,
         service.status,
@@ -97,6 +103,39 @@ class ServiceService extends Service {
         LIMIT $offset, $limit"
             ,
             [$uid]
+        );
+        $services = [];
+
+        foreach ($rows as $row) {
+            $services[] = new \Service($row);
+        }
+
+        return $services;
+    }
+
+    public function getAllByVehicle($vid, $offset, $limit) {
+        $manager = \DatabaseManager::getManager();
+        $rows = $manager->getAll(
+            "SELECT 
+        service.ser_id as serid,
+        service.name,
+        service.description,
+        service.create_time as createTime,
+        service.type,
+        service.capacity,
+        service.is_public as isPublic,
+        service.service_time as serviceTime,
+        duration,
+        service.service_end as serviceEnd,
+        service.route_state as routeState,
+        service.vehicle_v_id as vehicleId,
+        service.status,
+        service.is_premium as isPremium,
+        service.local_lo_id as localId  
+        FROM service WHERE service.vehicle_v_id = ?
+        LIMIT $offset, $limit"
+            ,
+            [$vid]
         );
         $services = [];
 
@@ -120,6 +159,8 @@ class ServiceService extends Service {
         capacity,
         is_public as isPublic,
         service_time as serviceTime,
+        duration ,
+        service_end as serviceEnd,
         route_state as routeState,
         vehicle_v_id as vehicleId,
         status,
@@ -148,6 +189,8 @@ class ServiceService extends Service {
         capacity = ?,
         is_public  = ?,
         service_time  = ?,
+        duration = ?,
+        service_end= ?,
         route_state  = ?,
         vehicle_v_id  = ?,
         status = ?,
@@ -161,6 +204,8 @@ class ServiceService extends Service {
             $service->getCapacity(),
             $service->getisPublic(),
             $service->getServiceTime(),
+            $service->getDuration(),
+            $service->getServiceEnd(),
             $service->getRouteState(),
             $service->getVehicleId(),
             $service->getStatus(),
@@ -187,6 +232,8 @@ class ServiceService extends Service {
         service.capacity,
         service.is_public as isPublic,
         service.service_time as serviceTime,
+        duration,
+        service.service_end as serviceEnd,
         service.route_state as routeState,
         service.vehicle_v_id as vehicleId,
         service.status,

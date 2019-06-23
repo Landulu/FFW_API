@@ -14,6 +14,8 @@ class Service extends Model implements JsonSerializable{
     private $status;
     private $isPremium;
     private $serviceTime;
+    private $duration;
+    private $serviceEnd;
     private $routeState;
     private $vehicleId;
     private $localId;
@@ -29,7 +31,9 @@ class Service extends Model implements JsonSerializable{
         $this->isPublic = isset($fields['isPublic']) ? $fields['isPublic'] : null;
         $this->status = isset($fields['status']) ? $fields['status'] : null;
         $this->isPremium = isset($fields['isPremium']) ? $fields['isPremium'] : null;
-        $this->serviceTime = isset($fields['serviceTime']) ? $fields['serviceTime'] : null;
+        $this->serviceTime = isset($fields['serviceTime']) ? $fields['serviceTime'] : "0000-00-00 00:00:00";
+        $this->duration = isset($fields['duration']) ? $fields['duration'] : null;
+        $this->serviceEnd = isset($fields['serviceEnd']) ? $fields['serviceEnd'] : "0000-00-00 00:00:00";
         $this->routeState = isset($fields['routeState']) ? $fields['routeState']: null;
         $this->vehicleId = isset($fields['vehicleId']) ? $fields['vehicleId'] : null;
         $this->localId = isset($fields['localId']) ? $fields['localId'] : null;
@@ -194,6 +198,41 @@ class Service extends Model implements JsonSerializable{
     {
         $this->serviceTime = $serviceTime;
     }
+
+    /**
+     * @return mixed|null
+     */
+    public function getDuration()
+    {
+        return $this->duration;
+    }
+
+    /**
+     * @param mixed|null $duration
+     */
+    public function setDuration($duration): void
+    {
+        $this->duration = $duration;
+    }
+
+
+
+    /**
+     * @return mixed|null
+     */
+    public function getServiceEnd()
+    {
+        return $this->serviceEnd;
+    }
+
+    /**
+     * @param mixed|null $serviceEnd
+     */
+    public function setServiceEnd($serviceEnd): void
+    {
+        $this->serviceEnd = $serviceEnd;
+    }
+
 
     /**
      * @return mixed|null

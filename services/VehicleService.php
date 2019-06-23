@@ -58,6 +58,40 @@ class VehicleService extends Service {
         return $vehicles;
     }
 
+    public function getAllFiltered($offset,$limit,$params) {
+
+        $manager = \DatabaseManager::getManager();
+
+        $finalSql=null;
+
+        if(isset($params['description'])){ $sqlArr["descriptionSql"] = " description LIKE '%{$params["description"]}%'"; }
+        if(isset($params['volume'])){ $sqlArr["volumeSql"] = " volume = '{$params["volume"]}'"; }
+        if(isset($params['insuranceDate'])){ $sqlArr["insuranceDateSql"] = " insurance_date = '{$params["insuranceDate"]}'"; }
+        if(isset($params['lastRevision'])){ $sqlArr["lastRevisionSql"] = " last_revision = '{$params["lastRevision"]}'"; }
+
+        $finalSql=parent::getAndSql($sqlArr);
+
+        $rows = $manager->getAll(
+            "SELECT 
+        v_id as vid, 
+        volume, 
+        insurance_date as insuranceDate,
+        last_revision as lastRevision,
+        description 
+        FROM vehicle
+        WHERE $finalSql
+        LIMIT $offset, $limit"
+        );
+
+        $vehicles = [];
+
+        foreach ($rows as $row) {
+            $vehicles[] = new \Vehicle($row);
+        }
+
+        return $vehicles;
+    }
+
     public function getOne($vid) {
         $manager = \DatabaseManager::getManager();
         $vehicle = $manager->getOne(

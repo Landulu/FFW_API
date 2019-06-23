@@ -80,6 +80,8 @@ class UsersController extends Controller {
         }
 
 
+
+
         //create users
         if ( count($urlArray) == 1 && $method == 'POST') {
             $json = file_get_contents('php://input'); 
@@ -286,7 +288,7 @@ class UsersController extends Controller {
         /*
         GET: 'users/{int}/affectations'
         */
-        // get companies by userId
+        // get affectations by userId
         if ( count($urlArray) == 3
             && ctype_digit($urlArray[1])
             && $urlArray[2] == 'affectations'
@@ -298,7 +300,11 @@ class UsersController extends Controller {
             $affectations = services\AffectationService::getInstance()->getAllByUser($urlArray[1], $offset, $limit);
 
             if(isset($_GET['completeData'])){
-                $affectations=AffectationController::decorateAffectation($affectations);
+
+                $methodsArr=[
+                    "service"=>["serviceMethod"=>"getOne", "relationIdMethod"=>"getSerid"]
+                ];
+                $affectations = parent::decorateModel($affectations,$methodsArr);
             }
 
             if($affectations) {
