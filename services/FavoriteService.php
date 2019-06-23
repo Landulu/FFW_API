@@ -77,7 +77,7 @@ class FavoriteService extends Service {
         return $comments;
     }
 
-    public function update(\Favorite $favorite, $cid): ?\Favorite {
+    public function update(\Favorite $favorite, $cid) {
         $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             "UPDATE favorite
