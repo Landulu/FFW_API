@@ -43,16 +43,24 @@ class FavoriteController extends Controller {
             $oldFavorite = services\FavoriteService::getInstance()->getOneByUidAndSid($newFavorite);
             if($oldFavorite != null){                //si le favori existe déjà on l'update juste
                 $favorite = services\FavoriteService::getInstance()->update($newFavorite, $oldFavorite['f_id']);
+                if (!$favorite){
+                    //le statut du favori n'a pas changé
+                    http_response_code(204);
+                } else {
+                    http_response_code(201);
+                }
+                return $favorite;
             } else {                                 //sinon on le crée
                 $favorite = services\FavoriteService::getInstance()->create($newFavorite);
-            }
-            if($favorite) {
-                http_response_code(201);
+                if($favorite) {
+                    http_response_code(201);
+                } else {
+                    http_response_code(400);
+                }
                 return $favorite;
-            } else {
-                http_response_code(400);
-                return $favorite;
+
             }
+            
         }
 
         // get One by Id
