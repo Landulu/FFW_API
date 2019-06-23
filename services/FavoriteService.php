@@ -42,6 +42,7 @@
             user_u_id as userId,
             service_ser_id as serviceId,
             status
+            f_id 
             from
             ffw.favorite LIMIT $offset, $limit");
             $favorites = [];
