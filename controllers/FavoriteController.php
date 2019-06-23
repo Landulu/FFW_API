@@ -50,7 +50,7 @@ class FavoriteController extends Controller {
                 } else {
                     http_response_code(201);
                 }
-                return $json;
+                return $favorite;
             } else {                                 //sinon on le crée
                 $favorite = services\FavoriteService::getInstance()->create($newFavorite);
                 if($favorite) {
@@ -58,7 +58,7 @@ class FavoriteController extends Controller {
                 } else {
                     http_response_code(204);
                 }
-                return $json;
+                return $favorite;
 
             }
             
