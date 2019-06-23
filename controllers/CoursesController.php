@@ -191,7 +191,7 @@ class CoursesController extends Controller{
                     $workerTable = '<table><tr><th>Employé</th></tr>';
 
                     foreach ($workers as $worker) {
-                        $workerRow = '<tr><td>' . $worker->getFirstname() .  ' ' . $worker->getLastname() . '</td></tr>';
+                        $workerRow = '<tr><td style="font-size: 8px">' . $worker->getFirstname() .  ' ' . $worker->getLastname() . '</td></tr>';
                         $workerTable .= $workerRow;
                     }
 
@@ -199,19 +199,26 @@ class CoursesController extends Controller{
 
                     $basketTable = '<table><tr><th colspan="5">TRAJET</th></tr>';
                     $basketTable .= '<tr>
-                        <th>Ordre</th>
-                        <th>Numero</th>
-                        <th>Adresse</th>
+                        <th width="8%">Ordre</th>
+                        <th width="8%">N</th>
+                        <th  width="40%">Adresse</th>
                         <th>Contact</th>
                         <th>Tel</th>
                         </tr>';
+
+                    usort($completeBaskets, function($a, $b)
+                    {
+                        return $a->getOrder() > $b->getOrder();
+                    });
+
                     foreach ($completeBaskets as $basket) {
+                        $address = $basket->getRole() == 'import' ? $basket->getSrcAddress() : $basket->getDstAddress();
                         $basketRow = '<tr>
-                            <td>'. (string)$basket->getOrder() . '</td>
-                            <td>'. (string)$basket->getBid() .'</td>
-                            <td>'. $basket->getRole() == 'import' ? (string)$basket->getSrcAddress() : (string)$basket->getDstAddress()  .'</td> 
-                            <td>'. (string)$this->getBasketContact($basket) .'</td>
-                            <td>'. (string)$this->getBasketTelephone($basket) .'</td></tr>';
+                            <td style="font-size: 0.5em">' . $basket->getOrder() . '</td>
+                            <td style="font-size: 0.5em">' . $basket->getBid() . '</td>
+                            <td style="font-size: 0.5em">' . $address . '</td>
+                            <td style="font-size: 0.5em">'. (string)$this->getBasketContact($basket) .'</td>
+                            <td style="font-size: 0.5em">'. (string)$this->getBasketTelephone($basket) .'</td></tr>';
                         $basketTable .= $basketRow;
                     }
 
@@ -273,11 +280,14 @@ class CoursesController extends Controller{
     //Close and output PDF document
                     ob_end_clean();
                     $pdf->Output('example_006.pdf', 'I');
+                    return 1;
 
                 }
             } else {
                 http_response_code(400);
             }
+        } else {
+            http_response_code(204);
         }
     }
 
