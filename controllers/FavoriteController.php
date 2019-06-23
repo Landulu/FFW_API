@@ -50,15 +50,15 @@ class FavoriteController extends Controller {
                 } else {
                     http_response_code(201);
                 }
-                return $favorite;
+                return $json;
             } else {                                 //sinon on le crée
                 $favorite = services\FavoriteService::getInstance()->create($newFavorite);
                 if($favorite) {
                     http_response_code(201);
                 } else {
-                    http_response_code(400);
+                    http_response_code(204);
                 }
-                return $favorite;
+                return $json;
 
             }
             
