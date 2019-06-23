@@ -106,8 +106,7 @@ class CoursesController extends Controller{
                             $arrBasketOrder[]=$arrBasketAddressIds[$res["path"][$i][0]][0];
                         }
                     }
-                    $arrBasketOrder["cost"]=$res["cost"];
-                    return $arrBasketOrder;
+                    return array("basketOrder"=>$arrBasketOrder,"duration"=>$res["cost"]);
                 }
             }
         }
@@ -171,7 +170,7 @@ class CoursesController extends Controller{
                     "company"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getCompanyId",
                         "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
                     "user"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getUserId",
-                        "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
+                        "completeMethods"=>["addre  ss"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
                     "external"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getExternalId",
                         "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]]
                 ];

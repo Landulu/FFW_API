@@ -16,7 +16,7 @@ class Product extends Model implements JsonSerializable {
     public function __construct(array $fields) {
         $this->prid = isset($fields['prid']) ? $fields['prid'] : NULL;
         $this->limitDate = isset($fields['limitDate']) ? $fields['limitDate'] : null;
-        $this->state = isset($fields['state'])? $fields['state'] : 'GOOD';
+        $this->state = isset($fields['state'])? $fields['state'] : null;
         $this->quantityUnit = isset($fields['quantityUnit'])? $fields['quantityUnit'] : null;
         $this->weightQuantity = isset($fields['weightQuantity']) ? $fields['weightQuantity'] : null;
         $this->articleId = $fields['articleId'];
