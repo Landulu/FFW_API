@@ -39,14 +39,19 @@ class FavoriteController extends Controller {
         if ( count($urlArray) == 1 && $method == 'POST') {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
-
-            $newFavorite = services\FavoriteService::getInstance()->create(new Favorite($obj));
-            if($newFavorite) {
+            $newFavorite = new Favorite($obj);
+            $oldFavorite = services\FavoriteService::getInstance()->getOneByUidAndSid($newFavorite);
+            if($oldFavorite != null){                //si le favori existe déjà on l'update juste
+                $favorite = services\FavoriteService::getInstance()->update($favorite, $favorite->getId());
+            } else {                                 //sinon on le crée
+                $favorite = services\FavoriteService::getInstance()->create($newFavorite);
+            }
+            if($favorite) {
                 http_response_code(201);
-                return $newFavorite;
+                return $favorite;
             } else {
-                return $newFavorite;
                 http_response_code(400);
+                return $favorite;
             }
         }
 

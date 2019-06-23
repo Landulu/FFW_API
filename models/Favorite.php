@@ -3,6 +3,7 @@
 require_once("Model.php");
 
 class Favorite extends Model implements JsonSerializable{
+    private $id;
     private $serviceId;
     private $userId;
     private $status;
@@ -14,6 +15,7 @@ class Favorite extends Model implements JsonSerializable{
         $this->serviceId = $fields['serviceId'];
         $this->userId = $fields['userId'];
         $this->status = $fields['status'];
+        $this->id = isset($fields['f_id'])?$fields['f_id']:NULL;
     }
 
     public function getServiceId() {
@@ -25,6 +27,9 @@ class Favorite extends Model implements JsonSerializable{
     public function getStatus() {
         return $this->status;
     }
+    public function getId(){
+        return $this->id;
+    }
 
     public function setServiceId($serid){
         $this->cid = $serid;
@@ -34,6 +39,9 @@ class Favorite extends Model implements JsonSerializable{
     }
     public function setStatus($status){
         $this->status = $status;
+    }
+    public function setId($id){
+        $this->id = $id;
     }
 
 
