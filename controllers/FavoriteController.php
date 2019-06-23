@@ -42,7 +42,7 @@ class FavoriteController extends Controller {
             $newFavorite = new Favorite($obj);
             $oldFavorite = services\FavoriteService::getInstance()->getOneByUidAndSid($newFavorite);
             if($oldFavorite != null){                //si le favori existe déjà on l'update juste
-                $favorite = services\FavoriteService::getInstance()->update($favorite, $favorite->getId());
+                $favorite = services\FavoriteService::getInstance()->update($newFavorite, $oldFavorite->getId());
             } else {                                 //sinon on le crée
                 $favorite = services\FavoriteService::getInstance()->create($newFavorite);
             }
