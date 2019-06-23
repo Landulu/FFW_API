@@ -147,7 +147,7 @@ class LocalsController extends Controller {
         }
 
 
-        // get room by local Id
+        // get recipes by local Id
         // locals/{loid}/recipes
 
         if ( count($urlArray) == 3
@@ -157,11 +157,11 @@ class LocalsController extends Controller {
 
 
             $recipes = services\RecipeService::getInstance()->getAllCookableByLocal($urlArray[1]);
-            if($recipes) {
+            if(count($recipes) > 0) {
                 http_response_code(200);
                 return $recipes;
             } else {
-                http_response_code(400);
+                http_response_code(204);
             }
 
         }
