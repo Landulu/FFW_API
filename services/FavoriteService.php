@@ -92,7 +92,7 @@
             return NULL;
         }
 
-        public function getOneByUidAndSid(\Favorite $favorite): ?\Favorite {
+        public function getOneByUidAndSid(\Favorite $favorite) {
             $manager = \DatabaseManager::getManager();
             $oldFavorite = $manager->getOne(
                 " SELECT *
@@ -103,9 +103,9 @@
             if($oldFavorite) {
                 return $oldFavorite;
             }
-            return NULL;     
+            return NULL;  
+        }   
 
-        }
     }
 
 ?>
