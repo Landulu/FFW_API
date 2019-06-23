@@ -40,7 +40,7 @@ class FavoriteController extends Controller {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
             $newFavorite = new Favorite($obj);
-            $oldFavorite = services\FavoriteService::getInstance()->getOneByUidAndSid($newFavorite);
+            $oldFavorite = new Favorite(services\FavoriteService::getInstance()->getOneByUidAndSid($newFavorite));
             if($oldFavorite != null){                //si le favori existe déjà on l'update juste
                 $favorite = services\FavoriteService::getInstance()->update($newFavorite, $oldFavorite->getId());
             } else {                                 //sinon on le crée
