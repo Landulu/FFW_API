@@ -10,10 +10,10 @@ class Vehicle extends Model implements JsonSerializable {
 
     public function __construct(array $fields){
         $this->vid = isset($fields['vid']) ? $fields['vid'] : null;
-        $this->volume = $fields['volume'];
-        $this->insuranceDate = $fields['insuranceDate'];
-        $this->lastRevision = $fields['lastRevision'];
-        $this->description = $fields['description'];
+        $this->volume = isset($fields['volume'])?$fields['volume'] : NULL;
+        $this->insuranceDate = isset($fields['insuranceDate'])?$fields['insuranceDate'] : NULL;
+        $this->lastRevision = isset($fields['lastRevision'])?$fields['lastRevision'] : NULL;
+        $this->description = isset($fields['description'])?$fields['description'] : NULL;
     }
 
     /**
