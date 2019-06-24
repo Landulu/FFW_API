@@ -198,7 +198,7 @@ class CourseService extends Service {
     }
     //Fin modification
 
-    public function update(\Service $service, $serid): ?\Service {
+    public function update(\Service $service): ?\Service {
         $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             "UPDATE service
@@ -231,7 +231,7 @@ class CourseService extends Service {
             $service->getStatus(),
             $service->getisPremium(),
             $service->getLocalId(),
-            $serid
+            $service->getSerid()
         ]);
         if ($affectedRows > 0) {
             return $service;

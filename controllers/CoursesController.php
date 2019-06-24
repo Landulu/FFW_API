@@ -5,7 +5,7 @@ include_once __DIR__ . '/../services/CourseService.php';
 include_once __DIR__ . '/../services/AddressService.php';
 include_once __DIR__ . '/../services/BasketService.php';
 include_once __DIR__ . '/../utils/pathfinding/TspBranchBound.php';
-include_once __DIR__ . '/../utils/reporting/tcpdf.php';
+include_once __DIR__ . '/../models/CompleteService.php';
 require_once("Controller.php");
 
 
@@ -143,13 +143,46 @@ class CoursesController extends Controller{
         /*
             /courses/{id}
         */
-        if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'PUT') {
+        if ( count($urlArray) == 1 && $method == 'PUT') {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-            $newCourse = services\CourseService::getInstance()->update(new Service($obj),$urlArray[1]);
+            if(isset($_GET["completeData"])){
+                $service=new CompleteService($obj);
+            }
+            else{
+                $service=new Service($obj);
+            }
+            return var_dump($service);
+            $newCourse = services\CourseService::getInstance()->update($service);
+
             if($newCourse) {
                 http_response_code(201);
+                if(isset($_GET["completeData"])){
+                    $arrMethods=[
+                        "vehicle"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getVehicleId"],
+                        "local"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getLocalId",
+                            "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAdid"]]],
+                        "skill"=>["serviceMethod"=>"getAllByService"],
+                        "affectations"=>["serviceMethod"=>"getAllByService","completeMethods"=>[
+                            "user"=>["objectType"=>"complete","serviceMethod"=>"getOneByAffectation"]
+                        ]],
+                        "baskets"=>[
+                            "serviceMethod"=>"getAllByService",
+                            "completeMethods"=>[
+                                "company"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getCompanyId",
+                                    "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
+                                "user"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getUserId",
+                                    "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
+                                "external"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getExternalId",
+                                    "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
+                                "local"=>["objectType"=>"complete","serviceMethod"=>"getOneByBasket",
+                                    "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAdid"]]]
+                            ]
+                        ]
+                    ];
+                    $newCourse=parent::decorateModel($newCourse,$arrMethods);
+                }
                 return $newCourse;
             } else {
                 http_response_code(400);
