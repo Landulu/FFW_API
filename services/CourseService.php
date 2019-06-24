@@ -7,7 +7,7 @@
  */
 namespace services;
 require_once __DIR__.'/../models/Service.php';
-require_once __DIR__.'/../utils/database/\DatabaseManager.php';
+require_once __DIR__.'/../utils/database/DatabaseManager.php';
 require_once "Service.php";
 
 
@@ -193,7 +193,7 @@ class CourseService extends Service {
             [$serviceId]);
 
         if($service){
-            return new Service($service);
+            return new \Service($service);
         }
     }
     //Fin modification
