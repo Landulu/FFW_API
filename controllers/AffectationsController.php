@@ -11,7 +11,7 @@ include_once 'models/CompleteAffectation.php';
 include_once 'services/AffectationService.php';
 require_once("Controller.php");
 
-class AffectationController extends Controller{
+class AffectationsController extends Controller{
 
 
     private static $controller;
@@ -21,9 +21,9 @@ class AffectationController extends Controller{
     private function __construct(){}
 
     
-    public static function getController(): AffectationController {
+    public static function getController(): AffectationsController {
         if(!isset(self::$controller)) {
-            self::$controller = new AffectationController();
+            self::$controller = new AffectationsController();
         }
         return self::$controller;
     }

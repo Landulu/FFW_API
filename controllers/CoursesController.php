@@ -106,8 +106,7 @@ class CoursesController extends Controller{
                             $arrBasketOrder[$i]=$arrBasketAddressIds[$res["path"][$i][0]][0];
                         }
                     }
-                    $arrBasketOrder['cost'] = $res['cost'];
-                    return $arrBasketOrder;
+                    return array("basketOrder"=>    $arrBasketOrder,"duration"=> $res['cost']);
                 }
             }
         }
@@ -154,7 +153,6 @@ class CoursesController extends Controller{
             else{
                 $service=new Service($obj);
             }
-            return var_dump($service);
             $newCourse = services\CourseService::getInstance()->update($service);
 
             if($newCourse) {

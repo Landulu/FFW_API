@@ -33,6 +33,7 @@
 "refused"
 "canceled"
 "affected"
+"transit"
 "delivered"
 
 
