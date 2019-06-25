@@ -22,7 +22,20 @@ class FavoriteController extends Controller {
         /*
             /favorite
         */
-        if ( count($urlArray) == 1 && $method == 'GET') {
+
+         //get one by status, service id and user id
+         if(count($urlArray) == 1 && $method == 'GET' && isset($_GET['service_id']) && isset($_GET['user_id']) && isset($_GET['status'])){
+            $obj['serviceId'] = $_GET['service_id'];
+            $obj['userId'] = $_GET['user_id'];
+            $obj['status'] = $_GET['status'];
+            $newFavorite = new Favorite($obj);
+            $favorite = services\FavoriteService::getInstance()->getOneByUidAndSid($newFavorite);
+            if($favorite != null && $favorite['status'] == $_GET['status']){
+                return $favorite;
+            }
+        }
+
+        else if ( count($urlArray) == 1 && $method == 'GET') {
             $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 20;
             if(isset($_GET['user_id']) && ctype_digit($_GET['user_id'])){
@@ -41,7 +54,6 @@ class FavoriteController extends Controller {
             $obj['userId'] = $_GET['user_id'];
             $obj['status'] = $_GET['status'];
             $newFavorite = new Favorite($obj);
-            var_dump($newFavorite);
             $oldFavorite = services\FavoriteService::getInstance()->getOneByUidAndSid($newFavorite);
             if($oldFavorite != null){                //si le favori existe déjà on l'update juste
                 $newFavorite->setId($oldFavorite['f_id']);
@@ -65,6 +77,8 @@ class FavoriteController extends Controller {
             }
             
         }
+
+       
 
         // get One by Id
         if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'GET') {
