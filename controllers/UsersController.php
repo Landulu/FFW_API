@@ -333,8 +333,6 @@ class UsersController extends Controller {
                     if( password_verify($userPwd, $completeUser['password'])){
                         return $completeUser;
                     } else {
-                        return $completeUser;
-
                         http_response_code(403);
                     }
                 } else {
