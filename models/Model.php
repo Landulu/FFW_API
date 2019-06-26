@@ -17,9 +17,8 @@ abstract class Model implements JsonSerializable
         foreach($controlArgNameArr as $controlArgName){
             if($controlArgName==$argName){
                 if(is_array($arg)){
-                    $arg=$arg[0];
+                    $arg=$arg[array_keys($arg)[0]];
                 }
-
                 $this->{'set'.$argName}($arg,true);
                 return null;
             }
