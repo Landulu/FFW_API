@@ -3,8 +3,6 @@
 ini_set('display_errors', 1);
 
 header('Content-Type: application/json; charset=utf-8');
-
-
 include_once 'controllers/AppController.php';
 include_once 'utils/curl/CurlManager.php';
 
