@@ -5,7 +5,7 @@ include_once __DIR__ . '/../services/CourseService.php';
 include_once __DIR__ . '/../services/AddressService.php';
 include_once __DIR__ . '/../services/BasketService.php';
 include_once __DIR__ . '/../utils/pathfinding/TspBranchBound.php';
-include_once __DIR__ . '/../utils/reporting/tcpdf.php';
+include_once __DIR__ . '/../models/CompleteService.php';
 require_once("Controller.php");
 
 
@@ -103,10 +103,10 @@ class CoursesController extends Controller{
 
                     for($i=0; $i<count($res["path"]); $i++) {
                         if(count($arrBasketAddressIds[$res["path"][$i][0]])==2){
-                            $arrBasketOrder[]=$arrBasketAddressIds[$res["path"][$i][0]][0];
+                            $arrBasketOrder[$i]=$arrBasketAddressIds[$res["path"][$i][0]][0];
                         }
                     }
-                    return array("basketOrder"=>$arrBasketOrder,"duration"=>$res["cost"]);
+                    return array("basketOrder"=>    $arrBasketOrder,"duration"=> $res['cost']);
                 }
             }
         }
@@ -143,13 +143,45 @@ class CoursesController extends Controller{
         /*
             /courses/{id}
         */
-        if ( count($urlArray) == 2 && ctype_digit($urlArray[1]) && $method == 'PUT') {
+        if ( count($urlArray) == 1 && $method == 'PUT') {
             $json = file_get_contents('php://input');
             $obj = json_decode($json, true);
 
-            $newCourse = services\CourseService::getInstance()->update(new Service($obj),$urlArray[1]);
+            if(isset($_GET["completeData"])){
+                $service=new CompleteService($obj);
+            }
+            else{
+                $service=new Service($obj);
+            }
+            $newCourse = services\CourseService::getInstance()->update($service);
+
             if($newCourse) {
                 http_response_code(201);
+                if(isset($_GET["completeData"])){
+                    $arrMethods=[
+                        "vehicle"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getVehicleId"],
+                        "local"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getLocalId",
+                            "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAdid"]]],
+                        "skill"=>["serviceMethod"=>"getAllByService"],
+                        "affectations"=>["serviceMethod"=>"getAllByService","completeMethods"=>[
+                            "user"=>["objectType"=>"complete","serviceMethod"=>"getOneByAffectation"]
+                        ]],
+                        "baskets"=>[
+                            "serviceMethod"=>"getAllByService",
+                            "completeMethods"=>[
+                                "company"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getCompanyId",
+                                    "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
+                                "user"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getUserId",
+                                    "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
+                                "external"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getExternalId",
+                                    "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
+                                "local"=>["objectType"=>"complete","serviceMethod"=>"getOneByBasket",
+                                    "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAdid"]]]
+                            ]
+                        ]
+                    ];
+                    $newCourse=parent::decorateModel($newCourse,$arrMethods);
+                }
                 return $newCourse;
             } else {
                 http_response_code(400);
@@ -160,11 +192,11 @@ class CoursesController extends Controller{
         // /courses/{id}/reporting
         if ( count($urlArray) == 3 && ctype_digit($urlArray[1]) && $urlArray[2] == "reporting" && $method == 'GET') {
 
-            $course = CourseService::getInstance()->getOne($urlArray[1]);
+            $course = services\CourseService::getInstance()->getOne($urlArray[1]);
             if($course) {
 
-                $affectations = AffectationService::getInstance()->getAllByService($urlArray[1],0, 20 );
-                $baskets = BasketService::getInstance()->getAllByService($urlArray[1], 0, 30);  // TODO: WE NEED FULL BASKETS
+                $affectations = services\AffectationService::getInstance()->getAllByService($urlArray[1],0, 20 );
+                $baskets = services\BasketService::getInstance()->getAllByService($urlArray[1], 0, 30);  // TODO: WE NEED FULL BASKETS
 
                 $methodsArr=[
                     "company"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getCompanyId",
@@ -179,25 +211,50 @@ class CoursesController extends Controller{
 
 
 
-                if ($affectations && $baskets) {
+                if ($affectations && $completeBaskets) {
 
                     $workers = [];
 
                     for ($i = 0; $i < count($affectations); $i++) {
-                        array_push($workers, UserService::getInstance()->getOne($affectations[$i]->uid));
+                        array_push($workers, services\UserService::getInstance()->getOne($affectations[$i]->getUid()));
                     }
 
 
                     $workerTable = '<table><tr><th>Employé</th></tr>';
 
                     foreach ($workers as $worker) {
-                        $workerRow = '<tr><td>' . $worker->getFirstname() .  ' ' . $worker->getLastname() . '</td></tr>';
+                        $workerRow = '<tr><td style="font-size: 8px">' . $worker->getFirstname() .  ' ' . $worker->getLastname() . '</td></tr>';
                         $workerTable .= $workerRow;
                     }
 
                     $workerTable .= '</table>';
 
-                    $addressTable = '<table><tr><th>Employé</th></tr>';
+                    $basketTable = '<table><tr><th colspan="5">TRAJET</th></tr>';
+                    $basketTable .= '<tr>
+                        <th width="8%">Ordre</th>
+                        <th width="8%">N</th>
+                        <th  width="40%">Adresse</th>
+                        <th>Contact</th>
+                        <th>Tel</th>
+                        </tr>';
+
+                    usort($completeBaskets, function($a, $b)
+                    {
+                        return $a->getOrder() > $b->getOrder();
+                    });
+
+                    foreach ($completeBaskets as $basket) {
+                        $address = $basket->getRole() == 'import' ? $basket->getSrcAddress() : $basket->getDstAddress();
+                        $basketRow = '<tr>
+                            <td style="font-size: 0.5em">' . $basket->getOrder() . '</td>
+                            <td style="font-size: 0.5em">' . $basket->getBid() . '</td>
+                            <td style="font-size: 0.5em">' . $address . '</td>
+                            <td style="font-size: 0.5em">'. (string)$this->getBasketContact($basket) .'</td>
+                            <td style="font-size: 0.5em">'. (string)$this->getBasketTelephone($basket) .'</td></tr>';
+                        $basketTable .= $basketRow;
+                    }
+
+                    $basketTable .= '</table>';
 
 
 
@@ -237,7 +294,10 @@ class CoursesController extends Controller{
     // add a page
                     $pdf->AddPage();
 
-                    $html = '<h4>Descriptif de route</h4><br><p>'.$course->getName().'</p><p> ('.$course->getServiceTime().')</p>';
+                    $html = '<h4>Descriptif de route</h4><br><p>'.$course->getName().'</p><p> ('.(string)$course->getServiceTime().')</p>';
+                    $html .= $workerTable;
+                    $html .= '<br><br>';
+                    $html .= $basketTable;
 
                     $pdf->writeHTML($html, true, false, true, false, '');
     // add a page
@@ -250,13 +310,40 @@ class CoursesController extends Controller{
     // reset pointer to the last page
                     $pdf->lastPage();
     //Close and output PDF document
+                    ob_end_clean();
                     $pdf->Output('example_006.pdf', 'I');
+                    return 1;
 
                 }
             } else {
                 http_response_code(400);
             }
+        } else {
+            http_response_code(204);
         }
+    }
 
+    private function getBasketContact(CompleteBasket $basket) {
+        if ($basket->getCompanyId() != null) {
+            return $basket->getCompany()->getName();
+        } else if ($basket->getExternalId() != null) {
+            return $basket->getExternal()->getName();
+        } else if ($basket->getUserId() != null) {
+            return $basket->getUser()->getLastname();
+        } else {
+            return 'ERR';
+        }
+    }
+
+    private function getBasketTelephone(CompleteBasket $basket) {
+        if ($basket->getCompanyId() != null) {
+            return $basket->getCompany()->getTel();
+        } else if ($basket->getExternalId() != null) {
+            return $basket->getExternal()->getTel();
+        } else if ($basket->getUserId() != null) {
+            return $basket->getUser()->getTel();
+        } else {
+            return 'ERR';
+        }
     }
 }

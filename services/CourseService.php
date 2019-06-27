@@ -7,7 +7,7 @@
  */
 namespace services;
 require_once __DIR__.'/../models/Service.php';
-require_once __DIR__.'/../utils/database/\DatabaseManager.php';
+require_once __DIR__.'/../utils/database/DatabaseManager.php';
 require_once "Service.php";
 
 
@@ -193,12 +193,12 @@ class CourseService extends Service {
             [$serviceId]);
 
         if($service){
-            return new Service($service);
+            return new \Service($service);
         }
     }
     //Fin modification
 
-    public function update(\Service $service, $serid): ?\Service {
+    public function update(\Service $service): ?\Service {
         $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             "UPDATE service
@@ -231,7 +231,7 @@ class CourseService extends Service {
             $service->getStatus(),
             $service->getisPremium(),
             $service->getLocalId(),
-            $serid
+            $service->getSerid()
         ]);
         if ($affectedRows > 0) {
             return $service;

@@ -11,7 +11,7 @@ include_once 'models/CompleteAffectation.php';
 include_once 'services/AffectationService.php';
 require_once("Controller.php");
 
-class AffectationController extends Controller{
+class AffectationsController extends Controller{
 
 
     private static $controller;
@@ -21,9 +21,9 @@ class AffectationController extends Controller{
     private function __construct(){}
 
     
-    public static function getController(): AffectationController {
+    public static function getController(): AffectationsController {
         if(!isset(self::$controller)) {
-            self::$controller = new AffectationController();
+            self::$controller = new AffectationsController();
         }
         return self::$controller;
     }
@@ -63,6 +63,18 @@ class AffectationController extends Controller{
             }
         }
 
+        if ( count($urlArray) == 1 && $method == 'PUT') {
+            $json = file_get_contents('php://input');
+            $obj = json_decode($json, true);
+
+            $affectation = services\AffectationService::getInstance()->update(new Affectation($obj));
+            if($affectation) {
+                http_response_code(201);
+                return $affectation;
+            } else {
+                http_response_code(400);
+            }
+        }
         /*
         PUT: 'address/{int}'
         */

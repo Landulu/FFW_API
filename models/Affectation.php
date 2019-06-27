@@ -4,13 +4,6 @@ require_once ("Model.php");
 
 class Affectation extends Model implements JsonSerializable{
 
-    private $affid;
-    private $role;
-    private $start;
-    private $end;
-    private $uid;
-    private $serid;
-    private $skid;
 
 
     /**
@@ -21,8 +14,8 @@ class Affectation extends Model implements JsonSerializable{
     {
         $this->affid = isset($fields['affid'])?$fields['affid']:NULL;
         $this->role = isset($fields['role'])?$fields['role']:NULL;
-        $this->start = isset($fields['start'])?$fields['start']:NULL;
-        $this->end = isset($fields['end'])?$fields['end']:NULL;
+        $this->start = isset($fields['start'])?$fields['start']:"0000-00-00 00:00:00";
+        $this->end = isset($fields['end'])?$fields['end']:"0000-00-00 00:00:00";
         $this->uid = isset($fields['uid'])?$fields['uid']:NULL;
         $this->serid = isset($fields['serid'])?$fields['serid']:NULL;
         $this->skid = isset($fields['skid'])?$fields['skid']:NULL;
