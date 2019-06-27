@@ -5,6 +5,7 @@ include_once __DIR__ . '/../services/CourseService.php';
 include_once __DIR__ . '/../services/AddressService.php';
 include_once __DIR__ . '/../services/BasketService.php';
 include_once __DIR__ . '/../utils/pathfinding/TspBranchBound.php';
+include_once __DIR__ . '/../utils/reporting/tcpdf.php';
 include_once __DIR__ . '/../models/CompleteService.php';
 require_once("Controller.php");
 
@@ -193,7 +194,7 @@ class CoursesController extends Controller{
         if ( count($urlArray) == 3 && ctype_digit($urlArray[1]) && $urlArray[2] == "reporting" && $method == 'GET') {
 
             $course = services\CourseService::getInstance()->getOne($urlArray[1]);
-            if($course) {
+            if($course && $course->getType()=="course") {
 
                 $affectations = services\AffectationService::getInstance()->getAllByService($urlArray[1],0, 20 );
                 $baskets = services\BasketService::getInstance()->getAllByService($urlArray[1], 0, 30);  // TODO: WE NEED FULL BASKETS
@@ -202,7 +203,7 @@ class CoursesController extends Controller{
                     "company"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getCompanyId",
                         "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
                     "user"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getUserId",
-                        "completeMethods"=>["addre  ss"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
+                        "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]],
                     "external"=>["objectType"=>"complete","serviceMethod"=>"getOne","relationIdMethod"=>"getExternalId",
                         "completeMethods"=>["address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAddressId"]]]
                 ];
@@ -216,7 +217,10 @@ class CoursesController extends Controller{
                     $workers = [];
 
                     for ($i = 0; $i < count($affectations); $i++) {
-                        array_push($workers, services\UserService::getInstance()->getOne($affectations[$i]->getUid()));
+                        $uid=$affectations[$i]->getUid();
+                        if($uid){
+                            array_push($workers, services\UserService::getInstance()->getOne($uid));
+                        }
                     }
 
 
@@ -301,11 +305,6 @@ class CoursesController extends Controller{
 
                     $pdf->writeHTML($html, true, false, true, false, '');
     // add a page
-                    $pdf->AddPage();
-
-                    $html = '<h1>Hey</h1>';
-    // output the HTML content
-                    $pdf->writeHTML($html, true, false, true, false, '');
 
     // reset pointer to the last page
                     $pdf->lastPage();

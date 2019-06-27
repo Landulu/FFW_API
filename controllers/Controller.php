@@ -54,8 +54,8 @@ class  Controller
 
                         $manager = call_user_func(array($serviceClass, "getInstance"));
 
-                        if ($manager  && method_exists($serviceClass,$method["serviceMethod"]) && $requestId) {
-                            if (strpos($method["serviceMethod"], "getOne")!==false) {
+                        if ($manager  && method_exists($serviceClass,$method["serviceMethod"])) {
+                            if (strpos($method["serviceMethod"], "getOne")!==false && $requestId) {
                                 $childObj=$manager->{$method["serviceMethod"]}($requestId);
                                 $childObj=isset($method["objectType"])?Model::convertModelType($method["objectType"],$childObj):$childObj;
                                 $lightObj->{"set" . ucfirst($methodKey)}($childObj);
