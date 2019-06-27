@@ -23,9 +23,8 @@ class AffectationService extends Service{
         $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
             "INSERT INTO
-        service(aff_id, role, start, end,  skill_sk_id, user_u_id, service_ser_id)
+        affectation ( role, start, end,  skill_sk_id, user_u_id, service_ser_id)
         VALUES (?, ?, ?, ?, ?, ?)", [
-            $affectation->getAffid(),
             $affectation->getRole(),
             $affectation->getStart(),
             $affectation->getEnd(),
@@ -165,10 +164,10 @@ class AffectationService extends Service{
 
     //Fin modification
 
-    public function update(\Affectation $affectation, $affid): ?\Affectation {
+    public function update(\Affectation $affectation): ?\Affectation {
         $manager = \DatabaseManager::getManager();
         $affectedRows = $manager->exec(
-            "UPDATE service
+            "UPDATE affectation
         SET role = ?,
         start = ?,
         end = ?,
@@ -176,14 +175,13 @@ class AffectationService extends Service{
         skill_sk_id  = ?,
         service_ser_id  = ?
         WHERE aff_id= ? ", [
-            $affectation->getAffid(),
             $affectation->getRole(),
             $affectation->getStart(),
             $affectation->getEnd(),
-            $affectation->getSkid(),
             $affectation->getUid(),
+            $affectation->getSkid(),
             $affectation->getSerid(),
-            $affid
+            $affectation->getAffid()
         ]);
         if ($affectedRows > 0) {
             return $affectation;
