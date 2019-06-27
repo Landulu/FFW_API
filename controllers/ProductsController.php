@@ -42,8 +42,8 @@ class ProductsController extends Controller {
             $products = services\Productservice::getInstance()->getAll($offset, $limit);
             $methodsArr=
                 ["article"=>[
-                    "serviceMethod"=>"getOne","idRelationMethod"=>"getArticleId","completeMethods"=>[
-                        "ingredient"=>["serviceMethod"=>"getOne","idRelationMethod"=>"getIngredientId"]
+                    "serviceMethod"=>"getOne","objectType"=>"complete","relationIdMethod"=>"getArticleId","completeMethods"=>[
+                        "ingredient"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getIngredientId"]
                         ]
                     ]
                 ];
@@ -119,8 +119,8 @@ class ProductsController extends Controller {
                 http_response_code(200);
                 $methodsArr=
                     ["article"=>[
-                        "serviceMethod"=>"getOne","idRelationMethod"=>"getArticleId","completeMethod"=>
-                            ["ingredient"=>["serviceMethod"=>"getOne","idRelationMethod"=>"getIngredientId"]]
+                        "serviceMethod"=>"getOne","objectType"=>"complete","relationIdMethod"=>"getArticleId","completeMethod"=>
+                            ["ingredient"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getIngredientId"]]
                         ]
                     ];
                 return self::decorateModel($product,$methodsArr);

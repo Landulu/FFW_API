@@ -70,7 +70,7 @@ class ArticleService extends Service {
         return NULL;
     }
 
-    public function getOne(string $aid) {
+    public function getOne($aid) {
         $manager = \DatabaseManager::getManager();
         $article = $manager->getOne('
         select a_id as aid,
