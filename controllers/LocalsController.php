@@ -65,7 +65,7 @@ class LocalsController extends Controller {
                         "completeMethods"=>[
                             "products"=>["serviceMethod"=>"getAllByRoom","completeMethods"=>[
                                 "article"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getArticleId","completeMethods"=>[
-                                    "ingredient"=>["serviceMethod"=>"getOne","idRelationMethod"=>"getIngredientId"]
+                                    "ingredient"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getIngredientId"]
                                 ]]]]]],
                     "address"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getAdid"]
                 ];

@@ -70,7 +70,7 @@ class FavoriteController extends Controller {
                 if($favorite) {
                     http_response_code(201);
                 } else {
-                    http_response_code(204);
+                    http_response_code(205);
                 }
                 return $favorite;
 

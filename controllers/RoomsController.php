@@ -112,8 +112,8 @@ class RoomsController extends Controller {
 
             $methodsArr=
                 ["article"=>[
-                    "serviceMethod"=>"getOne","idRelationMethod"=>"getArticleId","completeMethods"=>[
-                        "ingredient"=>["serviceMethod"=>"getOne","idRelationMethod"=>"getIngredientId"]
+                    "serviceMethod"=>"getOne","relationIdMethod"=>"getArticleId","completeMethods"=>[
+                        "ingredient"=>["serviceMethod"=>"getOne","relationIdMethod"=>"getIngredientId"]
                     ]
                 ]
                 ];
