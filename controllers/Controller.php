@@ -21,7 +21,6 @@ class  Controller
 
             $lightObj=Model::convertModelType("Complete",$lightObj);
 
-//            var_dump($lightObj);
             foreach($methodsArr as   $methodKey=>$method){
 
                 //relationIdMethod représente un identifiant présent dans un modèle mais qui n'est pas sont identifiant principale;
@@ -52,8 +51,6 @@ class  Controller
                     $serviceClass="services\\".$serviceClass;
 
                     if(class_exists($serviceClass)) {
-
-//                        var_dump($method["serviceMethod"]);
 
                         $manager = call_user_func(array($serviceClass, "getInstance"));
 

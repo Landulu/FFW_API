@@ -316,7 +316,6 @@ class UsersController extends Controller {
             } else {
                 http_response_code(400);
             }
-
         }
 
 
@@ -331,6 +330,7 @@ class UsersController extends Controller {
             $userPwd = urldecode($_GET['password']);
 
             $completeUser = services\UserService::getInstance()->getOneByEmail($userEmail);
+
             if($completeUser) {
                 if (isset($userPwd) && isset($completeUser['password'])){
                     if( password_verify($userPwd, $completeUser['password'])){
