@@ -20,7 +20,6 @@ class Service extends Model implements JsonSerializable{
     private $vehicleId;
     private $localId;
 
-
     public function __construct(array $fields) {
         $this->serid = isset($fields['serid']) ? $fields['serid'] : NULL;
         $this->name = isset($fields['name']) ? $fields['name'] : null;

@@ -224,7 +224,6 @@ class UserService extends Service {
         $affectedRows = $manager->exec(
         "UPDATE user
         SET email = ?, 
-            password = ?, 
             firstname = ?, 
             lastname = ?,
             last_subscription = ?,
@@ -237,7 +236,6 @@ class UserService extends Service {
             tel = ? 
             WHERE user.u_id = ?", [
             $user->getEmail(),
-            password_hash($user->getPassword(), PASSWORD_DEFAULT),
             $user->getFirstname(),
             $user->getLastname(),
             $user->getLastSubscription(),
